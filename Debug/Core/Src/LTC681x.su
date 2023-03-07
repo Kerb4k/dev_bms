@@ -1,0 +1,10 @@
+../Core/Src/LTC681x.c:33:10:pec15_calc	24	static
+../Core/Src/LTC681x.c:52:6:LTC681x_check_pec	48	static
+../Core/Src/LTC681x.c:112:6:cmd_68	24	static
+../Core/Src/LTC681x.c:132:6:wakeup_idle	24	static
+../Core/Src/LTC681x.c:147:6:wakeup_sleep	16	static
+../Core/Src/LTC681x.c:158:8:parse_cells	40	static
+../Core/Src/LTC681x.c:204:6:LTC681x_rdcv_reg	40	static
+../Core/Src/LTC681x.c:253:9:rdcv	48	static
+../Core/Src/LTC681x.c:290:6:adcv	24	static
+../Core/Src/LTC681x.c:307:6:cell_voltage	16	static
