@@ -284,6 +284,11 @@ uint8_t rdcv(        cell_asic *ic, //!< Array of the parsed cell codes
 	  return(pec_error);
 }
 
+void clrcell(SPI_HandleTypeDef *hspi){
+
+	uint8_t cmd[2]= {0x07 , 0x11};
+		cmd_68(cmd,hspi);
+}
 
 
 /* Starts ADC conversion for cell voltage */
@@ -304,11 +309,13 @@ void adcv( uint8_t MD, //ADC Mode
 	cmd_68(cmd, hspi);
 }
 
-void cell_voltage(cell_asic *ic ,SPI_HandleTypeDef *hspi){
+int cell_voltage(cell_asic *ic ,SPI_HandleTypeDef *hspi){
+	uint8_t pec;
 	wakeup_sleep();
 	adcv(1, 0, 0, hspi);
 	//delay_u(T_refup_max+T_CYCLE_FAST_MAX); //waiting for conversion
 	delay_m(10);
-	rdcv(ic, hspi);
 
+	pec = rdcv(ic, hspi);
+	clrcell(hspi);
 }

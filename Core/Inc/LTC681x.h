@@ -5,11 +5,12 @@
 #include <stdbool.h>
 #include "stm32g4xx.h"
 
-#define ic_number 1
+#define ic_number 2
 
 //time constants
 #define T_CYCLE_FAST_MAX	1191	// Measure 18 Cells
 #define T_refup_max 4400
+#define T_wake_max 400
 
 ///////////////////////////////////////////////////////
 
@@ -194,9 +195,8 @@ void LTC681x_rdcv_reg(uint8_t reg, //Determines which cell voltage register is r
   0: No PEC error detected
  -1: PEC error detected, retry read
  */
-uint8_t rdcv(        cell_asic *ic, //!< Array of the parsed cell codes
-					 SPI_HandleTypeDef *hspi
-                    );
+uint8_t rdcv(cell_asic *ic, //!< Array of the parsed cell codes
+			 SPI_HandleTypeDef *hspi);
 
 
 
@@ -211,6 +211,8 @@ void adcv(uint8_t MD, //!< ADC conversion Mode
                   uint8_t CH, //!< Sets which Cell channels are converted
 				  SPI_HandleTypeDef *hspi
                  );
+//clears cell voltages
+void clrcell(SPI_HandleTypeDef *hspi);
 
-void cell_voltage(cell_asic *ic ,SPI_HandleTypeDef *hspi);
+int cell_voltage(cell_asic *ic ,SPI_HandleTypeDef *hspi);
 #endif
