@@ -2,7 +2,7 @@
 #include "LTC681x.h"
 #include "isoSpi.h"
 #include <stdlib.h>
-
+#include "temp_calc.h"
 
 const uint16_t crc15Table[256] = {0x0,0xc599, 0xceab, 0xb32, 0xd8cf, 0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e, 0x3aac,  // precomputed CRC15 Table
                                 0xff35, 0x2cc8, 0xe951, 0xe263, 0x27fa, 0xad97, 0x680e, 0x633c, 0xa6a5, 0x7558, 0xb0c1,
@@ -49,7 +49,7 @@ uint16_t pec15_calc(uint8_t len, //Number of bytes that will be used to calculat
 }
 
 /* Helper function that increments PEC counters */
-void LTC681x_check_pec(uint8_t reg, //Type of Register
+void check_pec(uint8_t reg, //Type of Register
 					   cell_asic *ic //A two dimensional array that stores the data
 					   )
 {
@@ -133,10 +133,7 @@ void wakeup_idle(SPI_HandleTypeDef *hspi) //Number of ICs in the system
 {
 	for (int i =0; i<ic_number; i++)
 		{
-		   cs_low();
-		   delay_u(300); // Guarantees the LTC681x will be in standby ///if it doesnt work use delay_u(300)
-		   cs_high();
-		   delay_u(10); ///if it doesnt work use delay_u(10)
+		  spi_read_byte(0xff, hspi);
 		}
 }
 
@@ -148,7 +145,7 @@ void wakeup_sleep(){
 	for (int i =0; i<ic_number; i++)
 			{
 			   cs_low(CS_PIN);
-			   delay_u(300); // Guarantees the LTC681x will be in standby ///if it doesnt work use delay_u(300)
+			   delay_u(400); // Guarantees the LTC681x will be in standby ///if it doesnt work use delay_u(300)
 			   cs_high(CS_PIN);
 			   delay_u(10); ///if it doesnt work use delay_u(10)
 			}
@@ -201,7 +198,7 @@ int8_t parse_cells(uint8_t current_ic, // Current IC
 }
 
 /* Writes the command and reads the raw cell voltage register data */
-void LTC681x_rdcv_reg(uint8_t reg, //Determines which cell voltage register is read back
+void rdcv_reg(uint8_t reg, //Determines which cell voltage register is read back
                       uint8_t *data, //An array of the unparsed cell codes
 					  SPI_HandleTypeDef *hspi
                      )
@@ -262,7 +259,7 @@ uint8_t rdcv(        cell_asic *ic, //!< Array of the parsed cell codes
 	    // Executes once for each of the LTC6811 cell voltage registers
 	    for (uint8_t cell_reg = 1; cell_reg < 7; cell_reg++) {
 
-	    	LTC681x_rdcv_reg(cell_reg,cell_data,hspi );
+	    	rdcv_reg(cell_reg,cell_data,hspi );
 	    				for (int current_ic = 0; current_ic<ic_number; current_ic++)
 	    				{
 	    				if (ic->isospi_reverse == false)
@@ -279,7 +276,7 @@ uint8_t rdcv(        cell_asic *ic, //!< Array of the parsed cell codes
 	    				}
 
 	    }
-	    LTC681x_check_pec(CELL, ic);
+	   check_pec(CELL, ic);
 
 	  return(pec_error);
 }
@@ -309,13 +306,122 @@ void adcv( uint8_t MD, //ADC Mode
 	cmd_68(cmd, hspi);
 }
 
-int cell_voltage(cell_asic *ic ,SPI_HandleTypeDef *hspi){
-	uint8_t pec;
+void cell_voltage(cell_asic *ic ,SPI_HandleTypeDef *hspi){
+
 	wakeup_sleep();
 	adcv(1, 0, 0, hspi);
 	//delay_u(T_refup_max+T_CYCLE_FAST_MAX); //waiting for conversion
-	delay_m(10);
+	delay_m(15);
 
-	pec = rdcv(ic, hspi);
+	rdcv(ic, hspi);
 	clrcell(hspi);
+
+}
+
+
+void rdaux_reg(uint8_t reg, //Determines which GPIO voltage register is read back
+                       uint8_t *data, //Array of the unparsed auxiliary codes
+					   SPI_HandleTypeDef *hspi
+                      ){
+
+	const uint8_t REG_LEN = 8; // Number of bytes in the register + 2 bytes for the PEC
+		uint8_t cmd[4];
+		uint16_t cmd_pec;
+
+		if (reg == 1)     //Read back auxiliary group A
+		{
+			cmd[1] = 0x0C;
+			cmd[0] = 0x00;
+		}
+		else if (reg == 2)  //Read back auxiliary group B
+		{
+			cmd[1] = 0x0E;
+			cmd[0] = 0x00;
+		}
+		else if (reg == 3)  //Read back auxiliary group C
+		{
+			cmd[1] = 0x0D;
+			cmd[0] = 0x00;
+		}
+		else if (reg == 4)  //Read back auxiliary group D
+		{
+			cmd[1] = 0x0F;
+			cmd[0] = 0x00;
+		}
+		else          //Read back auxiliary group A
+		{
+			cmd[1] = 0x0C;
+			cmd[0] = 0x00;
+		}
+
+		cmd_pec = pec15_calc(2, cmd);
+		cmd[2] = (uint8_t)(cmd_pec >> 8);
+		cmd[3] = (uint8_t)(cmd_pec);
+
+		wakeup_idle(hspi);
+		spi_write_read(cmd,4,data,(REG_LEN*ic_number),hspi);
+
+}
+
+uint8_t rdaux(cell_asic *ic,//!<  Array of the parsed aux codes
+		 SPI_HandleTypeDef *hspi){
+	uint8_t data[NUM_RX_BYT * ic_number];
+	    int8_t pec_error = 0;
+	    uint8_t c_ic = 0;
+
+	    for (uint8_t gpio_reg = 1; gpio_reg < ic[0].ic_reg.num_gpio_reg + 1; gpio_reg++) {
+
+	    	rdaux_reg(gpio_reg, data, hspi);
+
+	    	for (int current_ic = 0; current_ic<ic_number; current_ic++)
+	    				{
+	    					if (ic->isospi_reverse == false)
+	    					{
+	    					  c_ic = current_ic;
+	    					}
+	    					else
+	    					{
+	    					  c_ic = ic_number - current_ic - 1;
+	    					}
+	    					pec_error = parse_cells(current_ic,gpio_reg, data,
+	    											&ic[c_ic].aux.a_codes[0],
+	    											&ic[c_ic].aux.pec_match[0]);
+	    				}
+
+	    }
+
+	    check_pec(AUX, ic);
+}
+
+void adax( uint8_t MD, //!< ADC Conversion Mode
+				  uint8_t CHG, //!< Sets which GPIO channels are converted
+				  SPI_HandleTypeDef *hspi
+				){
+		uint8_t cmd[4];
+		uint8_t md_bits;
+
+		md_bits = (MD & 0x02) >> 1;
+		cmd[0] = md_bits + 0x04;
+		md_bits = (MD & 0x01) << 7;
+		cmd[1] = md_bits + 0x60 + CHG ;
+
+		cmd_68(cmd,hspi);
+}
+
+void clraux(SPI_HandleTypeDef *hspi)
+{
+	uint8_t cmd[2]= {0x07 , 0x12};
+	cmd_68(cmd,hspi);
+}
+
+void stack_temp(cell_asic *ic ,SPI_HandleTypeDef *hspi){
+		wakeup_sleep();
+
+		adax(1, 0, hspi);
+		delay_m(15);
+		rdaux(ic, hspi);
+		clraux(hspi);
+
+		temp_calc(ic_number, ic);
+
 }

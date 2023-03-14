@@ -1,4 +1,5 @@
-Core/Src/LTC681x.o: ../Core/Src/LTC681x.c ../Core/Inc/LTC681x.h \
+Core/Src/temp_calc.o: ../Core/Src/temp_calc.c ../Core/Inc/temp_calc.h \
+ ../Core/Inc/LTC681x.h \
  ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h \
  ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h \
  ../Drivers/CMSIS/Include/core_cm4.h \
@@ -27,8 +28,8 @@ Core/Src/LTC681x.o: ../Core/Src/LTC681x.c ../Core/Inc/LTC681x.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
- ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
- ../Core/Inc/isoSpi.h ../Core/Inc/temp_calc.h ../Core/Inc/LTC681x.h
+ ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h
+../Core/Inc/temp_calc.h:
 ../Core/Inc/LTC681x.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g4xx.h:
 ../Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g431xx.h:
@@ -59,6 +60,3 @@ Core/Src/LTC681x.o: ../Core/Src/LTC681x.c ../Core/Inc/LTC681x.h \
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_spi_ex.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h:
-../Core/Inc/isoSpi.h:
-../Core/Inc/temp_calc.h:
-../Core/Inc/LTC681x.h:

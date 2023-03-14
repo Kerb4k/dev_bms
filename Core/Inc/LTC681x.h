@@ -82,7 +82,7 @@ typedef struct
 /*! AUX Reg Voltage Data structure */
 typedef struct
 {
-  uint16_t a_codes[10]; //!< Aux Voltage Codes
+  uint16_t a_codes[12]; //!< Aux Voltage Codes
   uint8_t pec_match[4]; //!< If a PEC error was detected during most recent read cmd
   double s_temp[10];
 
@@ -153,6 +153,11 @@ typedef struct
 uint16_t pec15_calc(uint8_t len, //Number of bytes that will be used to calculate a PEC
                     uint8_t *data //Array of data that will be used to calculate  a PEC
                    );
+/* Helper function that increments PEC counters */
+void check_pec(uint8_t reg, //Type of Register
+					   cell_asic *ic //A two dimensional array that stores the data
+					   );
+
 /*!
  Wake isoSPI up from IDlE state and enters the READY state
  @return void
@@ -175,18 +180,10 @@ int8_t parse_cells(uint8_t current_ic, // Current IC
 					//SPI_HandleTypeDef *hspi
 					);
 /* Writes the command and reads the raw cell voltage register data */
-void LTC681x_rdcv_reg(uint8_t reg, //Determines which cell voltage register is read back
+void rdcv_reg(uint8_t reg, //Determines which cell voltage register is read back
                       uint8_t *data, //An array of the unparsed cell codes
 					  SPI_HandleTypeDef *hspi
                      );
-
-
-
-
-
-
-
-
 /*!
  Reads and parses the LTC681x cell voltage registers.
  The function is used to read the cell codes of the LTC681x.
@@ -214,5 +211,24 @@ void adcv(uint8_t MD, //!< ADC conversion Mode
 //clears cell voltages
 void clrcell(SPI_HandleTypeDef *hspi);
 
-int cell_voltage(cell_asic *ic ,SPI_HandleTypeDef *hspi);
+void cell_voltage(cell_asic *ic ,SPI_HandleTypeDef *hspi);
+
+
+void rdaux_reg(uint8_t reg, //Determines which GPIO voltage register is read back
+                       uint8_t *data, //Array of the unparsed auxiliary codes
+					   SPI_HandleTypeDef *hspi
+                      );
+
+uint8_t rdaux(cell_asic *ic,//!<  Array of the parsed aux codes
+		 SPI_HandleTypeDef *hspi);
+
+void adax( uint8_t MD, //!< ADC Conversion Mode
+				  uint8_t CHG, //!< Sets which GPIO channels are converted
+				  SPI_HandleTypeDef *hspi
+				);
+
+void clraux(SPI_HandleTypeDef *hspi);
+
+void stack_temp(cell_asic *ic ,SPI_HandleTypeDef *hspi);
+
 #endif
