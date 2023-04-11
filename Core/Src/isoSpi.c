@@ -1,78 +1,57 @@
+
+
 #include <stdint.h>
 #include "isoSpi.h"
 #include "stm32g4xx.h"
 #include <stdio.h>
+#include "conf.h"
+extern SPI_HandleTypeDef hspi1;
 
 
-#define gpio_pin GPIO_PIN_4
-#define gpio_type GPIOA
 
 
-
-void cs_low(){
-	HAL_GPIO_WritePin(gpio_type, gpio_pin, 0);
+void delay_u(uint32_t us){
+	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+		    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+		    // Get the current number of clock cycles
+		    uint32_t const startTicks = DWT->CYCCNT;
+		    // Calculate the number of clock cycles for the desired delay
+		    uint32_t const delayTicks = (SystemCoreClock / 1000000) * us;
+		    // Wait until the number of clock cycles has elapsed
+		    while (DWT->CYCCNT - startTicks < delayTicks);
 }
 
-void cs_high(){
-	HAL_GPIO_WritePin(gpio_type, gpio_pin, 1);
+void delay_m(uint32_t ms){
+	HAL_Delay(ms);
 }
 
+uint8_t spi_write_read_byte(uint8_t wbyte){
 
-///////////////////////////////////
-// library https://github.com/keatis/dwt_delay/
-void delay_u(uint32_t microseconds)// microseconds
-{
-	 CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
-	    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-	    // Get the current number of clock cycles
-	    uint32_t const startTicks = DWT->CYCCNT;
-	    // Calculate the number of clock cycles for the desired delay
-	    uint32_t const delayTicks = (SystemCoreClock / 1000000) * microseconds;
-	    // Wait until the number of clock cycles has elapsed
-	    while (DWT->CYCCNT - startTicks < delayTicks);
-}
-//////////////////////////////////
+	uint8_t rxByte;
 
-void delay_m(uint16_t milli)
-{
-  HAL_Delay(milli);
-}
-/*
-Writes an array of bytes out of the SPI port
-*/
-void spi_write_array(uint8_t len, // Option: Number of bytes to be written on the SPI port
-                     uint8_t data[], //Array of bytes to be written on the SPI port
-					SPI_HandleTypeDef *hspi
-					)
-{
-	HAL_SPI_Transmit(hspi, data,len,1000); // might be changed in future
+	HAL_GPIO_WritePin(CS_PIN_TYPE, CS_PIN, GPIO_PIN_RESET);
+	HAL_SPI_TransmitReceive(&hspi1, &wbyte, &rxByte, 1, SPI_TIMEOUT);
+	HAL_GPIO_WritePin(CS_PIN_TYPE, CS_PIN, GPIO_PIN_SET);
 
+	return rxByte;
 }
 
-void spi_write_read(uint8_t tx_Data[],//array of data to be written on SPI port
-        uint8_t tx_len, //length of the tx data arry
-        uint8_t *rx_data,//Input: array that will store the data read by the SPI port
-        uint8_t rx_len ,//Option: number of bytes to be read from the SPI port
-		SPI_HandleTypeDef * hspi //spi reference
-       ){
+uint32_t spi_write_array(uint8_t len, uint8_t *data){
 
-	HAL_GPIO_WritePin(gpio_type, gpio_pin, 0);
+	HAL_GPIO_WritePin(CS_PIN_TYPE, CS_PIN, GPIO_PIN_RESET);
+	HAL_SPI_Transmit(&hspi1, data, len, SPI_TIMEOUT);
+	HAL_GPIO_WritePin(CS_PIN_TYPE, CS_PIN, GPIO_PIN_SET);
 
-	HAL_SPI_Transmit(hspi, tx_Data, tx_len, 1000);
-	HAL_SPI_Receive(hspi, rx_data, rx_len, 1000);
-
-	HAL_GPIO_WritePin(gpio_type, gpio_pin, 1);
-
+	return 0;
 }
 
+uint32_t spi_write_then_read_array_ltc(uint8_t wlen, uint8_t *wbuffer, uint8_t rlen, uint8_t *rbuffer){
 
-uint8_t spi_read_byte(uint8_t tx_dat,SPI_HandleTypeDef * hspi)
-{
-	uint8_t data;
+	HAL_GPIO_WritePin(CS_PIN_TYPE, CS_PIN, GPIO_PIN_RESET);
+	HAL_SPI_Transmit(&hspi1, wbuffer, wlen, SPI_TIMEOUT);
+	HAL_SPI_Receive(&hspi1, rbuffer, rlen, SPI_TIMEOUT);
+	HAL_GPIO_WritePin(CS_PIN_TYPE, CS_PIN, GPIO_PIN_SET);
 
-	HAL_GPIO_WritePin(gpio_type, gpio_pin, 0);
-	HAL_SPI_Receive(hspi, &data, 1, 500);
-	HAL_GPIO_WritePin(gpio_type, gpio_pin, 1);
+	return 0;
 
-	return data;
 }

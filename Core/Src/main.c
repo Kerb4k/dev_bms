@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "LTC681x.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,8 +93,6 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-  cell_asic *c_a = (cell_asic *)malloc(ic_number);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,17 +102,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-	  cell_voltage(c_a, &hspi1);
-
-	  stack_temp(c_a, &hspi1);
-
-	  cell_asic c1 = c_a[0], c2 = c_a[1];
-
-
-
-
-	  HAL_Delay(500);
   }
   /* USER CODE END 3 */
 }

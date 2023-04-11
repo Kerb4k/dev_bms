@@ -3,5 +3,5 @@
 ../Core/Src/isoSpi.c:23:6:delay_u	24	static
 ../Core/Src/isoSpi.c:36:6:delay_m	16	static
 ../Core/Src/isoSpi.c:43:6:spi_write_array	24	static
-../Core/Src/isoSpi.c:52:6:spi_write_read	24	static
-../Core/Src/isoSpi.c:69:9:spi_read_byte	24	static
+../Core/Src/isoSpi.c:54:6:spi_write_read	24	static
+../Core/Src/isoSpi.c:71:9:spi_read_byte	24	static

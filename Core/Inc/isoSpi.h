@@ -1,43 +1,18 @@
-#ifndef ISOSPI_H
-#define ISOSPI_H
-
-
-#include <stdint.h>
-#include "stm32g4xx.h"
 
 
 
 
+#ifndef LTC681X_GLUE_H_
+#define LTC681X_GLUE_H_
 
+void delay_u(uint32_t us);
 
-void cs_low();
+void delay_m(uint32_t ms);
 
-void cs_high();
+uint8_t spi_write_read_byte(uint8_t wbyte);
 
-void delay_u(uint32_t microseconds);
+uint32_t spi_write_array(uint8_t len, uint8_t *data);
 
-void delay_m(uint16_t milli);
+uint32_t spi_write_then_read_array_ltc(uint8_t wlen, uint8_t *wbuffer, uint8_t rlen, uint8_t *rbuffer);
 
-
-/*
-Writes an array of bytes out of the SPI port
-*/
-void spi_write_array(uint8_t len, // Option: Number of bytes to be written on the SPI port
-                     uint8_t data[], //Array of bytes to be written on the SPI port
-					 SPI_HandleTypeDef *hspi
-                    );
-/*
- Writes and read a set number of bytes using the SPI port.
-*/
-
-void spi_write_read(uint8_t tx_Data[],//array of data to be written on SPI port
-                    uint8_t tx_len, //length of the tx data arry
-                    uint8_t *rx_data,//Input: array that will store the data read by the SPI port
-                    uint8_t rx_len, //Option: number of bytes to be read from the SPI port
-					SPI_HandleTypeDef *hspi
-                   );
-
-uint8_t spi_read_byte(uint8_t tx_dat,SPI_HandleTypeDef *hspi);//name conflicts with linduino also needs to take a byte as a parameter
-
-
-#endif
+#endif /* LTC681X_GLUE_H_ */
