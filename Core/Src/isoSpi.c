@@ -5,9 +5,8 @@
 #include "stm32g4xx.h"
 #include <stdio.h>
 #include "conf.h"
+
 extern SPI_HandleTypeDef hspi1;
-
-
 
 
 void delay_u(uint32_t us){
