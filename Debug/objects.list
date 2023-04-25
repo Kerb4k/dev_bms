@@ -1,6 +1,7 @@
-"./Core/Src/LTC681x.o"
+"./Core/Src/LTC681X.o"
 "./Core/Src/isoSpi.o"
 "./Core/Src/main.o"
+"./Core/Src/operation.o"
 "./Core/Src/stm32g4xx_hal_msp.o"
 "./Core/Src/stm32g4xx_it.o"
 "./Core/Src/syscalls.o"

@@ -7,6 +7,7 @@
 
 
 #include "LTC681X.h"
+#include <stdint.h>
 
 void WakeIdle(void)
 {
@@ -331,7 +332,7 @@ void rdcv_reg(uint8_t reg,			//Determines which cell voltage register is read ba
 */
 int8_t rdaux(uint8_t reg,				//Determines which GPIO voltage register is read back.
                      uint8_t total_ic,			//the number of ICs in the system
-                     temp_data_t aux_codes[][12]	//A two dimensional array of the gpio voltage codes.
+                     temp_data_t aux_codes[][GPIO_NUM]	//A two dimensional array of the gpio voltage codes.
                     )
 {
 	const uint8_t NUM_RX_BYT = 8;

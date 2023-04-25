@@ -9,7 +9,8 @@
 
 #ifndef INC_CONF_H_
 #define INC_CONF_H_
-
+#include <stdint.h>
+#include "stdbool.h"
 
 #define CS_PIN 4
 #define CS_PIN_TYPE GPIOA
@@ -20,7 +21,7 @@
 
 #define SPI_TIMEOUT 15000
 
-
+#define NUMB_REASON_CODES	13
 
 typedef struct cell_data_t
 {
@@ -80,7 +81,7 @@ typedef struct status_data_t
 	//uint8_t ext_settings_flags;	//Deprecated
 	//uint8_t io_flags;				//Deprecated
 	int32_t uptime;
-	rtc_t rtc;
+	//rtc_t rtc;
 	int32_t current;
 	int32_t power;
 	//uint8_t fan1_dc;				//Deprecated
@@ -96,15 +97,15 @@ typedef struct status_data_t
 	uint16_t sum_of_cells;
 	uint8_t opmode;
 	uint8_t discharge_mode;
-	Bool logging;
-	Bool safe_state_executed;
+	bool logging;
+	bool safe_state_executed;
 	uint8_t reason_code;
-	Bool manual_fan_dc;
+	bool manual_fan_dc;
 	int32_t IVT_U1;
 	float IVT_U1_f;
 	int32_t IVT_U2;
 	float IVT_U2_f;
-	Bool precharge_flag;
+	bool precharge_flag;
 	float pre_percentage;
 	int32_t IVT_I;
 	float IVT_I_f;

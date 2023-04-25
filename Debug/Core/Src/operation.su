@@ -1,0 +1,7 @@
+../Core/Src/operation.c:52:6:operation_main	16	static
+../Core/Src/operation.c:130:8:core_routine	16	static
+../Core/Src/operation.c:144:6:precharge_compare	24	static
+../Core/Src/operation.c:168:5:check_voltage_match	24	static
+../Core/Src/operation.c:189:6:balance_routine	8	static
+../Core/Src/operation.c:202:9:read_cell_voltage	16	static
+../Core/Src/operation.c:227:9:read_temp_measurement	16	static

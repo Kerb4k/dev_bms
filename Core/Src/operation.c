@@ -20,7 +20,7 @@ cell_data_t cell_data[IC_NUM][CELL_NUM];
 temp_data_t temp_data[IC_NUM][GPIO_NUM]; //night should be changed to 12
 uint8_t slave_cfg_tx[IC_NUM][6];
 uint8_t slave_cfg_rx[IC_NUM][8];
-extern Bool rtc_event_flag;
+extern int rtc_event_flag;
 nlg_setpnt_t nlg5_ctrl = {
 	.mc_limit = 160, // Max current to be drawn from mains outlet (16 Amps)
 	.oc_limit = 60,  // Charging current (6 Amp)
@@ -192,4 +192,55 @@ void balance_routine(void)
 	cfg_slaves();
 
 }
+/*!
+	\brief			Read all cell voltages from LTC-6811 daisy chain.
 
+	Up to five consecutive reads are performed in case a CRC (PEC) check fails.
+
+	\return			-1 on pec error, 0 on successful read.
+*/
+uint8_t read_cell_voltage(void){
+	int8_t pec;
+	WakeUp();
+	adcv();
+	adcv_delay();
+	WakeIdle();
+
+	for(uint8_t reg = 0; reg < 5; reg++){
+		pec = rdcv(0, IC_NUM, cell_data);
+		if (pec == 0) {
+			return 0;
+		}
+		else increase_pec_counter();
+	}
+	goto_safe_state(PEC_ERROR);
+	return -1;
+
+}
+/*!
+	\brief			Read all auxiliary voltages from LTC-6811 daisy chain.
+
+	Up to five consecutive reads are performed in case a CRC (PEC) check fails.
+
+	\return			-1 on pec error, 0 on successful read.
+*/
+uint8_t read_temp_measurement(void){
+	int8_t pec;
+	WakeUp();
+	adax();
+	adax_delay();
+	WakeIdle();
+
+	for (uint8_t i = 0; i < 5; i++)	{ //for (uint8_t i = 0; i < 5; i++)	{
+			 pec = rdaux(0, IC_NUM, temp_data);  // pec = ltc6804_rdaux(0, IC_NUM, temp_data);
+			 temp_calc(IC_NUM, temp_data); // Moved out of 'if' to execute even on pec error
+			if (pec == 0) {
+				return 0;
+			} else {
+				increase_pec_counter();
+			}
+		}
+		goto_safe_state(PEC_ERROR);
+		return -1;
+
+}
