@@ -16,7 +16,7 @@
 #define CS_PIN_TYPE GPIOA
 
 #define CELL_NUM 18	// Number of cells in one stack
-#define IC_NUM 2 // Length of a daisy chain
+#define IC_NUM 1 // Length of a daisy chain
 #define GPIO_NUM 10 //GPIO + Vref
 
 #define SPI_TIMEOUT 15000

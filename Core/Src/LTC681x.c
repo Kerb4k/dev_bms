@@ -8,6 +8,11 @@
 
 #include "LTC681X.h"
 #include <stdint.h>
+#include "conf.h"
+
+#define T_WAKE_MAX		400
+#define T_REFUP_MAX		4400
+#define T_CYCLE_FAST_MAX	1185	// Measure 12 Cells
 
 void WakeIdle(void)
 {
@@ -115,7 +120,7 @@ void wrcfg(uint8_t total_ic,
 	}
 
 	uint8_t rx_data;
-	wake_idle();
+	WakeIdle();
 	//spi_write_array(CMD_LEN, cmd); //This function causes bad stuff!
 	spi_write_then_read_array_ltc(CMD_LEN, cmd, 0, &rx_data);
 
@@ -148,7 +153,7 @@ int8_t rdcfg(uint8_t total_ic,
 	cmd[2] = 0x2b;
 	cmd[3] = 0x0a;
 
-	wake_idle();
+	WakeIdle();
 	spi_write_then_read_array_ltc(4, cmd, (BYTES_IN_REG*total_ic), rx_data);
 
 	for (uint8_t current_ic = 0; current_ic < total_ic; current_ic++)
@@ -174,6 +179,109 @@ int8_t rdcfg(uint8_t total_ic,
 	free(rx_data);
 #endif
 	return(pec_error);
+}
+
+void wrcfgb(uint8_t total_ic,
+				   uint8_t config[][6]
+				  ){
+	const uint8_t BYTES_IN_REG = 6;
+		const uint8_t CMD_LEN = 4 + (8 * total_ic);
+		uint16_t cfg_pec;
+		uint8_t cmd_index;
+
+	#if DYNAMIC_MEM
+		uint8_t *cmd;
+		cmd = (uint8_t *)malloc(CMD_LEN*sizeof(uint8_t));
+	#else
+		uint8_t cmd[CMD_LEN];
+	#endif
+
+		cmd[0] = 0x00;
+		cmd[1] = 0x24;
+		//pec15_calc(2, cmd);
+		cmd[2] = (pec15_calc(2, cmd) >> 8) & 0xFF;
+		cmd[3] = (pec15_calc(2, cmd) >> 0) & 0xFF;
+
+		cmd_index = 4;
+		for (uint8_t current_ic = total_ic; current_ic > 0; current_ic--)
+		{
+			/* the last IC on the stack. The first configuration written is */
+			/* received by the last IC in the daisy chain */
+
+			for (uint8_t current_byte = 0; current_byte < BYTES_IN_REG; current_byte++)	/* executes for each of the 6 bytes in the CFGR register */
+			{
+				/* current_byte is the byte counter */
+
+				cmd[cmd_index] = config[current_ic-1][current_byte];					/* adding the config data to the array to be sent */
+				cmd_index = cmd_index + 1;
+			}
+			cfg_pec = (uint16_t)pec15_calc(BYTES_IN_REG, &config[current_ic-1][0]);		/* calculating the PEC for each ICs configuration register data */
+			cmd[cmd_index] = (uint8_t)(cfg_pec >> 8);
+			cmd[cmd_index + 1] = (uint8_t)cfg_pec;
+			cmd_index = cmd_index + 2;
+		}
+
+		uint8_t rx_data;
+
+		WakeIdle();
+		spi_write_then_read_array_ltc(CMD_LEN, cmd, 0, &rx_data);
+#if DYNAMIC_MEM
+	free(cmd);
+#endif
+
+}
+
+int8_t rdcfgb(uint8_t total_ic,
+                     uint8_t r_config[][8]
+                    )
+{
+	const uint8_t BYTES_IN_REG = 8;
+
+	uint8_t cmd[4];
+	int8_t pec_error = 0;
+	uint16_t data_pec;
+	uint16_t received_pec;
+
+#if DYNAMIC_MEM
+	uint8_t *rx_data;
+	rx_data = (uint8_t *) malloc((8*total_ic)*sizeof(uint8_t));
+#else
+	const uint8_t max_ic = 12;
+	uint8_t rx_data[8 * max_ic];
+#endif
+
+	cmd[0] = 0x00;
+	cmd[1] = 0x26;
+	cmd[2] = (pec15_calc(2, cmd) >> 8) & 0xFF;
+	cmd[3] = (pec15_calc(2, cmd) >> 0) & 0xFF;
+
+	WakeIdle();
+	spi_write_then_read_array_ltc(4, cmd, (BYTES_IN_REG*total_ic), rx_data);
+
+	for (uint8_t current_ic = 0; current_ic < total_ic; current_ic++)
+		{
+			// executes for each LTC6804 in the daisy chain and packs the data
+			// into the r_config array as well as check the received Config data
+			// for any bit errors
+
+			for (uint8_t current_byte = 0; current_byte < BYTES_IN_REG; current_byte++)
+			{
+				r_config[current_ic][current_byte] = rx_data[current_byte + (current_ic*BYTES_IN_REG)];
+			}
+
+			received_pec = (r_config[current_ic][6]<<8) + r_config[current_ic][7];
+			data_pec = pec15_calc(6, &r_config[current_ic][0]);
+			if (received_pec != data_pec)
+			{
+				pec_error = -1;
+			}
+		}
+
+	#if DYNAMIC_MEM
+		free(rx_data);
+	#endif
+		return(pec_error);
+
 }
 
 uint8_t rdcv(uint8_t reg,				// Controls which cell voltage register is read back.
@@ -266,7 +374,6 @@ uint8_t rdcv(uint8_t reg,				// Controls which cell voltage register is read bac
 			//must be incremented by 2 bytes to point to the next ICs cell voltage data
 		}
 	}
-
 #if DYNAMIC_MEM
 	free(cell_data);
 #endif
@@ -321,8 +428,8 @@ void rdcv_reg(uint8_t reg,			//Determines which cell voltage register is read ba
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec);
 
-	wake_idle();
-	wake_idle();
+	WakeIdle();
+	WakeIdle();
 	spi_write_then_read_array_ltc(4, cmd, (REG_LEN*total_ic), data);
 }
 
@@ -430,7 +537,14 @@ int8_t rdaux(uint8_t reg,				//Determines which GPIO voltage register is read ba
 	return (pec_error);
 }
 
+adcv_delay(void){
+	delay_u(T_REFUP_MAX + T_CYCLE_FAST_MAX);
+}
 
+void adax_delay(void)
+{
+	delay_u(T_REFUP_MAX + T_CYCLE_FAST_MAX);
+}
 /*!
 	\brief Read the raw data from the LTC6804 auxiliary register.
 */
@@ -473,7 +587,7 @@ void rdaux_reg(uint8_t reg,			//Determines which GPIO voltage register is read b
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec);
 
-	wake_idle();
+	WakeIdle();
 	spi_write_then_read_array_ltc(4, cmd, (REG_LEN*total_ic), data);
 }
 
@@ -495,7 +609,7 @@ void clrcell(void)
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec );
 
-	wake_idle();
+	WakeIdle();
 	spi_write_array(4, cmd);
 }
 
@@ -515,7 +629,7 @@ void clraux(void)
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec);
 
-	wake_idle();
+	WakeIdle();
 	spi_write_array(4, cmd);
 }
 
@@ -547,7 +661,7 @@ int8_t rdstata(uint8_t total_ic,		//Number of ICs in the system
 	cmd[2] = 0xed;
 	cmd[3] = 0x72;
 
-	wake_idle();
+	WakeIdle();
 	spi_write_then_read_array_ltc(4, cmd, (BYTES_IN_REG*total_ic), rx_data);
 
 	for (uint8_t current_ic = 0; current_ic < total_ic; current_ic++)       //executes for each LTC6804 in the daisy chain and packs the data
@@ -602,7 +716,7 @@ int8_t rdstatb(uint8_t total_ic,		//Number of ICs in the system
 	cmd[2] = 0x70;
 	cmd[3] = 0x24;
 
-	wake_idle();
+	WakeIdle();
 	spi_write_then_read_array_ltc(4, cmd, (BYTES_IN_REG*total_ic), rx_data);
 
 	for (uint8_t current_ic = 0; current_ic < total_ic; current_ic++)       //executes for each LTC6804 in the daisy chain and packs the data
@@ -646,7 +760,7 @@ void adcv(void)
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec);
 
-	wake_idle();
+	WakeIdle();
 	spi_write_array(4, cmd);
 }
 
@@ -665,7 +779,7 @@ void adax(void)
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec);
 
-	wake_idle();
+	WakeIdle();
 	spi_write_array(4, cmd);
 }
 
@@ -684,6 +798,6 @@ void adstat(void)
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec);
 
-	wake_idle();
+	WakeIdle();
 	spi_write_array(4, cmd);
 }

@@ -4,6 +4,11 @@
 #include "math.h"
 #include <stdint.h>
 
+
+
+
+
+
 void temp_calc(uint8_t total_ic,  temp_data_t temp_data[][GPIO_NUM]){ //fix arguments
 	float v, r, vv , t;
 	for(int i = 0; i < total_ic; i++){
@@ -18,7 +23,7 @@ void temp_calc(uint8_t total_ic,  temp_data_t temp_data[][GPIO_NUM]){ //fix argu
 			    t = 1/t;
 
 			    t -= 273.15;
-
+		temp_data[i][j].temp = (int)t;
 		//	ic[i].aux.s_temp[j] = t;
 
 		}
