@@ -101,7 +101,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
  // HAL_TIM_Base_Start(&htim3);
-
+  uint8_t duty_cycle = 0;
+  TIM8->CCR3 = duty_cycle;
+  HAL_TIMEx_PWMN_Start(&htim8, TIM_CHANNEL_3);
 
   /* USER CODE END 2 */
 
@@ -113,7 +115,14 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  operation_main();
+	  HAL_Delay(500);
+	  duty_cycle += 10;
+	  if(duty_cycle > 100)
+		  duty_cycle = 0;
+	  TIM8->CCR3 = duty_cycle;
+
+
+	  //operation_main();
 
 
 

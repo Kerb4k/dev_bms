@@ -5,7 +5,7 @@
  *      Author: dovlati
  */
 #include "conf.h"
-
+#include "calculations.h"
 /*!
 	\brief	Calculates the Sum of Cells.
 */
@@ -14,7 +14,7 @@ void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], stat
 
 	uint16_t soc = 0;
 
-	for(uint8_t i = 0; i < total_icl; i++){
+	for(uint8_t i = 0; i < total_ic; i++){
 		for(uint8_t j = 0; j < CELL_NUM; j++){
 			soc += (cell_data[i][j].voltage / 100);
 		}
@@ -26,22 +26,10 @@ void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], stat
 */
 void calculate_power(status_data_t *status_data)
 {
-	uint8_t duty_cycle;
-
-		if (temperature > T2DC_HIGH_TEMPERATURE - 5)
-		{
-			duty_cycle = T2DC_HIGH_DUTY_CYCLE;
-		}
-		else if (temperature < T2DC_LOW_DUTY_CYCLE)
-		{
-			duty_cycle = T2DC_LOW_DUTY_CYCLE;
-		}
-		else
-		{
-			duty_cycle = temperature * T2DC_M + T2DC_B;
-		}
-
-		return duty_cycle;
+	int32_t current = status_data->current;
+		uint16_t voltage = status_data->sum_of_cells;
+		int32_t power = current * (int32_t)voltage;
+		status_data->power = power;
 }
 
 
@@ -129,7 +117,22 @@ void get_minmax_voltage(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], sta
 	\brief Returns the duty cycle of fan based on temperature input.
 */
 uint8_t get_duty_cycle(int16_t temperature){
+	uint8_t duty_cycle;
 
+			if (temperature > T2DC_HIGH_TEMPERATURE - 5)
+			{
+				duty_cycle = T2DC_HIGH_DUTY_CYCLE;
+			}
+			else if (temperature < T2DC_LOW_DUTY_CYCLE)
+			{
+				duty_cycle = T2DC_LOW_DUTY_CYCLE;
+			}
+			else
+			{
+				duty_cycle = temperature * T2DC_M + T2DC_B;
+			}
+
+			return duty_cycle;
 }
 
 /*!

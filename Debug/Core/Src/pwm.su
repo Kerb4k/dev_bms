@@ -1,0 +1,2 @@
+../Core/Src/pwm.c:20:6:pwm_init	8	static
+../Core/Src/pwm.c:25:6:set_fan_duty_cycle	16	static

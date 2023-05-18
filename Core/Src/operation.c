@@ -57,11 +57,11 @@ static uint8_t charger_event_counter;
 
 void operation_main(void){
 
-	open_AIR();
-	open_PRE();
+	//open_AIR();
+	//open_PRE();
 
 	initialize();
-	fan_energize();
+	//fan_energize();
 	init_slave_cfg();
 
 	for(uint32_t i=0; i<NUMB_REASON_CODES; i++)
