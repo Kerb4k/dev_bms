@@ -57,7 +57,11 @@ static uint8_t charger_event_counter;
 
 void operation_main(void){
 
+	open_AIR();
+	open_PRE();
+
 	initialize();
+	fan_energize();
 	init_slave_cfg();
 
 	for(uint32_t i=0; i<NUMB_REASON_CODES; i++)
@@ -88,63 +92,6 @@ void operation_main(void){
 
 	}
 
-
-	//initial setting of AIR and PRECHARGE pins
-/*	open_AIR();
-	open_PRE();
-
-	//System initialization
-	initialize();
-	fan_energize();
-	init_slave_cfg();
-
-#if CAN_ENABLED
-// can initialization
-#endif
-
-	for(uint32_t i=0; i<NUMB_REASON_CODES; i++)
-		{
-			status_data.error_counters[i]=0;
-		}
-
-	status_data.pec_error_counter = 0;
-	status_data.pec_error_counter_last = 0;
-
-	status_data.limping = 0;
-	status_data.recieved_IVT = 0; // might need to be deleted
-
-	status_data.opmode = 0;
-	status_data.opmode = (1 << 0)|(1 << 4); //17
-	status_data.logging = true; //Always true
-
-#if BYPASS_INITIAL_CHECK
-	close_AIR();
-	delay_ms(5000);
-	close_PRE();
-#else
-	if (core_routine(RETEST_NO) == 0) {	// Initial check before closing AIRs
-		delay_m(1000);
-		close_AIR();
-#if !CHECK_IVT
-		delay_ms(5000);
-		close_PRE();
-#endif
-	}
-#endif
-
-	while(1){
-
-#if CAN_ENABLED
-		//can_check_opmode_setting(); // can check
-#endif
-		delay_m(100);
-
-
-		// TODO operation statments
-
-
-	}
-*/
 }
 
 /*!

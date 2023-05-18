@@ -12,13 +12,36 @@
 void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], status_data_t *status_data)
 {
 
+	uint16_t soc = 0;
+
+	for(uint8_t i = 0; i < total_icl; i++){
+		for(uint8_t j = 0; j < CELL_NUM; j++){
+			soc += (cell_data[i][j].voltage / 100);
+		}
+	}
+	status_data->sum_of_cells = (uint16_t)soc /100;
 }
 /*!
 	\brief	Calculate power from current data and Sum of Cells.
 */
 void calculate_power(status_data_t *status_data)
 {
+	uint8_t duty_cycle;
 
+		if (temperature > T2DC_HIGH_TEMPERATURE - 5)
+		{
+			duty_cycle = T2DC_HIGH_DUTY_CYCLE;
+		}
+		else if (temperature < T2DC_LOW_DUTY_CYCLE)
+		{
+			duty_cycle = T2DC_LOW_DUTY_CYCLE;
+		}
+		else
+		{
+			duty_cycle = temperature * T2DC_M + T2DC_B;
+		}
+
+		return duty_cycle;
 }
 
 
@@ -79,6 +102,7 @@ void get_minmax_voltage(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], sta
 	uint8_t min_id = 0;
 	uint8_t max_id = 0;
 
+
 	for (uint8_t i = 0; i < total_ic; i++)
 	{
 		for (uint8_t j = 0; j < CELL_NUM; j++)
@@ -90,15 +114,8 @@ void get_minmax_voltage(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], sta
 			}
 			if (cell_data[i][j].voltage < min && cell_data[i][j].voltage > 5000) //ignore cells under .5V
 			{
-				if( i==2 && j==11 )
-				{
-					//remove this if when working stack is put in car
-				}
-				else
-				{
-					min = cell_data[i][j].voltage;
-					min_id = (i << 4) | (j & 0x0f);
-				}
+				min = cell_data[i][j].voltage;
+				min_id = (i << 4) | (j & 0x0f);
 			}
 		}
 	}
@@ -112,6 +129,7 @@ void get_minmax_voltage(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], sta
 	\brief Returns the duty cycle of fan based on temperature input.
 */
 uint8_t get_duty_cycle(int16_t temperature){
+
 }
 
 /*!
