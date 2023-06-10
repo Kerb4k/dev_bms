@@ -16,7 +16,7 @@
 #define CS_PIN_TYPE GPIOA
 
 #define CELL_NUM 18	// Number of cells in one stack
-#define IC_NUM 1 // Length of a daisy chain
+#define IC_NUM 2 // Length of a daisy chain
 #define GPIO_NUM 10 //GPIO + Vref
 
 #define SPI_TIMEOUT 15000
@@ -62,7 +62,7 @@ typedef struct limit_t
 	float max_current;
 	uint16_t charger_en;			//Deprecated
 	uint16_t charger_dis;			//Deprecated
-	uint16_t delta;				//Deprecated
+	uint16_t tolerance;				//Deprecated
 	float accu_min_voltage;
 	float precharge_min_start_voltage;
 	float precharge_max_end_voltage;
@@ -81,9 +81,16 @@ typedef struct status_data_t
 	//uint8_t ext_settings_flags;	//Deprecated
 	//uint8_t io_flags;				//Deprecated
 	int32_t uptime;
+	int8_t mode;
 	//rtc_t rtc;
+	float time;
+	float time_prev;
+	int32_t soc;
+	int32_t soc_pre;
 	int32_t current;
 	int32_t power;
+	int32_t IVT_voltage;
+	int16_t delta;
 	//uint8_t fan1_dc;				//Deprecated
 	//uint8_t fan2_dc;				//Deprecated
 	int16_t min_temp;
@@ -178,5 +185,5 @@ typedef struct status_data_t
 #define NLG5_C_CP_V				(1<<5)
 //////////////////////////////////////////////////////////////////////
 
-
+#define BATTERY_CAPACITY 13
 #endif /* INC_CONF_H_ */

@@ -1,0 +1,2 @@
+../Core/Src/can.c:18:6:HandleRxMessage	24	static
+../Core/Src/can.c:34:6:SendCanMessage	64	static

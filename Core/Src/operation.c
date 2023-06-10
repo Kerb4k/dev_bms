@@ -45,7 +45,7 @@ limit_t limits  = {
 	.max_current = 180.0,
 	.charger_dis = 41800,
 	.charger_en = 41500,
-	.delta = 100,
+	.tolerance = 100,
 	.accu_min_voltage = 490.0,
 	.precharge_min_start_voltage = 470.0,
 	.precharge_max_end_voltage = 450.0,
@@ -77,21 +77,35 @@ void operation_main(void){
 
 		status_data.opmode = 0;
 		status_data.opmode = (1 << 0)|(1 << 4);
-		status_data.logging = true; //Always true
 
-
-
+		status_data.mode = 1;
 	while(1){
 
-		read_cell_voltage();
-		read_temp_measurement();
 
-		HAL_Delay(500);
+		switch (status_data.mode){
+			case 0:
+				core_routine(RETEST_YES);
 
+				break;
+			case 1:
+				empty_disch_cfg();
+				read_cell_voltage();
+				get_minmax_voltage(IC_NUM, cell_data, &status_data);
+				if((status_data.max_voltage - status_data.min_voltage) > limits.tolerance)
+					balance_routine();
+		//		balance_routine();
 
-
+				break;
+			case 2:
+				//charge_routine();
+				break;
+			case 3:
+				//debug_routine();
+				break;
+			default:
+				break;
+		}
 	}
-
 }
 
 /*!
@@ -116,14 +130,15 @@ int8_t core_routine(int32_t retest){
 	empty_disch_cfg();
 	read_cell_voltage();
 	read_temp_measurement();
-	/* TODO
-	 * calc_sum_of_cells(IC_NUM, cell_data, &status_data);
-	 * get_minmax_voltage(IC_NUM, cell_data, &status_data);
-	 * get_minmax_temperature(IC_NUM, temp_data, &status_data);
-	 * calculate_power(&status_data);
-	 * set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);
-	 * and etc. look in NIK object
-	 */
+	get_minmax_voltage(IC_NUM, cell_data, &status_data);
+	get_minmax_temperature(IC_NUM, temp_data, &status_data);
+	calculate_power(&status_data);
+	set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);
+#if IVT
+	calculate_soc(&status_data);
+#endif
+
+
 	return test_limits(&status_data, &limits, retest);
 }
 void precharge_compare(void)
@@ -272,4 +287,69 @@ void cfg_slaves(void){
 	delay_u(500);
 	rdcfg(IC_NUM, slave_cfg_rx);
 	rdcfgb(IC_NUM, slave_cfgb_rx);
+}
+
+int8_t test_limits(status_data_t *status_data, limit_t *limit, int32_t retest){
+
+	/*if(status_data->pec_error_counter = 5)
+		//goto_safe_state(PEC_ERROR);
+
+#if TEST_OVERVOLTAGE
+	if (status_data->max_voltage > limit->max_voltage)
+	{
+		if(!(status_data->error_counters[OVERVOLTAGE]<=ERROR_COUNT_LIMIT && retest))
+		{
+			goto_safe_state(OVERVOLTAGE);
+			return -1;
+		}
+		else
+		{
+			status_data->error_counters[OVERVOLTAGE]++;
+		}
+	}
+	else if (status_data->error_counters[OVERVOLTAGE]>0)
+	{
+		status_data->error_counters[OVERVOLTAGE]--;
+	}
+#endif
+
+#if TEST_UNDERVOLTAGE
+	if (status_data->min_voltage < limit->min_voltage)
+	{
+		if(!(status_data->error_counters[UNDERVOLTAGE]<=ERROR_COUNT_LIMIT && retest))
+		{
+			goto_safe_state(UNDERVOLTAGE);
+			return -1;
+		}
+		else
+		{
+			status_data->error_counters[UNDERVOLTAGE]++;
+		}
+	}
+	else if (status_data->error_counters[UNDERVOLTAGE]>0)
+	{
+		status_data->error_counters[UNDERVOLTAGE]--;
+	}
+#endif
+
+#if TEST_OVERTEMPERATURE
+	if (status_data->max_temp > limit->max_temp)
+	{
+		if(!(status_data->error_counters[OVERTEMP]<=ERROR_COUNT_LIMIT && retest))
+		{
+			goto_safe_state(OVERTEMP);
+			return -1;
+		}
+		else
+		{
+			status_data->error_counters[OVERTEMP]++;
+		}
+	}
+	else if (status_data->error_counters[OVERTEMP]>0)
+	{
+		status_data->error_counters[OVERTEMP]--;
+	}
+#endif
+*/
+	return 0;
 }

@@ -27,12 +27,16 @@ void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], stat
 void calculate_power(status_data_t *status_data)
 {
 	int32_t current = status_data->current;
-		uint16_t voltage = status_data->sum_of_cells;
+		uint16_t voltage = status_data->IVT_voltage;
+
 		int32_t power = current * (int32_t)voltage;
 		status_data->power = power;
 }
 
-
+void calculate_soc(status_data_t *status_data){
+	status_data->soc_pre = status_data->soc;
+	status_data->soc = status_data->soc_pre + (status_data->current/BATTERY_CAPACITY )*(status_data->time - status_data->time_prev);
+}
 /*!
 	Loops though all temp values and finds the highest and lowest temp values and corresponding
 	cell IDs
@@ -71,6 +75,7 @@ void get_minmax_temperature(uint8_t total_ic, temp_data_t temp_data[][GPIO_NUM],
 	}
 	status_data->min_temp = min;
 	status_data->max_temp = max;
+	status_data->delta = max - min;
 	status_data->min_temp_id = min_id;
 	status_data->max_temp_id = max_id;
 }
@@ -142,35 +147,52 @@ uint8_t get_duty_cycle(int16_t temperature){
 
 	\return void
 */
+
+
+
+
 void build_disch_cfg(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], uint8_t tx_config[][6],\
 					 status_data_t *status_data, limit_t *limit){
 	uint16_t DCCx = 0x0000;
-	for (uint8_t i = 0; i < total_ic; i++){ //discharge all cells
-		DCCx = 0x0FFF; // Set all discharge bits to 1
-		tx_config[i][4] = (DCCx & 0x00FF);
-		tx_config[i][5] = ((DCCx >> 8) & 0x0F);
+	//discharge all cells
+
+	for(int i = 0; i < IC_NUM; i++){
+		DCCx = 0x0000;
+		for(int j = 0; j < 12; j++){
+			if (cell_data[i][j].voltage > (status_data->min_voltage + limit->tolerance))
+				DCCx = pow(2, j);
+
+
+		}
+
+		tx_config[i][0] = 0;
+		tx_config[i][1] = 0;
+		tx_config[i][2] = 0;
+		tx_config[i][3] = 0;
+		tx_config[i][4] = DCCx & 0xFF;
+		tx_config[i][5] = 16 + (DCCx >> 15);
+
 	}
+
 }
 
 void build_disch_cfgb(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], uint8_t tx_config[][6],\
 status_data_t *status_data, limit_t *limit)
 {
 	uint16_t DCCx = 0x0000;
+		//discharge all cells
 
-
-			for (uint8_t i = 0; i < total_ic; i++)
-			{
-				tx_config[i][0] = 0x00;
-				tx_config[i][1] = 0x00;
-				tx_config[i][2] = 0x00;
-				tx_config[i][3] = 0x00;
-				tx_config[i][4] = 0x00;
-				tx_config[i][5] = 0x00;
-
-				DCCx = 0x0FFF; // Set all discharge bits to 1
-				tx_config[i][0] = (DCCx & 0x00FF);
-				tx_config[i][1] = 0x03;
+		for(int i = 0; i < IC_NUM; i++){
+			DCCx = 0x0000;
+			for(int j = 12; j < CELL_NUM; j++){
+				if (cell_data[i][j].voltage > (status_data->min_voltage + limit->tolerance))
+					DCCx = pow(2, j - 12);
 			}
 
+			tx_config[i][0] = (DCCx & 0xF) << 4;
+			tx_config[i][1] = (DCCx & 0x30) >> 4;
+
+
+		}
 
 }
