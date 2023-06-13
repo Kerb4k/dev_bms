@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "can.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -31,6 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define CANID_CONFIG 0x602
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -107,7 +108,7 @@ int main(void)
   MX_TIM8_Init();
   MX_FDCAN1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_FDCAN_ActivateNotification(hfdcan, CAN_IT_RX_FIFO0_MSG_PENDING|CAN_IT_RX_FIFO1_MSG_PENDING);
+
 
   /* USER CODE END 2 */
 
@@ -207,7 +208,39 @@ static void MX_FDCAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
+ /* if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan, FDCAN_RX_FIFO0, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
+  {
+  	Error_Handler();
+  }
+  if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan, FDCAN_RX_FIFO1, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
+  {
+  	Error_Handler();
+  }*/
 
+
+
+  FDCAN_FilterTypeDef sFilterConfig;
+  sFilterConfig.IdType = FDCAN_STANDARD_ID;
+  sFilterConfig.FilterIndex = 0;
+  sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+  sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  sFilterConfig.FilterID1 = 0;
+  sFilterConfig.FilterID2 = 0x7FF;
+
+  if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK) {
+      /* Filter configuration Error */
+     // printf("[CAN] Unable to configure!\n");
+  }
+
+  if (HAL_FDCAN_Start(&hfdcan1) != HAL_OK) {
+      /* Start Error */
+    //  printf("[CAN] Unable to start!\n");
+  }
+
+  if (HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK) {
+      /* Notification Error */
+   //   printf("[CAN] Unable to activate the CAN interrupt!\n");
+  }
   /* USER CODE END FDCAN1_Init 2 */
 
 }

@@ -83,7 +83,13 @@ int8_t rdstatb(uint8_t total_ic, uint8_t r_config[][8]);
 void adcv(void);
 void adax(void);
 void adstat(void);
+int8_t parse_cells(uint8_t current_ic, // Current IC
+					uint8_t cell_reg,  // Type of register
+					uint8_t cell_data[], // Unparsed data
+					uint16_t *cell_codes // Parsed data
 
+					//SPI_HandleTypeDef *hspi
+					);
 static const unsigned int crc15Table[256] = {
 	0x0000, 0xc599, 0xceab, 0x0b32, 0xd8cf, 0x1d56, 0x1664, 0xd3fd, 0xf407, 0x319e, 0x3aac,
 	0xff35, 0x2cc8, 0xe951, 0xe263, 0x27fa, 0xad97, 0x680e, 0x633c, 0xa6a5, 0x7558, 0xb0c1,

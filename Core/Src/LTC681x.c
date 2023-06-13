@@ -9,7 +9,7 @@
 #include "LTC681X.h"
 #include <stdint.h>
 #include "conf.h"
-
+#include <stdlib.h>
 #define T_WAKE_MAX		400
 #define T_REFUP_MAX		4400
 #define T_CYCLE_FAST_MAX	1185	// Measure 12 Cells
@@ -537,6 +537,34 @@ int8_t rdaux(uint8_t reg,				//Determines which GPIO voltage register is read ba
 	return (pec_error);
 }
 
+int8_t rdaux1(uint8_t reg,				//Determines which GPIO voltage register is read back.
+                     uint8_t total_ic,			//the number of ICs in the system
+                     temp_data_t aux_codes[][GPIO_NUM]	//A two dimensional array of the gpio voltage codes.
+                    )
+{
+	const uint8_t NUM_RX_BYT = 8;
+
+	int8_t pec_error = 0;
+
+
+	uint8_t *data = (uint8_t *) malloc((NUM_RX_BYT*total_ic)*sizeof(uint8_t));
+
+	for (uint8_t gpio_reg = 4; gpio_reg > 0; gpio_reg--){ // try to do it inverse
+		rdaux_reg(gpio_reg, total_ic, data);
+		for (int current_ic = 0; current_ic<total_ic; current_ic++){
+			/* PARSE CELLS*/
+
+			pec_error = parse_cells(current_ic,gpio_reg, data,
+													//&ic[c_ic].aux.a_codes[0],
+													&aux_codes[current_ic][0].raw);
+			/*PARSE CELLS*/
+		}
+	}
+
+	free(data);
+	return (pec_error);
+}
+
 adcv_delay(void){
 	delay_u(T_REFUP_MAX + T_CYCLE_FAST_MAX);
 }
@@ -544,6 +572,7 @@ adcv_delay(void){
 void adax_delay(void)
 {
 	delay_u(T_REFUP_MAX + T_CYCLE_FAST_MAX);
+
 }
 /*!
 	\brief Read the raw data from the LTC6804 auxiliary register.
@@ -591,6 +620,49 @@ void rdaux_reg(uint8_t reg,			//Determines which GPIO voltage register is read b
 	spi_write_then_read_array_ltc(4, cmd, (REG_LEN*total_ic), data);
 }
 
+
+int8_t parse_cells(uint8_t current_ic, // Current IC
+					uint8_t cell_reg,  // Type of register
+					uint8_t cell_data[], // Unparsed data
+					uint16_t *cell_codes // Parsed data
+
+					//SPI_HandleTypeDef *hspi
+					)
+{
+	const uint8_t NUM_RX_BYT = 8;
+	const uint8_t BYT_IN_REG = 6;
+	const uint8_t CELL_IN_REG = 3;
+	int8_t pec_error = 0;
+	uint16_t parsed_cell;
+	uint16_t received_pec;
+	uint16_t data_pec;
+	uint8_t data_counter = current_ic*NUM_RX_BYT; //data counter
+
+
+	for (uint8_t current_cell = 0; current_cell<CELL_IN_REG; current_cell++) // This loop parses the read back data into the register codes, it
+	{																		// loops once for each of the 3 codes in the register
+
+		parsed_cell = cell_data[data_counter] + (cell_data[data_counter + 1] << 8);//Each code is received as two bytes and is combined to
+																				   // create the parsed code
+		cell_codes[current_cell  + ((cell_reg - 1) * CELL_IN_REG)] = parsed_cell;
+
+		data_counter = data_counter + 2;                       //Because the codes are two bytes, the data counter
+															  //must increment by two for each parsed code
+	}
+	received_pec = (cell_data[data_counter] << 8) | cell_data[data_counter+1]; //The received PEC for the current_ic is transmitted as the 7th and 8th
+																			   //after the 6 cell voltage data bytes
+	data_pec = pec15_calc(BYT_IN_REG, &cell_data[(current_ic) * NUM_RX_BYT]);
+
+	if (received_pec != data_pec)
+	{
+		pec_error = 1;                             //The pec_error variable is simply set negative if any PEC errors
+
+	}
+
+	data_counter=data_counter+2;
+
+	return(pec_error);
+}
 
 /*!
 	\brief Clears the LTC6804 cell voltage registers.
@@ -775,6 +847,7 @@ void adax(void)
 
 	cmd[0] = ADAX[0];
 	cmd[1] = ADAX[1];
+
 	cmd_pec = pec15_calc(2, ADAX);
 	cmd[2] = (uint8_t)(cmd_pec >> 8);
 	cmd[3] = (uint8_t)(cmd_pec);

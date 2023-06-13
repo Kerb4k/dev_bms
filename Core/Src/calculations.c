@@ -75,7 +75,7 @@ void get_minmax_temperature(uint8_t total_ic, temp_data_t temp_data[][GPIO_NUM],
 	}
 	status_data->min_temp = min;
 	status_data->max_temp = max;
-	status_data->delta = max - min;
+
 	status_data->min_temp_id = min_id;
 	status_data->max_temp_id = max_id;
 }
@@ -114,6 +114,7 @@ void get_minmax_voltage(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], sta
 	}
 	status_data->min_voltage = min;
 	status_data->max_voltage = max;
+	status_data->delta = max - min;
 	status_data->min_voltage_id = min_id;
 	status_data->max_voltage_id = max_id;
 }
@@ -156,23 +157,26 @@ void build_disch_cfg(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], uint8_
 	uint16_t DCCx = 0x0000;
 	//discharge all cells
 
-	for(int i = 0; i < IC_NUM; i++){
-		DCCx = 0x0000;
-		for(int j = 0; j < 12; j++){
-			if (cell_data[i][j].voltage > (status_data->min_voltage + limit->tolerance))
-				DCCx = pow(2, j);
-
-
+	for (uint8_t i = 0; i < total_ic; i++){
+		for (uint8_t j = 0; j < 12; j++){
+			if (cell_data[i][j].voltage > (status_data->min_voltage + limit->tolerance)){
+				DCCx |= (1<<j);
+			}
+			else{
+				DCCx &= ~(1<<j);
+			}
 		}
-
-		tx_config[i][0] = 0;
-		tx_config[i][1] = 0;
-		tx_config[i][2] = 0;
-		tx_config[i][3] = 0;
-		tx_config[i][4] = DCCx & 0xFF;
-		tx_config[i][5] = 16 + (DCCx >> 15);
-
+		tx_config[i][4] = (DCCx & 0x00ff);
+		tx_config[i][5] = ((DCCx >> 8) & 0x0f);
 	}
+
+
+	/*tx_config[0][0] = 0;
+	tx_config[0][1] = 0;
+	tx_config[0][2] = 0;
+	tx_config[0][3] = 0;
+	tx_config[0][4] = 255;
+	tx_config[0][5] =15;*/
 
 }
 
@@ -182,17 +186,16 @@ status_data_t *status_data, limit_t *limit)
 	uint16_t DCCx = 0x0000;
 		//discharge all cells
 
-		for(int i = 0; i < IC_NUM; i++){
-			DCCx = 0x0000;
-			for(int j = 12; j < CELL_NUM; j++){
-				if (cell_data[i][j].voltage > (status_data->min_voltage + limit->tolerance))
-					DCCx = pow(2, j - 12);
+	for (uint8_t i = 0; i < total_ic; i++){
+			for (uint8_t j = 12; j < CELL_NUM; j++){
+				if (cell_data[i][j].voltage > (status_data->min_voltage + limit->tolerance)){
+					DCCx |= (1<<(j - 12));
+				}
+				else{
+					DCCx &= ~(1<<(j - 12));
+				}
 			}
-
-			tx_config[i][0] = (DCCx & 0xF) << 4;
-			tx_config[i][1] = (DCCx & 0x30) >> 4;
-
-
+			tx_config[i][0] = (DCCx & 0x0f) << 4 ;
+			tx_config[i][1] = (DCCx >> 4);
 		}
-
 }

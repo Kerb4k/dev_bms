@@ -78,7 +78,7 @@ void operation_main(void){
 		status_data.opmode = 0;
 		status_data.opmode = (1 << 0)|(1 << 4);
 
-		status_data.mode = 1;
+		status_data.mode = 0;
 	while(1){
 
 
@@ -88,12 +88,10 @@ void operation_main(void){
 
 				break;
 			case 1:
-				empty_disch_cfg();
 				read_cell_voltage();
 				get_minmax_voltage(IC_NUM, cell_data, &status_data);
-				if((status_data.max_voltage - status_data.min_voltage) > limits.tolerance)
-					balance_routine();
-		//		balance_routine();
+				balance_routine();
+				HAL_Delay(2000);
 
 				break;
 			case 2:
