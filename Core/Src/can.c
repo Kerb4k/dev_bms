@@ -7,6 +7,8 @@
 
 
 #include "stm32g4xx.h"
+#include "conf.h"
+
 
 extern FDCAN_HandleTypeDef hfdcan;
 extern FDCAN_TxHeaderTypeDef TxHeader;
@@ -45,7 +47,9 @@ uint8_t CheckCanError( void )
 	return offcan;
 }
 
-void CanSend(uint8_t *TxData ){
+void CanSend(uint8_t *TxData, uint8_t identifier ){
+
+	TxHeader.Identifier = identifier;
 
 	if(HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan, &TxHeader, TxData) != HAL_OK){
 	        // Transmission request Error
@@ -54,4 +58,38 @@ void CanSend(uint8_t *TxData ){
 
 }
 
+
+void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
+
+	uint8_t cell_id = 0;
+	for(int i = 0; i < IC_NUM; i++){
+		for(int j = 0; j < CELL_NUM; j += 3){
+			uint16_t buf = cell_data[i][j].voltage;
+			uint16_t buf2 = cell_data[i][j+1].voltage;
+			uint16_t buf3 = cell_data[i][j+3].voltage;
+
+			uint8_t c1_1 = buf;
+			uint8_t c2_1 = buf >> 8;
+
+			uint8_t c1_2 = buf2;
+			uint8_t c2_2 = buf2 >> 8;
+
+			uint8_t c1_3 = buf3;
+			uint8_t c2_3 = buf3 >> 8;
+
+
+
+			cell_id = i * 18 + j;
+			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
+
+			CanSend(&TxData, cell_id);
+			delay_u(100);
+		}
+	}
+
+
+
+
+
+}
 

@@ -111,10 +111,7 @@ int main(void)
   while (1)
     {
       // Here we create a FDCAN message
-	  uint8_t TxData[8] = {0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78, 0x9A};
-	  CanSend(&TxData);
-
-      HAL_Delay(1000); // Delay for 1 second
+	  operation_main();
       /* USER CODE END WHILE */
 
       /* USER CODE BEGIN 3 */

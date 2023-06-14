@@ -86,6 +86,8 @@ void operation_main(void){
 			case 0:
 				core_routine(RETEST_YES);
 
+				Send_cell_data(cell_data);
+
 				break;
 			case 1:
 				read_cell_voltage();

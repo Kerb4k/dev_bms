@@ -10,6 +10,7 @@
 
 uint8_t CheckCanError( void );
 
-void CanSend(uint8_t *TxData );
+void CanSend(uint8_t *TxData, uint8_t identifier );
 
+void Send_cell_data(cell_data_t cell_data[][CELL_NUM]);
 #endif /* INC_CAN_H_ */
