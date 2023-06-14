@@ -48,6 +48,7 @@ TIM_HandleTypeDef htim8;
 
 UART_HandleTypeDef huart2;
 
+FDCAN_TxHeaderTypeDef TxHeader;
 /* USER CODE BEGIN PV */
 #define CANID_SYNC		0x80
 /* USER CODE END PV */
@@ -65,39 +66,7 @@ static void MX_FDCAN1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define ERR_CANOFFLINE				11
-uint8_t canSendErrorFlag;
 
-uint8_t CheckCanError( void )
-{
-	FDCAN_ProtocolStatusTypeDef CAN1Status;
-
-	static uint8_t offcan1 = 0;
-
-	HAL_FDCAN_GetProtocolStatus(&hfdcan, &CAN1Status);
-
-	static uint8_t offcan = 0;
-
-	if ( !offcan1 && CAN1Status.BusOff) // detect passive error instead and try to stay off bus till clears?
-	{
-		  HAL_FDCAN_Stop(&hfdcan);
-		  Set_Error(ERR_CANOFFLINE);
-		  // set LED.
-		  offcan = 1;
-		  return 0;
-	}
-
-	// use the senderrorflag to only try once a second to get back onbus.
-	if ( CAN1Status.BusOff && canSendErrorFlag )
-	{
-		if (HAL_FDCAN_Start(&hfdcan) == HAL_OK)
-		{
-			offcan = 0;
-		}
-	}
-
-	return offcan;
-}
 /* USER CODE END 0 */
 
 /**
@@ -142,24 +111,8 @@ int main(void)
   while (1)
     {
       // Here we create a FDCAN message
-      FDCAN_TxHeaderTypeDef TxHeader;
-      TxHeader.Identifier = 0x123; // Modify this with your identifier
-      TxHeader.IdType = FDCAN_STANDARD_ID;
-      TxHeader.TxFrameType = FDCAN_DATA_FRAME;
-      TxHeader.DataLength = FDCAN_DLC_BYTES_8;
-      TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-      TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
-      TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
-      TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-      TxHeader.MessageMarker = 0;
-
-      uint8_t TxData[8] = {0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78, 0x9A}; // Modify this with your data
-
-      if(HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan, &TxHeader, TxData) != HAL_OK)
-      {
-        // Transmission request Error
-        Error_Handler();
-      }
+	  uint8_t TxData[8] = {0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78, 0x9A};
+	  CanSend(&TxData);
 
       HAL_Delay(1000); // Delay for 1 second
       /* USER CODE END WHILE */
@@ -294,6 +247,16 @@ static void MX_FDCAN1_Init(void)
   	{
   		Error_Handler();
   	}
+
+  	TxHeader.Identifier = 0x123; // Modify this with your identifier
+  		TxHeader.IdType = FDCAN_STANDARD_ID;
+  		TxHeader.TxFrameType = FDCAN_DATA_FRAME;
+  		TxHeader.DataLength = FDCAN_DLC_BYTES_8;
+  		TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+  		TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
+  		TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
+  		TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+  		TxHeader.MessageMarker = 0;
   /* USER CODE END FDCAN1_Init 2 */
 
 }

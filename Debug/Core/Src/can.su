@@ -1,0 +1,2 @@
+../Core/Src/can.c:17:9:CheckCanError	56	static
+../Core/Src/can.c:48:6:CanSend	16	static
