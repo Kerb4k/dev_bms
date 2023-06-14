@@ -1,0 +1,276 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 0 cell_1: 8 Vector__XXX
+ SG_ cell_1 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_2 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_3 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 2 NewMessage_0002: 8 Vector__XXX
+
+BO_ 3 NewMessage_0003: 8 Vector__XXX
+
+BO_ 4 NewMessage_0004: 8 Vector__XXX
+
+BO_ 5 NewMessage_0005: 8 Vector__XXX
+
+BO_ 6 NewMessage_0006: 8 Vector__XXX
+
+BO_ 7 NewMessage_0007: 8 Vector__XXX
+
+BO_ 8 NewMessage_0008: 8 Vector__XXX
+
+BO_ 9 NewMessage_0009: 8 Vector__XXX
+
+BO_ 10 NewMessage_0010: 8 Vector__XXX
+
+BO_ 11 NewMessage_0011: 8 Vector__XXX
+
+BO_ 12 NewMessage_0012: 8 Vector__XXX
+
+BO_ 13 NewMessage_0013: 8 Vector__XXX
+
+BO_ 14 NewMessage_0014: 8 Vector__XXX
+
+BO_ 15 NewMessage_0015: 8 Vector__XXX
+
+BO_ 16 NewMessage_0016: 8 Vector__XXX
+
+BO_ 17 NewMessage_0017: 8 Vector__XXX
+
+BO_ 18 NewMessage_0018: 8 Vector__XXX
+
+BO_ 19 NewMessage_0019: 8 Vector__XXX
+
+BO_ 20 NewMessage_0020: 8 Vector__XXX
+
+BO_ 21 NewMessage_0021: 8 Vector__XXX
+
+BO_ 22 NewMessage_0022: 8 Vector__XXX
+
+BO_ 23 NewMessage_0023: 8 Vector__XXX
+
+BO_ 24 NewMessage_0024: 8 Vector__XXX
+
+BO_ 25 NewMessage_0025: 8 Vector__XXX
+
+BO_ 26 NewMessage_0026: 8 Vector__XXX
+
+BO_ 27 NewMessage_0027: 8 Vector__XXX
+
+BO_ 28 NewMessage_0028: 8 Vector__XXX
+
+BO_ 29 NewMessage_0029: 8 Vector__XXX
+
+BO_ 30 NewMessage_0030: 8 Vector__XXX
+
+BO_ 31 NewMessage_0031: 8 Vector__XXX
+
+BO_ 32 NewMessage_0032: 8 Vector__XXX
+
+BO_ 33 NewMessage_0033: 8 Vector__XXX
+
+BO_ 34 NewMessage_0034: 8 Vector__XXX
+
+BO_ 35 NewMessage_0035: 8 Vector__XXX
+
+BO_ 36 NewMessage_0036: 8 Vector__XXX
+
+BO_ 37 NewMessage_0037: 8 Vector__XXX
+
+BO_ 38 NewMessage_0038: 8 Vector__XXX
+
+BO_ 39 NewMessage_0039: 8 Vector__XXX
+
+BO_ 40 NewMessage_0040: 8 Vector__XXX
+
+BO_ 41 NewMessage_0041: 8 Vector__XXX
+
+BO_ 42 NewMessage_0042: 8 Vector__XXX
+
+BO_ 43 NewMessage_0043: 8 Vector__XXX
+
+BO_ 44 NewMessage_0044: 8 Vector__XXX
+
+BO_ 45 NewMessage_0045: 8 Vector__XXX
+
+BO_ 46 NewMessage_0046: 8 Vector__XXX
+
+BO_ 47 NewMessage_0047: 8 Vector__XXX
+
+BO_ 48 NewMessage_0048: 8 Vector__XXX
+
+BO_ 49 NewMessage_0049: 8 Vector__XXX
+
+BO_ 50 NewMessage_0050: 8 Vector__XXX
+
+BO_ 51 NewMessage_0051: 8 Vector__XXX
+
+BO_ 52 NewMessage_0052: 8 Vector__XXX
+
+BO_ 53 NewMessage_0053: 8 Vector__XXX
+
+BO_ 54 NewMessage_0054: 8 Vector__XXX
+
+BO_ 55 NewMessage_0055: 8 Vector__XXX
+
+BO_ 56 NewMessage_0056: 8 Vector__XXX
+
+BO_ 57 NewMessage_0057: 8 Vector__XXX
+
+BO_ 58 NewMessage_0058: 8 Vector__XXX
+
+BO_ 59 NewMessage_0059: 8 Vector__XXX
+
+BO_ 60 NewMessage_0060: 8 Vector__XXX
+
+BO_ 61 NewMessage_0061: 8 Vector__XXX
+
+BO_ 62 NewMessage_0062: 8 Vector__XXX
+
+BO_ 63 NewMessage_0063: 8 Vector__XXX
+
+BO_ 64 NewMessage_0064: 8 Vector__XXX
+
+BO_ 65 NewMessage_0065: 8 Vector__XXX
+
+BO_ 66 NewMessage_0066: 8 Vector__XXX
+
+BO_ 67 NewMessage_0067: 8 Vector__XXX
+
+BO_ 68 NewMessage_0068: 8 Vector__XXX
+
+BO_ 69 NewMessage_0069: 8 Vector__XXX
+
+BO_ 70 NewMessage_0070: 8 Vector__XXX
+
+BO_ 71 NewMessage_0071: 8 Vector__XXX
+
+BO_ 72 NewMessage_0072: 8 Vector__XXX
+
+BO_ 73 NewMessage_0073: 8 Vector__XXX
+
+BO_ 74 NewMessage_0074: 8 Vector__XXX
+
+BO_ 75 NewMessage_0075: 8 Vector__XXX
+
+BO_ 76 NewMessage_0076: 8 Vector__XXX
+
+BO_ 77 NewMessage_0077: 8 Vector__XXX
+
+BO_ 78 NewMessage_0078: 8 Vector__XXX
+
+BO_ 79 NewMessage_0079: 8 Vector__XXX
+
+BO_ 80 NewMessage_0080: 8 Vector__XXX
+
+BO_ 81 NewMessage_0081: 8 Vector__XXX
+
+BO_ 82 NewMessage_0082: 8 Vector__XXX
+
+BO_ 83 NewMessage_0083: 8 Vector__XXX
+
+BO_ 84 NewMessage_0084: 8 Vector__XXX
+
+BO_ 85 NewMessage_0085: 8 Vector__XXX
+
+BO_ 86 NewMessage_0086: 8 Vector__XXX
+
+BO_ 87 NewMessage_0087: 8 Vector__XXX
+
+BO_ 88 NewMessage_0088: 8 Vector__XXX
+
+BO_ 89 NewMessage_0089: 8 Vector__XXX
+
+BO_ 90 NewMessage_0090: 8 Vector__XXX
+
+BO_ 91 NewMessage_0091: 8 Vector__XXX
+
+BO_ 92 NewMessage_0092: 8 Vector__XXX
+
+BO_ 93 NewMessage_0093: 8 Vector__XXX
+
+BO_ 94 NewMessage_0094: 8 Vector__XXX
+
+BO_ 95 NewMessage_0095: 8 Vector__XXX
+
+BO_ 96 NewMessage_0096: 8 Vector__XXX
+
+BO_ 97 NewMessage_0097: 8 Vector__XXX
+
+BO_ 98 NewMessage_0098: 8 Vector__XXX
+
+BO_ 99 NewMessage_0099: 8 Vector__XXX
+
+BO_ 100 NewMessage_0100: 8 Vector__XXX
+
+BO_ 101 NewMessage_0101: 8 Vector__XXX
+
+BO_ 102 NewMessage_0102: 8 Vector__XXX
+
+BO_ 103 NewMessage_0103: 8 Vector__XXX
+
+BO_ 104 NewMessage_0104: 8 Vector__XXX
+
+BO_ 105 NewMessage_0105: 8 Vector__XXX
+
+BO_ 106 NewMessage_0106: 8 Vector__XXX
+
+BO_ 107 NewMessage_0107: 8 Vector__XXX
+
+BO_ 108 NewMessage_0108: 8 Vector__XXX
+
+BO_ 109 NewMessage_0109: 8 Vector__XXX
+
+BO_ 110 NewMessage_0110: 8 Vector__XXX
+
+BO_ 111 NewMessage_0111: 8 Vector__XXX
+
+BO_ 112 NewMessage_0112: 8 Vector__XXX
+
+BO_ 113 NewMessage_0113: 8 Vector__XXX
+
+BO_ 114 NewMessage_0114: 8 Vector__XXX
+
+BO_ 115 NewMessage_0115: 8 Vector__XXX
+
+BO_ 116 NewMessage_0116: 8 Vector__XXX
+
+
+
+
