@@ -13,6 +13,8 @@
 extern FDCAN_HandleTypeDef hfdcan;
 extern FDCAN_TxHeaderTypeDef TxHeader;
 extern FDCAN_RxHeaderTypeDef RxHeader;
+
+
 #define ERR_CANOFFLINE				11
 uint8_t canSendErrorFlag;
 

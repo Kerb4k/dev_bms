@@ -226,7 +226,7 @@ static void MX_FDCAN1_Init(void)
   	sFilterConfig.FilterIndex = 1;
   	sFilterConfig.FilterType = FDCAN_FILTER_MASK;
   	sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-  	sFilterConfig.FilterID1 = CANID_SYNC;
+  	sFilterConfig.FilterID1 = 0x521;
   	sFilterConfig.FilterID2 = 0x7FF;
   	if (HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig) != HAL_OK)
   	{
