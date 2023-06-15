@@ -11,6 +11,9 @@
 #define INC_CONF_H_
 #include <stdint.h>
 #include "stdbool.h"
+#include "stm32g4xx_hal.h"
+
+
 
 #define CS_PIN 4
 #define CS_PIN_TYPE GPIOA
@@ -22,6 +25,9 @@
 #define SPI_TIMEOUT 15000
 
 #define NUMB_REASON_CODES	13
+
+#define FREQUENCY 1
+
 
 typedef struct cell_data_t
 {
@@ -85,8 +91,8 @@ typedef struct status_data_t
 	//rtc_t rtc;
 	float time;
 	float time_prev;
-	int32_t soc;
-	int32_t soc_pre;
+	float soc;
+	float soc_pre;
 	int32_t current;
 	int32_t power;
 	int32_t IVT_voltage;
@@ -185,5 +191,5 @@ typedef struct status_data_t
 #define NLG5_C_CP_V				(1<<5)
 //////////////////////////////////////////////////////////////////////
 
-#define BATTERY_CAPACITY 13
+#define BATTERY_CAPACITY 13000 //13Ah
 #endif /* INC_CONF_H_ */

@@ -49,6 +49,8 @@ TIM_HandleTypeDef htim8;
 UART_HandleTypeDef huart2;
 
 FDCAN_TxHeaderTypeDef TxHeader;
+
+FDCAN_RxHeaderTypeDef RxHeader;
 /* USER CODE BEGIN PV */
 #define CANID_SYNC		0x80
 /* USER CODE END PV */

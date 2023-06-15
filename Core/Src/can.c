@@ -12,7 +12,7 @@
 
 extern FDCAN_HandleTypeDef hfdcan;
 extern FDCAN_TxHeaderTypeDef TxHeader;
-
+extern FDCAN_RxHeaderTypeDef RxHeader;
 #define ERR_CANOFFLINE				11
 uint8_t canSendErrorFlag;
 
@@ -56,6 +56,24 @@ void CanSend(uint8_t *TxData, uint8_t identifier ){
 		Error_Handler();
 	}
 
+}
+
+void ReadCANBusMessage(uint32_t messageIdentifier, uint8_t *RxData[])
+{
+    /* Check if a new message is available in RX FIFO 0 */
+    if(HAL_FDCAN_GetRxMessage(&hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+    {
+        // If there's an error reading the message, you can handle it here
+        // For example, you could print an error message
+        Error_Handler();
+    }
+
+    /* Validate the Identifier */
+    if(RxHeader.Identifier == messageIdentifier)
+    {
+        // Process the received message
+        // Note: the content of the message is in RxData array
+    }
 }
 
 

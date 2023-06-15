@@ -34,8 +34,11 @@ void calculate_power(status_data_t *status_data)
 }
 
 void calculate_soc(status_data_t *status_data){
-	status_data->soc_pre = status_data->soc;
-	status_data->soc = status_data->soc_pre + (status_data->current/BATTERY_CAPACITY )*(status_data->time - status_data->time_prev);
+
+	float consumed = status_data->current * FREQUENCY/3600;
+
+	status_data->soc -= consumed / BATTERY_CAPACITY * 100;
+
 }
 /*!
 	Loops though all temp values and finds the highest and lowest temp values and corresponding

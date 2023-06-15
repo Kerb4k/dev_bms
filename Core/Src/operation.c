@@ -69,6 +69,7 @@ void operation_main(void){
 			status_data.error_counters[i]=0;
 		}
 
+		status_data.soc = 100;
 		status_data.pec_error_counter = 0;
 		status_data.pec_error_counter_last = 0;
 
