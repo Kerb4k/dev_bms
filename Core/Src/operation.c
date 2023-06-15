@@ -87,6 +87,7 @@ void operation_main(void){
 				core_routine(RETEST_YES);
 
 				Send_cell_data(cell_data);
+				HAL_Delay(500);
 
 				break;
 			case 1:

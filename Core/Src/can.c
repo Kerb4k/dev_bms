@@ -82,14 +82,9 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 			cell_id = i * 18 + j;
 			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
 
-			CanSend(&TxData, cell_id);
+			CanSend(TxData, cell_id);
 			delay_u(100);
 		}
 	}
-
-
-
-
-
 }
 
