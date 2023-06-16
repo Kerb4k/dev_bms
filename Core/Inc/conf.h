@@ -136,6 +136,7 @@ typedef struct status_data_t
 /*!
 	debug functionality enable/disable
  */
+#define IVT							1
 #define CAN_DEBUG					1
 #define CAN_ENABLED					1
 #define FAN_DEBUG					1

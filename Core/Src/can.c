@@ -60,10 +60,11 @@ void CanSend(uint8_t *TxData, uint8_t identifier ){
 
 }
 
-void ReadCANBusMessage(uint32_t messageIdentifier, uint8_t *RxData[])
+int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1, size_t size)
 {
+
     /* Check if a new message is available in RX FIFO 0 */
-    if(HAL_FDCAN_GetRxMessage(&hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData) != HAL_OK)
+    if(HAL_FDCAN_GetRxMessage(&hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData1) != HAL_OK)
     {
         // If there's an error reading the message, you can handle it here
         // For example, you could print an error message
@@ -73,10 +74,11 @@ void ReadCANBusMessage(uint32_t messageIdentifier, uint8_t *RxData[])
     /* Validate the Identifier */
     if(RxHeader.Identifier == messageIdentifier)
     {
-        // Process the received message
-        // Note: the content of the message is in RxData array
+        return 0; // Message successfully read and validated
     }
+    return -1; // Message Identifier did not match
 }
+
 
 
 void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){

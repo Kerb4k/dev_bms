@@ -9,6 +9,19 @@
 /*!
 	\brief	Calculates the Sum of Cells.
 */
+
+void get_current(status_data_t *status_data){
+	uint8_t data[8];
+	ReadCANBusMessage(0x521, data, sizeof(data));
+
+	status_data->IVT_I = ((uint32_t)data[2] << 24) |
+	        		     ((uint32_t)data[3] << 16) |
+					     ((uint32_t)data[4] << 8)  |
+					     ((uint32_t)data[5]);
+
+
+}
+
 void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], status_data_t *status_data)
 {
 
@@ -26,16 +39,16 @@ void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], stat
 */
 void calculate_power(status_data_t *status_data)
 {
-	int32_t current = status_data->current;
+		int32_t current = status_data->current;
 		uint16_t voltage = status_data->IVT_voltage;
 
-		int32_t power = current * (int32_t)voltage;
+		int32_t power = status_data->IVT_I * (int32_t)voltage;
 		status_data->power = power;
 }
 
 void calculate_soc(status_data_t *status_data){
 
-	float consumed = status_data->current * FREQUENCY/3600;
+	float consumed = status_data->IVT_I * FREQUENCY/3600;
 
 	status_data->soc -= consumed / BATTERY_CAPACITY * 100;
 

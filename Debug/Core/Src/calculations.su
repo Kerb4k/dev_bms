@@ -1,8 +1,9 @@
-../Core/Src/calculations.c:12:6:calc_sum_of_cells	32	static
-../Core/Src/calculations.c:27:6:calculate_power	32	static
-../Core/Src/calculations.c:36:6:calculate_soc	24	static
-../Core/Src/calculations.c:51:6:get_minmax_temperature	40	static
-../Core/Src/calculations.c:94:6:get_minmax_voltage	32	static
-../Core/Src/calculations.c:128:9:get_duty_cycle	24	static
-../Core/Src/calculations.c:158:6:build_disch_cfg	32	static
-../Core/Src/calculations.c:186:6:build_disch_cfgb	32	static
+../Core/Src/calculations.c:13:6:get_current	24	static
+../Core/Src/calculations.c:25:6:calc_sum_of_cells	32	static
+../Core/Src/calculations.c:40:6:calculate_power	32	static
+../Core/Src/calculations.c:49:6:calculate_soc	24	static
+../Core/Src/calculations.c:64:6:get_minmax_temperature	40	static
+../Core/Src/calculations.c:107:6:get_minmax_voltage	32	static
+../Core/Src/calculations.c:141:9:get_duty_cycle	24	static
+../Core/Src/calculations.c:171:6:build_disch_cfg	32	static
+../Core/Src/calculations.c:199:6:build_disch_cfgb	32	static

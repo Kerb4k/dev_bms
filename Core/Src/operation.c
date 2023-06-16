@@ -88,8 +88,11 @@ void operation_main(void){
 				core_routine(RETEST_YES);
 
 				Send_cell_data(cell_data);
-				uint8_t RxData[8];
-				ReadCANBusMessage(0x521, &RxData);
+
+				uint8_t data[8];
+				ReadCANBusMessage(0x521, data, sizeof(data));
+
+
 				HAL_Delay(500);
 
 				break;
