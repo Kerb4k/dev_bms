@@ -60,6 +60,10 @@ void operation_main(void){
 	//open_AIR();
 	//open_PRE();
 
+
+
+	CanSend(start_ivt, 0x411);
+
 	initialize();
 	//fan_energize();
 	init_slave_cfg();
