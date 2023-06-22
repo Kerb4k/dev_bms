@@ -32,7 +32,7 @@ void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], stat
 			soc += (cell_data[i][j].voltage / 100);
 		}
 	}
-	status_data->sum_of_cells = (uint16_t)soc /100;
+	status_data->sum_of_cells = (float)soc /100;
 }
 /*!
 	\brief	Calculate power from current data and Sum of Cells.
@@ -48,9 +48,9 @@ void calculate_power(status_data_t *status_data)
 
 void calculate_soc(status_data_t *status_data){
 
-	float consumed = status_data->IVT_I * FREQUENCY/3600;
+	//float consumed = status_data->IVT_I * FREQUENCY/3600;
 
-	status_data->soc -= consumed / BATTERY_CAPACITY * 100;
+	status_data->soc = status_data->IVT_Wh / ACCU_Wh;
 
 }
 /*!
@@ -70,7 +70,7 @@ void get_minmax_temperature(uint8_t total_ic, temp_data_t temp_data[][GPIO_NUM],
 
 	for (uint8_t i = 0; i < total_ic; i++)
 	{
-		for (uint8_t j = 0; j < GPIO_NUM; j++)
+		for (uint8_t j = 0; j < GPIO_NUM-7; j++)
 		{
 
 			if (temp_data[i][j].temp > max)

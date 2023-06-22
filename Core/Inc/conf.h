@@ -19,7 +19,7 @@
 #define CS_PIN_TYPE GPIOA
 
 #define CELL_NUM 18	// Number of cells in one stack
-#define IC_NUM 1 // Length of a daisy chain
+#define IC_NUM 8 // Length of a daisy chain
 #define GPIO_NUM 12 //GPIO + Vref
 
 #define SPI_TIMEOUT 15000
@@ -28,6 +28,7 @@
 
 #define FREQUENCY 1
 
+#define ACCU_Wh 6600
 
 typedef struct cell_data_t
 {
@@ -107,7 +108,7 @@ typedef struct status_data_t
 	uint16_t max_voltage;
 	uint8_t min_voltage_id;
 	uint8_t max_voltage_id;
-	uint16_t sum_of_cells;
+	float sum_of_cells;
 	uint8_t opmode;
 	uint8_t discharge_mode;
 	bool logging;
@@ -138,7 +139,7 @@ typedef struct status_data_t
 /*!
 	debug functionality enable/disable
  */
-#define IVT							1
+#define IVT							0
 #define CAN_DEBUG					1
 #define CAN_ENABLED					1
 #define FAN_DEBUG					1
@@ -170,7 +171,7 @@ typedef struct status_data_t
 #define CHECK_IVT							1 //to completely disable IVT TEST_ACCU_UNDERVOLTAGE needs to be set to 0
 #define TEST_OVERTEMPERATURE_CHARGING		0
 #define TEST_OVERCURRENT					0
-#define IVT_TIMEOUT							1
+#define IVT_TIMEOUT							0
 
 /*!
 	Reason codes for entering safe-state

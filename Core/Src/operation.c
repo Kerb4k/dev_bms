@@ -41,15 +41,15 @@ limit_t limits  = {
 	.max_voltage = 42000,
 	.min_voltage = 30000,
 	.max_charge_temp = 4400,
-	.max_temp = 5900,
-	.min_temp = -1500,
+	.max_temp = 57,
+	.min_temp = 0,
 	.power = (8 * (10^6)),
 	.max_current = 180.0,
 	.charger_dis = 41800,
 	.charger_en = 41500,
 	.tolerance = 100,
 	.accu_min_voltage = 490.0,
-	.precharge_min_start_voltage = 470.0,
+	.precharge_min_start_voltage = 450.0,
 	.precharge_max_end_voltage = 450.0,
 	.limp_min_voltage = 34000
 };
@@ -149,13 +149,26 @@ void open_PRE(void){
 
 }
 
+int AMS_OK(status_data_t *status_data, limit_t *limit){
+	if(status_data->min_voltage > limit->min_voltage && status_data->max_voltage < limit->max_voltage){
+		if(status_data->min_temp > limit->min_temp && status_data->max_temp < limit->max_temp){
+			close_AIR();
+			return 0;
+		}
+	}
+	open_AIR();
+	return 1;
+}
+
 int8_t core_routine(int32_t retest){
 	empty_disch_cfg();
 	read_cell_voltage();
 	read_temp_measurement();
 	get_minmax_voltage(IC_NUM, cell_data, &status_data);
 	get_minmax_temperature(IC_NUM, temp_data, &status_data);
-	calculate_power(&status_data);
+	calc_sum_of_cells(IC_NUM, cell_data, &status_data);
+	AMS_OK(&status_data, &limits);
+	//calculate_power(&status_data);
 	//set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);
 
 #if IVT
@@ -164,7 +177,7 @@ int8_t core_routine(int32_t retest){
 	precharge_compare();
 #endif
 
-	test_limp(&status_data, &limits);
+	//test_limp(&status_data, &limits);
 
 
 	return test_limits(&status_data, &limits, retest);
@@ -201,21 +214,21 @@ void read_IVT(status_data_t *status_data){
 void precharge_compare(void)
 {
 
-
+//TODO
 
 	float percentage;
 	float pre = status_data.IVT_U1_f;
 	float air_p = status_data.IVT_U2_f;
-	percentage = (pre * 100) / air_p;
+	percentage = (air_p * 100) / pre;
 	status_data.pre_percentage = percentage;
 	if (status_data.safe_state_executed == 0) {
-		if ((percentage >= 93) && (check_voltage_match() == true) && status_data.IVT_U1_f > limits.precharge_min_start_voltage && status_data.IVT_U1_f) {
+		if ((percentage >= 95) && (check_voltage_match() == true) && status_data.IVT_U1_f > limits.precharge_min_start_voltage) {
 			close_PRE();
 		}
-		else if(status_data.IVT_U1_f < limits.precharge_max_end_voltage || status_data.IVT_U1_f < limits.precharge_max_end_voltage)
+		/*else
 		{
 			open_PRE();
-		}
+		}*/
 		/*else {
 			open_PRE(); //it is maybe not a great idea to actively open the precharge without opening all the contactors
 		}*/

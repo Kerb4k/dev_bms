@@ -21,9 +21,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   8 .data         000000a8  20000000  080088f4  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000364  200000a8  0800899c  000200a8  2**2
+  9 .bss          00000670  200000a8  0800899c  000200a8  2**2
                   ALLOC
- 10 ._user_heap_stack 00000604  2000040c  0800899c  0002040c  2**0
+ 10 ._user_heap_stack 00000600  20000718  0800899c  00020718  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  000200a8  2**0
                   CONTENTS, READONLY
@@ -39,11 +39,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  17 .debug_line   00019b3b  00000000  00000000  000603b7  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    000ceded  00000000  00000000  00079ef2  2**0
+ 18 .debug_str    000cee05  00000000  00000000  00079ef2  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000050  00000000  00000000  00148cdf  2**0
+ 19 .comment      00000050  00000000  00000000  00148cf7  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00006160  00000000  00000000  00148d30  2**2
+ 20 .debug_frame  00006160  00000000  00000000  00148d48  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1171,7 +1171,7 @@ void WakeIdle(void)
  8000e98:	20ff      	movs	r0, #255	; 0xff
  8000e9a:	f001 f98b 	bl	80021b4 <spi_write_read_byte>
 	delay_u(IC_NUM * T_READY);
- 8000e9e:	200a      	movs	r0, #10
+ 8000e9e:	2050      	movs	r0, #80	; 0x50
  8000ea0:	f001 f954 	bl	800214c <delay_u>
 }
  8000ea4:	bf00      	nop
@@ -1186,7 +1186,7 @@ void WakeUp(void){
  8000eac:	20ff      	movs	r0, #255	; 0xff
  8000eae:	f001 f981 	bl	80021b4 <spi_write_read_byte>
 	delay_u(IC_NUM * T_WAKE_MAX);
- 8000eb2:	f44f 70c8 	mov.w	r0, #400	; 0x190
+ 8000eb2:	f44f 6048 	mov.w	r0, #3200	; 0xc80
  8000eb6:	f001 f949 	bl	800214c <delay_u>
 
 #if ((IC_NUM * T_WAKE_MAX) >= T_IDLE_MIN)
@@ -5381,7 +5381,7 @@ void operation_main(void){
 				get_minmax_voltage(IC_NUM, cell_data, &status_data);
  80028e0:	4a07      	ldr	r2, [pc, #28]	; (8002900 <operation_main+0xcc>)
  80028e2:	4909      	ldr	r1, [pc, #36]	; (8002908 <operation_main+0xd4>)
- 80028e4:	2001      	movs	r0, #1
+ 80028e4:	2008      	movs	r0, #8
  80028e6:	f7ff fa89 	bl	8001dfc <get_minmax_voltage>
 				balance_routine();
  80028ea:	f000 f999 	bl	8002c20 <balance_routine>
@@ -5401,7 +5401,7 @@ void operation_main(void){
 		switch (status_data.mode){
  80028fa:	e7d6      	b.n	80028aa <operation_main+0x76>
  80028fc:	20000000 	.word	0x20000000
- 8002900:	20000334 	.word	0x20000334
+ 8002900:	20000640 	.word	0x20000640
  8002904:	42c80000 	.word	0x42c80000
  8002908:	200002c0 	.word	0x200002c0
 
@@ -5474,12 +5474,12 @@ int8_t core_routine(int32_t retest){
 	get_minmax_voltage(IC_NUM, cell_data, &status_data);
  8002964:	4a11      	ldr	r2, [pc, #68]	; (80029ac <core_routine+0x5c>)
  8002966:	4912      	ldr	r1, [pc, #72]	; (80029b0 <core_routine+0x60>)
- 8002968:	2001      	movs	r0, #1
+ 8002968:	2008      	movs	r0, #8
  800296a:	f7ff fa47 	bl	8001dfc <get_minmax_voltage>
 	get_minmax_temperature(IC_NUM, temp_data, &status_data);
  800296e:	4a0f      	ldr	r2, [pc, #60]	; (80029ac <core_routine+0x5c>)
  8002970:	4910      	ldr	r1, [pc, #64]	; (80029b4 <core_routine+0x64>)
- 8002972:	2001      	movs	r0, #1
+ 8002972:	2008      	movs	r0, #8
  8002974:	f7ff f9b2 	bl	8001cdc <get_minmax_temperature>
 	calculate_power(&status_data);
  8002978:	480c      	ldr	r0, [pc, #48]	; (80029ac <core_routine+0x5c>)
@@ -5515,9 +5515,9 @@ int8_t core_routine(int32_t retest){
  80029a6:	46bd      	mov	sp, r7
  80029a8:	bd80      	pop	{r7, pc}
  80029aa:	bf00      	nop
- 80029ac:	20000334 	.word	0x20000334
+ 80029ac:	20000640 	.word	0x20000640
  80029b0:	200002c0 	.word	0x200002c0
- 80029b4:	200002e4 	.word	0x200002e4
+ 80029b4:	200003e0 	.word	0x200003e0
  80029b8:	20000008 	.word	0x20000008
 
 080029bc <read_IVT>:
@@ -5749,7 +5749,7 @@ void precharge_compare(void)
  8002b86:	46bd      	mov	sp, r7
  8002b88:	bd80      	pop	{r7, pc}
  8002b8a:	bf00      	nop
- 8002b8c:	20000334 	.word	0x20000334
+ 8002b8c:	20000640 	.word	0x20000640
  8002b90:	42c80000 	.word	0x42c80000
  8002b94:	42ba0000 	.word	0x42ba0000
  8002b98:	20000008 	.word	0x20000008
@@ -5809,7 +5809,7 @@ int check_voltage_match(void)
  8002c10:	f85d 7b04 	ldr.w	r7, [sp], #4
  8002c14:	4770      	bx	lr
  8002c16:	bf00      	nop
- 8002c18:	20000334 	.word	0x20000334
+ 8002c18:	20000640 	.word	0x20000640
  8002c1c:	42c80000 	.word	0x42c80000
 
 08002c20 <balance_routine>:
@@ -5829,7 +5829,7 @@ void balance_routine(void)
  8002c2a:	4b0a      	ldr	r3, [pc, #40]	; (8002c54 <balance_routine+0x34>)
  8002c2c:	4a0a      	ldr	r2, [pc, #40]	; (8002c58 <balance_routine+0x38>)
  8002c2e:	490b      	ldr	r1, [pc, #44]	; (8002c5c <balance_routine+0x3c>)
- 8002c30:	2001      	movs	r0, #1
+ 8002c30:	2008      	movs	r0, #8
  8002c32:	f7ff f97b 	bl	8001f2c <build_disch_cfg>
 	build_disch_cfgb(IC_NUM, cell_data, slave_cfgb_tx, &status_data, &limits);
  8002c36:	4b06      	ldr	r3, [pc, #24]	; (8002c50 <balance_routine+0x30>)
@@ -5837,7 +5837,7 @@ void balance_routine(void)
  8002c3a:	4b06      	ldr	r3, [pc, #24]	; (8002c54 <balance_routine+0x34>)
  8002c3c:	4a08      	ldr	r2, [pc, #32]	; (8002c60 <balance_routine+0x40>)
  8002c3e:	4907      	ldr	r1, [pc, #28]	; (8002c5c <balance_routine+0x3c>)
- 8002c40:	2001      	movs	r0, #1
+ 8002c40:	2008      	movs	r0, #8
  8002c42:	f7ff f9dd 	bl	8002000 <build_disch_cfgb>
 
 	cfg_slaves();
@@ -5848,10 +5848,10 @@ void balance_routine(void)
  8002c4c:	46bd      	mov	sp, r7
  8002c4e:	bd80      	pop	{r7, pc}
  8002c50:	20000008 	.word	0x20000008
- 8002c54:	20000334 	.word	0x20000334
- 8002c58:	20000314 	.word	0x20000314
+ 8002c54:	20000640 	.word	0x20000640
+ 8002c58:	20000560 	.word	0x20000560
  8002c5c:	200002c0 	.word	0x200002c0
- 8002c60:	2000031c 	.word	0x2000031c
+ 8002c60:	20000590 	.word	0x20000590
 
 08002c64 <empty_disch_cfg>:
 
@@ -5916,7 +5916,7 @@ void empty_disch_cfg(void){
  8002cc6:	3301      	adds	r3, #1
  8002cc8:	607b      	str	r3, [r7, #4]
  8002cca:	687b      	ldr	r3, [r7, #4]
- 8002ccc:	2b00      	cmp	r3, #0
+ 8002ccc:	2b07      	cmp	r3, #7
  8002cce:	ddd1      	ble.n	8002c74 <empty_disch_cfg+0x10>
 	}
 
@@ -5927,8 +5927,8 @@ void empty_disch_cfg(void){
  8002cd6:	3708      	adds	r7, #8
  8002cd8:	46bd      	mov	sp, r7
  8002cda:	bd80      	pop	{r7, pc}
- 8002cdc:	20000314 	.word	0x20000314
- 8002ce0:	2000031c 	.word	0x2000031c
+ 8002cdc:	20000560 	.word	0x20000560
+ 8002ce0:	20000590 	.word	0x20000590
 
 08002ce4 <read_cell_voltage>:
 
@@ -5957,7 +5957,7 @@ uint8_t read_cell_voltage(void){
  8002cfe:	e011      	b.n	8002d24 <read_cell_voltage+0x40>
 		pec = rdcv(0, IC_NUM, cell_data);
  8002d00:	4a0e      	ldr	r2, [pc, #56]	; (8002d3c <read_cell_voltage+0x58>)
- 8002d02:	2101      	movs	r1, #1
+ 8002d02:	2108      	movs	r1, #8
  8002d04:	2000      	movs	r0, #0
  8002d06:	f7fe fbf9 	bl	80014fc <rdcv>
  8002d0a:	4603      	mov	r3, r0
@@ -6020,14 +6020,14 @@ uint8_t read_temp_measurement(void){
  8002d5a:	e015      	b.n	8002d88 <read_temp_measurement+0x48>
 			 pec = rdaux(0, IC_NUM, temp_data);  // pec = ltc6804_rdaux(0, IC_NUM, temp_data);
  8002d5c:	4a10      	ldr	r2, [pc, #64]	; (8002da0 <read_temp_measurement+0x60>)
- 8002d5e:	2101      	movs	r1, #1
+ 8002d5e:	2108      	movs	r1, #8
  8002d60:	2000      	movs	r0, #0
  8002d62:	f7fe fd80 	bl	8001866 <rdaux>
  8002d66:	4603      	mov	r3, r0
  8002d68:	71bb      	strb	r3, [r7, #6]
 			 temp_calc(IC_NUM, temp_data); // Moved out of 'if' to execute even on pec error
  8002d6a:	490d      	ldr	r1, [pc, #52]	; (8002da0 <read_temp_measurement+0x60>)
- 8002d6c:	2001      	movs	r0, #1
+ 8002d6c:	2008      	movs	r0, #8
  8002d6e:	f000 fb83 	bl	8003478 <temp_calc>
 			if (pec == 0) {
  8002d72:	f997 3006 	ldrsb.w	r3, [r7, #6]
@@ -6060,7 +6060,7 @@ uint8_t read_temp_measurement(void){
  8002d9a:	46bd      	mov	sp, r7
  8002d9c:	bd80      	pop	{r7, pc}
  8002d9e:	bf00      	nop
- 8002da0:	200002e4 	.word	0x200002e4
+ 8002da0:	200003e0 	.word	0x200003e0
 
 08002da4 <init_slave_cfg>:
 
@@ -6145,8 +6145,8 @@ void init_slave_cfg(void)
  8002e28:	3301      	adds	r3, #1
  8002e2a:	71fb      	strb	r3, [r7, #7]
  8002e2c:	79fb      	ldrb	r3, [r7, #7]
- 8002e2e:	2b00      	cmp	r3, #0
- 8002e30:	d0be      	beq.n	8002db0 <init_slave_cfg+0xc>
+ 8002e2e:	2b07      	cmp	r3, #7
+ 8002e30:	d9be      	bls.n	8002db0 <init_slave_cfg+0xc>
 	}
 }
  8002e32:	bf00      	nop
@@ -6155,7 +6155,7 @@ void init_slave_cfg(void)
  8002e38:	46bd      	mov	sp, r7
  8002e3a:	f85d 7b04 	ldr.w	r7, [sp], #4
  8002e3e:	4770      	bx	lr
- 8002e40:	20000314 	.word	0x20000314
+ 8002e40:	20000560 	.word	0x20000560
 
 08002e44 <cfg_slaves>:
 
@@ -6166,32 +6166,32 @@ void cfg_slaves(void){
  8002e48:	f7fe f82e 	bl	8000ea8 <WakeUp>
 	wrcfg(IC_NUM, slave_cfg_tx);
  8002e4c:	490b      	ldr	r1, [pc, #44]	; (8002e7c <cfg_slaves+0x38>)
- 8002e4e:	2001      	movs	r0, #1
+ 8002e4e:	2008      	movs	r0, #8
  8002e50:	f7fe f8da 	bl	8001008 <wrcfg>
 	WakeUp();
  8002e54:	f7fe f828 	bl	8000ea8 <WakeUp>
 	wrcfgb(IC_NUM, slave_cfgb_tx); //TODO
  8002e58:	4909      	ldr	r1, [pc, #36]	; (8002e80 <cfg_slaves+0x3c>)
- 8002e5a:	2001      	movs	r0, #1
+ 8002e5a:	2008      	movs	r0, #8
  8002e5c:	f7fe fa03 	bl	8001266 <wrcfgb>
 	delay_u(500);
  8002e60:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
  8002e64:	f7ff f972 	bl	800214c <delay_u>
 	rdcfg(IC_NUM, slave_cfg_rx);
  8002e68:	4906      	ldr	r1, [pc, #24]	; (8002e84 <cfg_slaves+0x40>)
- 8002e6a:	2001      	movs	r0, #1
+ 8002e6a:	2008      	movs	r0, #8
  8002e6c:	f7fe f962 	bl	8001134 <rdcfg>
 	rdcfgb(IC_NUM, slave_cfgb_rx);
  8002e70:	4905      	ldr	r1, [pc, #20]	; (8002e88 <cfg_slaves+0x44>)
- 8002e72:	2001      	movs	r0, #1
+ 8002e72:	2008      	movs	r0, #8
  8002e74:	f7fe fa99 	bl	80013aa <rdcfgb>
 }
  8002e78:	bf00      	nop
  8002e7a:	bd80      	pop	{r7, pc}
- 8002e7c:	20000314 	.word	0x20000314
- 8002e80:	2000031c 	.word	0x2000031c
- 8002e84:	20000324 	.word	0x20000324
- 8002e88:	2000032c 	.word	0x2000032c
+ 8002e7c:	20000560 	.word	0x20000560
+ 8002e80:	20000590 	.word	0x20000590
+ 8002e84:	200005c0 	.word	0x200005c0
+ 8002e88:	20000600 	.word	0x20000600
 
 08002e8c <increase_pec_counter>:
 
@@ -6223,7 +6223,7 @@ void increase_pec_counter(void)
  8002ec0:	f85d 7b04 	ldr.w	r7, [sp], #4
  8002ec4:	4770      	bx	lr
  8002ec6:	bf00      	nop
- 8002ec8:	20000334 	.word	0x20000334
+ 8002ec8:	20000640 	.word	0x20000640
 
 08002ecc <goto_safe_state>:
 
@@ -6270,7 +6270,7 @@ void goto_safe_state(uint8_t reason)
  8002f02:	3708      	adds	r7, #8
  8002f04:	46bd      	mov	sp, r7
  8002f06:	bd80      	pop	{r7, pc}
- 8002f08:	20000334 	.word	0x20000334
+ 8002f08:	20000640 	.word	0x20000640
 
 08002f0c <test_limp>:
 
@@ -7571,7 +7571,7 @@ LoopForever:
   ldr r2, =_sbss
  8003628:	200000a8 	.word	0x200000a8
   ldr r4, =_ebss
- 800362c:	2000040c 	.word	0x2000040c
+ 800362c:	20000718 	.word	0x20000718
 
 08003630 <ADC1_2_IRQHandler>:
  * @retval : None
@@ -7745,7 +7745,7 @@ __weak void HAL_IncTick(void)
  80036ec:	46bd      	mov	sp, r7
  80036ee:	f85d 7b04 	ldr.w	r7, [sp], #4
  80036f2:	4770      	bx	lr
- 80036f4:	20000408 	.word	0x20000408
+ 80036f4:	20000714 	.word	0x20000714
  80036f8:	20000040 	.word	0x20000040
 
 080036fc <HAL_GetTick>:
@@ -7766,7 +7766,7 @@ __weak uint32_t HAL_GetTick(void)
  8003708:	f85d 7b04 	ldr.w	r7, [sp], #4
  800370c:	4770      	bx	lr
  800370e:	bf00      	nop
- 8003710:	20000408 	.word	0x20000408
+ 8003710:	20000714 	.word	0x20000714
 
 08003714 <HAL_Delay>:
   *       implementations in user file.

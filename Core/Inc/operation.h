@@ -42,4 +42,5 @@ void open_PRE(void);
 int check_voltage_match(void);
 void increase_pec_counter(void);
 void read_IVT(status_data_t *status_data);
+int AMS_OK(status_data_t *status_data, limit_t *limit);
 #endif /* INC_OPERATION_H_ */
