@@ -90,14 +90,7 @@ void operation_main(void){
 		switch (status_data.mode){
 			case 0:
 				core_routine(RETEST_YES);
-
-				Send_cell_data(cell_data);
-
-				uint8_t data[8];
-				ReadCANBusMessage(0x521, data, sizeof(data));
-
-
-				HAL_Delay(500);
+			    HAL_Delay(1000);
 
 				break;
 			case 1:

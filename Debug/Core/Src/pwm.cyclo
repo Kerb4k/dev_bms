@@ -1,0 +1,2 @@
+pwm.c:20:6:pwm_init	1
+pwm.c:25:6:set_fan_duty_cycle	4
