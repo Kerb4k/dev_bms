@@ -15,6 +15,8 @@
 #define RETEST_YES	1
 #define RETEST_NO	0
 
+
+uint8_t start_ivt[] = {0x34, 0x01, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
 /*
 	Memory allocation for large data arrays and structs
 */
@@ -57,10 +59,8 @@ static uint8_t charger_event_counter;
 
 void operation_main(void){
 
-	//open_AIR();
-	//open_PRE();
-
-
+	open_AIR();
+	open_PRE();
 
 	CanSend(start_ivt, 0x411);
 
@@ -137,6 +137,24 @@ void operation_main(void){
 	\return status of test_limits function (0: OK, -1 FAIL).
 */
 
+void open_AIR(void){
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, RESET);
+}
+
+void close_AIR(void){
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, SET);
+}
+
+void close_PRE(void){
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, SET);
+
+}
+
+void open_PRE(void){
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, RESET);
+
+}
+
 int8_t core_routine(int32_t retest){
 	empty_disch_cfg();
 	read_cell_voltage();
@@ -147,13 +165,23 @@ int8_t core_routine(int32_t retest){
 	set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);
 #if IVT
 	calculate_soc(&status_data);
+	precharge_compare();
 #endif
+
+	test_limp(&status_data, &limits);
 
 
 	return test_limits(&status_data, &limits, retest);
 }
 void precharge_compare(void)
 {
+
+	//TODO read can for IVT_U1
+	//ReadCANBusMessage(messageIdentifier, RxData1, size)
+	//TODO read can for IVT_U2
+	//ReadCANBusMessage(messageIdentifier, RxData1, size)
+
+
 	//TODO recheck
 	float percentage;
 	float pre = status_data.IVT_U1_f;
@@ -274,9 +302,7 @@ uint8_t read_temp_measurement(void){
 
 }
 
-void increase_pec_counter(void){
-	status_data.pec_error_counter+=1;
-}
+
 void init_slave_cfg(void)
 {
 	for (uint8_t i = 0; i < IC_NUM; i++)
@@ -300,11 +326,71 @@ void cfg_slaves(void){
 	rdcfgb(IC_NUM, slave_cfgb_rx);
 }
 
-int8_t test_limits(status_data_t *status_data, limit_t *limit, int32_t retest){
+void increase_pec_counter(void)
+{
+	status_data.pec_error_counter++;
+	status_data.pec_error_average = (float)status_data.pec_error_counter / status_data.uptime;
+}
 
-	/*if(status_data->pec_error_counter = 5)
-		//goto_safe_state(PEC_ERROR);
+void goto_safe_state(uint8_t reason)
+{
+#if BMS_RELAY_CTRL_BYPASS
+	// Do nothing.
+#else
+#if SKIP_PEC_ERROR_ACTIONS
+	if (reason != PEC_ERROR)
+	{
+		open_AIR();
+		open_PRE();
+	}
+#else
+	open_AIR();
+	open_PRE();
+#endif
+#endif
 
+#if STOP_CORE_ON_SAFE_STATE
+	status_data.opmode &= ~(1 << 0);
+#endif
+
+#if START_DEBUG_ON_SAFE_STATE
+	status_data.opmode |= (1 << 3);
+#endif
+
+	status_data.safe_state_executed = true;
+	status_data.reason_code = reason;
+}
+
+int32_t test_limp(status_data_t *status_data, limit_t *limit)
+{
+#if TEST_UNDERVOLTAGE
+	if(status_data->min_voltage < limit->limp_min_voltage)
+	{
+		if(!(status_data->limp_counters[0]<=LIMP_COUNT_LIMIT))
+		{
+			status_data->limping = 1;
+			status_data->limp_counters[0]+=10; //we have this here so it takes a bit of time for bms to exit limp mode once it enters
+		}
+		else
+		{
+			status_data->limp_counters[0]++;
+		}
+	}
+	else if (status_data->limp_counters[0]>0)
+	{
+		status_data->limp_counters[0]--;
+		if(status_data->limp_counters[0]==0)
+		{
+			status_data->limping = 0;
+		}
+	}
+#endif
+}
+
+
+int8_t test_limits(status_data_t *status_data, limit_t *limit, int32_t retest)
+{
+		//MAYBE WE DON'T WANT 50% ERRORS TO BE ALLOWED
 #if TEST_OVERVOLTAGE
 	if (status_data->max_voltage > limit->max_voltage)
 	{
@@ -361,6 +447,125 @@ int8_t test_limits(status_data_t *status_data, limit_t *limit, int32_t retest){
 		status_data->error_counters[OVERTEMP]--;
 	}
 #endif
-*/
+
+#if TEST_OVERTEMPERATURE_CHARGING
+	if(status_data->opmode&(1<<2) && (status_data->max_temp > limit->max_charge_temp))
+	{
+		if(!(status_data->error_counters[OVERTEMP_CHARGING]<=ERROR_COUNT_LIMIT && retest))
+		{
+			goto_safe_state(OVERTEMP_CHARGING);
+			return -1;
+		}
+		else
+		{
+			status_data->error_counters[OVERTEMP_CHARGING]++;
+		}
+	}
+	else if (status_data->error_counters[OVERTEMP_CHARGING]>0)
+	{
+		status_data->error_counters[OVERTEMP_CHARGING]--;
+	}
+#endif
+
+#if TEST_UNDERTEMPERATURE
+	if (status_data->min_temp < limit->min_temp)
+	{
+		if(!(status_data->error_counters[UNDERTEMP]<=ERROR_COUNT_LIMIT && retest))
+		{
+			goto_safe_state(UNDERTEMP);
+			return -1;
+		}
+		else
+		{
+			status_data->error_counters[UNDERTEMP]++;
+		}
+	}
+	else if (status_data->error_counters[UNDERTEMP]>0)
+	{
+		status_data->error_counters[UNDERTEMP]--;
+	}
+#endif
+
+#if TEST_OVERPOWER
+	if (status_data->power > limit->power)
+	{
+		if(!(status_data->error_counters[OVERPOWER]<=ERROR_COUNT_LIMIT && retest))
+		{
+			goto_safe_state(OVERPOWER);
+			return -1;
+		}
+		else
+		{
+			status_data->error_counters[OVERPOWER]++;
+		}
+	}
+	else if (status_data->error_counters[OVERPOWER]>0)
+	{
+		status_data->error_counters[OVERPOWER]--;
+	}
+#endif
+
+#if TEST_OVERCURRENT
+if (status_data->IVT_I_f > limit->max_current)
+{
+	if(!(status_data->error_counters[OVERCURR]<=ERROR_COUNT_LIMIT && retest))
+	{
+		goto_safe_state(OVERCURR);
+		return -1;
+	}
+	else
+	{
+		status_data->error_counters[OVERCURR]++;
+	}
+}
+else if (status_data->error_counters[OVERCURR]>0)
+{
+	status_data->error_counters[OVERCURR]--;
+}
+#endif
+
+#if TEST_ACCU_UNDERVOLTAGE
+	if (status_data->IVT_U2_f < limit->accu_min_voltage)
+	{
+		if(!(status_data->error_counters[ACCU_UNDERVOLTAGE]<=ERROR_COUNT_LIMIT && retest))
+		{
+			goto_safe_state(ACCU_UNDERVOLTAGE);
+			return -1;
+		}
+		else
+		{
+			status_data->error_counters[ACCU_UNDERVOLTAGE]++;
+		}
+	}
+	else if (status_data->error_counters[ACCU_UNDERVOLTAGE]>0)
+	{
+		status_data->error_counters[ACCU_UNDERVOLTAGE]--;
+	}
+#endif
+
+#if IVT_TIMEOUT
+	if (status_data->recieved_IVT != 1 )
+	{
+		if(!(status_data->error_counters[IVT_LOST]<=ERROR_COUNT_LIMIT_LOST && retest))
+		{
+			goto_safe_state(IVT_LOST);
+			return -1;
+		}
+		else
+		{
+			status_data->error_counters[IVT_LOST]++;
+		}
+	}
+	else
+	{
+		status_data->recieved_IVT = 0;
+
+		if((status_data->error_counters[ACCU_UNDERVOLTAGE]>0))
+		{
+			status_data->error_counters[IVT_LOST]--;
+		}
+	}
+#endif
+
 	return 0;
 }

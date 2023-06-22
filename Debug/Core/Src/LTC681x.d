@@ -1,4 +1,4 @@
-Core/Src/LTC681X.o: ../Core/Src/LTC681X.c ../Core/Inc/LTC681X.h \
+Core/Src/LTC681x.o: ../Core/Src/LTC681x.c ../Core/Inc/LTC681x.h \
  ../Core/Inc/conf.h ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h \
  ../Core/Inc/stm32g4xx_hal_conf.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_rcc.h \
@@ -32,7 +32,7 @@ Core/Src/LTC681X.o: ../Core/Src/LTC681X.c ../Core/Inc/LTC681X.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart.h \
  ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal_uart_ex.h \
  ../Core/Inc/conf.h
-../Core/Inc/LTC681X.h:
+../Core/Inc/LTC681x.h:
 ../Core/Inc/conf.h:
 ../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h:
 ../Core/Inc/stm32g4xx_hal_conf.h:

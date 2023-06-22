@@ -110,3 +110,65 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 	}
 }
 
+//////////////////////////////////////////////////////////////////////
+static void payload_sort_old_to_new(uint32_t *payload, uint8_t *data)
+{
+	payload[0] = (data[0] << 0)|(data[1] << 8)|(data[2] << 16)|(data[3] << 24);
+	payload[1] = (data[4] << 0)|(data[5] << 8)|(data[6] << 16)|(data[7] << 24);
+}
+
+static void payload_sort_new_to_old(uint8_t * data, uint32_t *payload)
+{
+
+	data[0] = (payload[0] >> 0);
+	data[1] = (payload[0] >> 8);
+	data[2] = (payload[0] >> 16);
+	data[3] = (payload[0] >> 24);
+
+	data[4] = (payload[1] >> 0);
+	data[5] = (payload[1] >> 8);
+	data[6] = (payload[1] >> 16);
+	data[7] = (payload[1] >> 24);
+
+
+}
+
+/*int32_t cantx_voltage_limp_total(void)
+{
+    uint32_t ret;
+    uint8_t data[8];
+    uint32_t sum_of_cells = status_data.sum_of_cells;
+    uint8_t limping = status_data.limping;
+
+    data[0] = sum_of_cells >> 24;
+    data[1] = sum_of_cells >> 16;
+    data[2] = sum_of_cells >> 8;
+    data[3] = sum_of_cells;
+
+    data[4] = limping;
+    data[5] = 0;
+    data[6] = 0xAB;
+    data[7] = 0xCD;
+
+    uint32_t mailbox;
+
+
+    TxHeader.Identifier = CAN_ID_VOLT_TOTAL;
+    TxHeader. = 0;
+    TxHeader.RTR = CAN_RTR_DATA;
+    TxHeader.IDE = CAN_ID_STD;
+    TxHeader.DLC = 8;
+
+    ret = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, data, &mailbox);
+    if (ret != HAL_OK)
+    {
+        // Handle Error
+        return -1;
+    }
+    return 0;
+}*/
+
+
+
+
+

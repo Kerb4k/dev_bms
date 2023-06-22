@@ -29,10 +29,6 @@
 #define FREQUENCY 1
 
 
-uint8_t start_ivt[] = {0x34, 0x01, 0x1, 0x0, 0x0, 0x0, 0x0, 0x0};
-
-
-
 typedef struct cell_data_t
 {
 	uint16_t voltage;

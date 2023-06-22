@@ -6,7 +6,7 @@
  */
 
 
-#include "LTC681X.h"
+#include "LTC681x.h"
 #include <stdint.h>
 #include "conf.h"
 #include <stdlib.h>

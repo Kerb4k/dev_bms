@@ -1,4 +1,4 @@
-"./Core/Src/LTC681X.o"
+"./Core/Src/LTC681x.o"
 "./Core/Src/calculations.o"
 "./Core/Src/can.o"
 "./Core/Src/isoSpi.o"

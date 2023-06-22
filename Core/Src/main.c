@@ -21,7 +21,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-//#include "can.h"
+#include "can.h"
+#include "conf.h"
+#include "operation.h"
+#include "pwm.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,7 +43,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-FDCAN_HandleTypeDef hfdcan1;
+FDCAN_HandleTypeDef hfdcan;
 
 SPI_HandleTypeDef hspi1;
 
@@ -48,6 +51,9 @@ TIM_HandleTypeDef htim8;
 
 UART_HandleTypeDef huart2;
 
+FDCAN_TxHeaderTypeDef TxHeader;
+
+FDCAN_RxHeaderTypeDef RxHeader;
 /* USER CODE BEGIN PV */
 #define CANID_SYNC		0x80
 /* USER CODE END PV */
@@ -173,89 +179,83 @@ static void MX_FDCAN1_Init(void)
   /* USER CODE BEGIN FDCAN1_Init 1 */
 
   /* USER CODE END FDCAN1_Init 1 */
-  hfdcan1.Instance = FDCAN1;
-  hfdcan1.Init.ClockDivider = FDCAN_CLOCK_DIV1;
-  hfdcan1.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
-  hfdcan1.Init.Mode = FDCAN_MODE_NORMAL;
-  hfdcan1.Init.AutoRetransmission = ENABLE;
-  hfdcan1.Init.TransmitPause = DISABLE;
-  hfdcan1.Init.ProtocolException = DISABLE;
-  hfdcan1.Init.NominalPrescaler = 1;
-  hfdcan1.Init.NominalSyncJumpWidth = 1;
-  hfdcan1.Init.NominalTimeSeg1 = 13;
-  hfdcan1.Init.NominalTimeSeg2 = 2;
-  hfdcan1.Init.DataPrescaler = 1;
-  hfdcan1.Init.DataSyncJumpWidth = 1;
-  hfdcan1.Init.DataTimeSeg1 = 1;
-  hfdcan1.Init.DataTimeSeg2 = 1;
-  hfdcan1.Init.StdFiltersNbr = 28;
-  hfdcan1.Init.ExtFiltersNbr = 0;
-  hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
-  if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
+  hfdcan.Instance = FDCAN1;
+  hfdcan.Init.ClockDivider = FDCAN_CLOCK_DIV1;
+  hfdcan.Init.FrameFormat = FDCAN_FRAME_CLASSIC;
+  hfdcan.Init.Mode = FDCAN_MODE_NORMAL;
+  hfdcan.Init.AutoRetransmission = ENABLE;
+  hfdcan.Init.TransmitPause = DISABLE;
+  hfdcan.Init.ProtocolException = DISABLE;
+  hfdcan.Init.NominalPrescaler = 1;
+  hfdcan.Init.NominalSyncJumpWidth = 1;
+  hfdcan.Init.NominalTimeSeg1 = 13;
+  hfdcan.Init.NominalTimeSeg2 = 2;
+  hfdcan.Init.DataPrescaler = 1;
+  hfdcan.Init.DataSyncJumpWidth = 1;
+  hfdcan.Init.DataTimeSeg1 = 1;
+  hfdcan.Init.DataTimeSeg2 = 1;
+  hfdcan.Init.StdFiltersNbr = 28;
+  hfdcan.Init.ExtFiltersNbr = 0;
+  hfdcan.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
+  if (HAL_FDCAN_Init(&hfdcan) != HAL_OK)
   {
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
   FDCAN_FilterTypeDef	sFilterConfig;
 
-  if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan, FDCAN_RX_FIFO0, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
-  	if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan, FDCAN_RX_FIFO1, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
+  // Clearing filters
+  for (uint8_t i = 0; i < 28; ++i) {
+    sFilterConfig.IdType = FDCAN_STANDARD_ID;
+    sFilterConfig.FilterIndex = i;
+    sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+    sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+    sFilterConfig.FilterID1 = 0x0;
+    sFilterConfig.FilterID2 = 0x0;
+    HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig);
+  }
 
-  	//only accept config/request can messages and sync can messages
-  	sFilterConfig.IdType = FDCAN_STANDARD_ID;
-  	sFilterConfig.FilterIndex = 0;
-  	sFilterConfig.FilterType = FDCAN_FILTER_MASK;
-  	sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-  	sFilterConfig.FilterID1 = CANID_CONFIG;
-  	sFilterConfig.FilterID2 = 0x7FF;
-  	if (HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
+  uint16_t can_ids[] = {0x521, 0x522, 0x523, 0x528};
+  for (uint8_t i = 0; i < 4; ++i) {
+    sFilterConfig.IdType = FDCAN_STANDARD_ID;
+    sFilterConfig.FilterIndex = i;
+    sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+    sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+    sFilterConfig.FilterID1 = can_ids[i];
+    sFilterConfig.FilterID2 = 0x7FF;
+    if (HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig) != HAL_OK)
+    {
+      Error_Handler();
+    }
+  }
 
-  	sFilterConfig.IdType = FDCAN_STANDARD_ID;
-  	sFilterConfig.FilterIndex = 1;
-  	sFilterConfig.FilterType = FDCAN_FILTER_MASK;
-  	sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-  	sFilterConfig.FilterID1 = 0x521;
-  	sFilterConfig.FilterID2 = 0x7FF;
-  	if (HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
+  if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
-  	if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
+  if(HAL_FDCAN_Start(&hfdcan) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if(HAL_FDCAN_ActivateNotification(&hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
-  	if(HAL_FDCAN_Start(&hfdcan) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
-  	if(HAL_FDCAN_ActivateNotification(&hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
-
-  	TxHeader.Identifier = 0x123; // Modify this with your identifier
-  		TxHeader.IdType = FDCAN_STANDARD_ID;
-  		TxHeader.TxFrameType = FDCAN_DATA_FRAME;
-  		TxHeader.DataLength = FDCAN_DLC_BYTES_8;
-  		TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-  		TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
-  		TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
-  		TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-  		TxHeader.MessageMarker = 0;
+  TxHeader.Identifier = 0x123; // Modify this with your identifier
+  TxHeader.IdType = FDCAN_STANDARD_ID;
+  TxHeader.TxFrameType = FDCAN_DATA_FRAME;
+  TxHeader.DataLength = FDCAN_DLC_BYTES_8;
+  TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+  TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
+  TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
+  TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+  TxHeader.MessageMarker = 0;
   /* USER CODE END FDCAN1_Init 2 */
 
 }
+
 
 /**
   * @brief SPI1 Initialization Function
