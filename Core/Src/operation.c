@@ -84,13 +84,14 @@ void operation_main(void){
 		status_data.opmode = (1 << 0)|(1 << 4);
 
 		status_data.mode = 0;
+
 	while(1){
 
 
 		switch (status_data.mode){
 			case 0:
 				core_routine(RETEST_YES);
-			    HAL_Delay(1000);
+			    HAL_Delay(900);
 
 				break;
 			case 1:
@@ -155,8 +156,10 @@ int8_t core_routine(int32_t retest){
 	get_minmax_voltage(IC_NUM, cell_data, &status_data);
 	get_minmax_temperature(IC_NUM, temp_data, &status_data);
 	calculate_power(&status_data);
-	set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);
+	//set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);
+
 #if IVT
+	read_IVT(&status_data);
 	calculate_soc(&status_data);
 	precharge_compare();
 #endif
@@ -166,16 +169,40 @@ int8_t core_routine(int32_t retest){
 
 	return test_limits(&status_data, &limits, retest);
 }
+
+void read_IVT(status_data_t *status_data){
+
+	uint8_t RxData1[8];
+	while(ReadCANBusMessage(0x522, &RxData1)){
+		delay_u(20000);
+	}
+
+	//delay_u(500);
+
+	status_data->IVT_U1 = (uint32_t)(RxData1[5] | (RxData1[4] << 8) | (RxData1[3] << 16) | (RxData1[2] << 24) );
+	status_data->IVT_U1_f = status_data->IVT_U1 / 1000.0f;
+	uint8_t RxData2[8];
+	while(ReadCANBusMessage(0x523, &RxData2)){
+		delay_u(20000);
+	}
+	//delay_u(500);
+	status_data->IVT_U2 = (uint32_t)(RxData2[5] | (RxData2[4] << 8) | (RxData2[3] << 16) | (RxData2[2] << 24) );
+	status_data->IVT_U2_f = status_data->IVT_U2 / 1000.0f;
+	uint8_t RxData3[8];
+	while(ReadCANBusMessage(0x528, &RxData3)){
+		delay_u(20000);
+	}
+	//delay_u(500);
+	status_data->IVT_Wh = (uint32_t)(RxData3[5] | (RxData3[4] << 8) | (RxData3[3] << 16) | (RxData3[2] << 24) );
+	status_data->IVT_Wh_f = status_data->IVT_Wh / 1000.0f;
+
+}
+
 void precharge_compare(void)
 {
 
-	//TODO read can for IVT_U1
-	//ReadCANBusMessage(messageIdentifier, RxData1, size)
-	//TODO read can for IVT_U2
-	//ReadCANBusMessage(messageIdentifier, RxData1, size)
 
 
-	//TODO recheck
 	float percentage;
 	float pre = status_data.IVT_U1_f;
 	float air_p = status_data.IVT_U2_f;
@@ -263,7 +290,7 @@ uint8_t read_cell_voltage(void){
 		}
 		else increase_pec_counter();
 	}
-	//goto_safe_state(PEC_ERROR);
+	goto_safe_state(PEC_ERROR);
 	return -1;
 
 }
@@ -290,7 +317,7 @@ uint8_t read_temp_measurement(void){
 				increase_pec_counter();
 			}
 		}
-		//goto_safe_state(PEC_ERROR);
+		goto_safe_state(PEC_ERROR);
 		return -1;
 
 }

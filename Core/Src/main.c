@@ -201,60 +201,70 @@ static void MX_FDCAN1_Init(void)
   {
     Error_Handler();
   }
+
   /* USER CODE BEGIN FDCAN1_Init 2 */
   FDCAN_FilterTypeDef	sFilterConfig;
 
-  // Clearing filters
-  for (uint8_t i = 0; i < 28; ++i) {
-    sFilterConfig.IdType = FDCAN_STANDARD_ID;
-    sFilterConfig.FilterIndex = i;
-    sFilterConfig.FilterType = FDCAN_FILTER_MASK;
-    sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-    sFilterConfig.FilterID1 = 0x0;
-    sFilterConfig.FilterID2 = 0x0;
-    HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig);
-  }
+  if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan, FDCAN_RX_FIFO0, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
+  	{
+  		Error_Handler();
+  	}
+  	if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan, FDCAN_RX_FIFO1, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
+  	{
+  		Error_Handler();
+  	}
 
-  uint16_t can_ids[] = {0x521, 0x522, 0x523, 0x528};
-  for (uint8_t i = 0; i < 4; ++i) {
+    //only accept config/request can messages and sync can messages
+  	sFilterConfig.IdType = FDCAN_STANDARD_ID;
+  	sFilterConfig.FilterIndex = 0;
+  	sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+  	sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  	sFilterConfig.FilterID1 = CANID_CONFIG;
+  	sFilterConfig.FilterID2 = 0x7FF;
+  	if (HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig) != HAL_OK)
+  	{
+  		Error_Handler();
+  	}
+
+    // Additional filter configuration for 0x52x messages
     sFilterConfig.IdType = FDCAN_STANDARD_ID;
-    sFilterConfig.FilterIndex = i;
+    sFilterConfig.FilterIndex = 1;
     sFilterConfig.FilterType = FDCAN_FILTER_MASK;
     sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-    sFilterConfig.FilterID1 = can_ids[i];
-    sFilterConfig.FilterID2 = 0x7FF;
+    sFilterConfig.FilterID1 = 0x520;   // Start of the range
+    sFilterConfig.FilterID2 = 0x700;   // Mask for the filter. This will allow IDs 0x520 - 0x52F
     if (HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig) != HAL_OK)
     {
-      Error_Handler();
+        Error_Handler();
     }
-  }
 
-  if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  	if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
+  	{
+  		Error_Handler();
+  	}
 
-  if(HAL_FDCAN_Start(&hfdcan) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if(HAL_FDCAN_ActivateNotification(&hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  	if(HAL_FDCAN_Start(&hfdcan) != HAL_OK)
+  	{
+  		Error_Handler();
+  	}
+  	if(HAL_FDCAN_ActivateNotification(&hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
+  	{
+  		Error_Handler();
+  	}
 
-  TxHeader.Identifier = 0x123; // Modify this with your identifier
-  TxHeader.IdType = FDCAN_STANDARD_ID;
-  TxHeader.TxFrameType = FDCAN_DATA_FRAME;
-  TxHeader.DataLength = FDCAN_DLC_BYTES_8;
-  TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-  TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
-  TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
-  TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-  TxHeader.MessageMarker = 0;
+  	TxHeader.Identifier = 0x123; // Modify this with your identifier
+  	TxHeader.IdType = FDCAN_STANDARD_ID;
+  	TxHeader.TxFrameType = FDCAN_DATA_FRAME;
+  	TxHeader.DataLength = FDCAN_DLC_BYTES_8;
+  	TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+  	TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
+  	TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
+  	TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+  	TxHeader.MessageMarker = 0;
   /* USER CODE END FDCAN1_Init 2 */
 
 }
+
 
 
 /**

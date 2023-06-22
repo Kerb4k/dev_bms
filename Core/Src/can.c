@@ -60,7 +60,7 @@ void CanSend(uint8_t *TxData, uint8_t identifier ){
 
 }
 
-int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1, size_t size)
+int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1)
 {
 
     /* Check if a new message is available in RX FIFO 0 */
@@ -76,7 +76,7 @@ int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1, size_t size)
     {
         return 0; // Message successfully read and validated
     }
-    return -1; // Message Identifier did not match
+    return 1; // Message Identifier did not match
 }
 
 

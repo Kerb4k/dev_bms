@@ -54,7 +54,7 @@ typedef struct {
 } can_mb_conf_t;
 
 
-int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1, size_t size);
+int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1);
 
 uint8_t CheckCanError( void );
 

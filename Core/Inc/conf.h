@@ -19,7 +19,7 @@
 #define CS_PIN_TYPE GPIOA
 
 #define CELL_NUM 18	// Number of cells in one stack
-#define IC_NUM 7 // Length of a daisy chain
+#define IC_NUM 1 // Length of a daisy chain
 #define GPIO_NUM 12 //GPIO + Vref
 
 #define SPI_TIMEOUT 15000
@@ -118,6 +118,8 @@ typedef struct status_data_t
 	float IVT_U1_f;
 	int32_t IVT_U2;
 	float IVT_U2_f;
+	int32_t IVT_Wh;
+	float IVT_Wh_f;
 	bool precharge_flag;
 	float pre_percentage;
 	int32_t IVT_I;
