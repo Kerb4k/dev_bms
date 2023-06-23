@@ -1,7 +1,7 @@
 ../Core/Src/calculations.c:13:6:get_current	24	static
 ../Core/Src/calculations.c:25:6:calc_sum_of_cells	32	static
 ../Core/Src/calculations.c:40:6:calculate_power	32	static
-../Core/Src/calculations.c:49:6:calculate_soc	24	static
+../Core/Src/calculations.c:49:6:calculate_soc	16	static
 ../Core/Src/calculations.c:64:6:get_minmax_temperature	40	static
 ../Core/Src/calculations.c:107:6:get_minmax_voltage	32	static
 ../Core/Src/calculations.c:141:9:get_duty_cycle	24	static
