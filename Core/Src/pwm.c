@@ -22,6 +22,14 @@ void pwm_init(void){
 	HAL_TIMEx_PWMN_Start(&htim8, TIM_CHANNEL_3);
 }
 
+
+void fan_control(status_data_t *status_data){
+	if(status_data->max_temp > 40)
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, SET);
+	else
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, RESET);
+}
+
 void set_fan_duty_cycle(uint8_t dc, int manual_mode_bit){
 	if (dc >= 100) {
 			dc = 100;

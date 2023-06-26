@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0069)https://files.brusa.biz/drive/02_Energy/Chargers/NLG5/NLG5_BRUSA.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+ 
+ 
+ <title>NLG5_BRUSA</title>
+ 
+
+<style type="text/css">
+<!--
+
+table{
+	color: #000000; 
+	cellspacing: 0px;
+	border-width: 0.1mm; 
+	border-color: rgb(0,0,0);
+	border-style:solid;
+	//~ border-collapse:collapse;
+	border-spacing: 0;
+	font-size: 10pt;
+}
+
+td, th { 
+	border-width: 0.1mm; 
+	border-color: rgb(0,0,0);
+	border-style: solid;
+	padding : 1px 5px;
+	vertical-align:top;
+
+}
+
+tr {
+	page-break-inside: avoid;
+}
+
+thead {
+	display:table-header-group;
+}
+
+tbody {
+	display:table-row-group;
+}
+
+h2 {
+	padding-top: 30px;
+}
+
+.numbertable{
+	text-align: center;
+}
+
+.msg {
+	background-color: #ccffff;
+}
+
+.bit {
+	background-color: #ffff99;
+}
+
+.sig {
+	background-color: #ccffcc;
+}
+
+.span {
+	background-color: #ffcccc;
+	height: 10px;
+}
+
+-->
+</style>
+</head>
+<body>
+<h1>CAN Matrix - NLG5_BRUSA</h1>
+
+<table>
+<thead>
+<tr class="msg">
+<th>Msg</th><th>Message Name</th><th>Node Name</th><th>ID</th><th>DLC</th><th>Cycle Time </th><th>Message Loss Time</th><th>-----</th><th>-----</th><th>-----</th><th>-----</th><th>-----</th><th>-----</th><th>Comment</th>
+</tr>
+<tr class="sig">
+<th>Sig</th><th>Signal Name</th><th>Used in Message</th><th>Bit Pos</th><th>Bit Size</th><th>min. Value</th><th>max. Value</th><th>Factor</th><th>Offset</th><th>Unit</th><th>Type</th><th>Inactive Value</th><th>Byteorder</th><th>Comment</th>
+</tr>
+<tr class="bit">
+<th>Bit</th><th>Signal Name</th><th>Used in Message</th><th>Bit Pos</th><th>Bit Size</th><th colspan="6">Value Descripion</th><th>Inactive Value</th><th>Byteorder</th><th>Comment</th>
+</tr>
+<tr class="span">
+<td colspan="14"></td></tr>
+</thead>
+<tbody>
+<tr class="msg">
+<td>Msg</td><td>NLG5_CTL</td><td>Control</td><td>0x618</td><td>7</td><td>0 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_C_C_EN</td><td>NLG5_CTL</td><td>0</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Must be ON to enable power stage of the charger</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_C_C_EL</td><td>NLG5_CTL</td><td>1</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>cycle this value 0-1-0 to clear all latched charger errors </td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_C_CP_V</td><td>NLG5_CTL</td><td>2</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>special signal to tell a charging station equipped with the Control Pilot interface (SAE J1772) to switch on the facility's ventilation (in order to get rid of battery gases like hydrogen, e.g.)</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_C_MR</td><td>NLG5_CTL</td><td>3</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Enables CP-State C to request mains voltage</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_MC_MAX</td><td>NLG5_CTL</td><td>8</td><td>16</td><td>0A</td><td>50A</td><td>0.1A/bit</td><td>0A</td><td>A</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Maximum current to be drawn from the mains outlet, usually 16A. Must always contain a valid value in order to keep on charging.</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_OV_COM</td><td>NLG5_CTL</td><td>24</td><td>16</td><td>0V</td><td>1000V</td><td>0.1V/bit</td><td>0V</td><td>V</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Desired voltage to be output to the battery. Must always contain a valid value in order to keep on charging.</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_OC_COM</td><td>NLG5_CTL</td><td>40</td><td>16</td><td>0A</td><td>150A</td><td>0.1A/bit</td><td>0A</td><td>A</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Desired battery current. Must always contain a valid value in order to keep on charging.</td>
+</tr>
+<tr class="msg">
+<td>Msg</td><td>NLG5_DIAG_RX</td><td>Control</td><td>0x718</td><td>8</td><td>0 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>LAD_D_ParamRq</td><td>NLG5_DIAG_RX</td><td>0</td><td>64</td><td>0</td><td>0</td><td>1/bit</td><td>0</td><td></td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Diag requested data from host</td>
+</tr>
+<tr class="msg">
+<td>Msg</td><td>NLG5_ST</td><td>NLG5</td><td>0x610</td><td>4</td><td>0 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_HE</td><td>NLG5_ST</td><td>0</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Indicates if hardware enabled, i.e. a hi or lo signal is fed to the 'Power On' pin (pin3 of control connector)</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_ERR</td><td>NLG5_ST</td><td>1</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>An error has been detected, red LED is ON, no power is output</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_WAR</td><td>NLG5_ST</td><td>2</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Warning condition on, i.e. charging power limited due to any limiting condition; red LED is blinking</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_FAN</td><td>NLG5_ST</td><td>3</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Charger cooling fan is active</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_EUM</td><td>NLG5_ST</td><td>4</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>European mains input detected (230V, 50Hz)</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_UM_I</td><td>NLG5_ST</td><td>5</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>US mains level 1 (120VAC / 60Hz) detected</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_UM_II</td><td>NLG5_ST</td><td>6</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>US mains level 2 (240VAC / 60Hz) detected</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_CP_DT</td><td>NLG5_ST</td><td>7</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Control pilot signal (SAE J1772) detected </td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_BPD_I</td><td>NLG5_ST</td><td>8</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Bypass detection bit 1; 00: no bypass, 01: DC bypass detected, 10:AC bypass in phase, 11: AC bypass not in phase</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_BPD_II</td><td>NLG5_ST</td><td>9</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Bypass detection bit 2; 00: no bypass, 01: DC bypass detected, 10:AC bypass in phase, 11: AC bypass not in phase</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_OV</td><td>NLG5_ST</td><td>10</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by battery output voltage limit</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_OC</td><td>NLG5_ST</td><td>11</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by battery output current limit</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_MC</td><td>NLG5_ST</td><td>12</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by mains current limit</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_PI</td><td>NLG5_ST</td><td>13</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by analog input 'power indicator' (PI) limit</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_CP</td><td>NLG5_ST</td><td>14</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by control pilot signal (SAE J1772)</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_PMAX</td><td>NLG5_ST</td><td>15</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by maximum power capability of NLG5</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_MC_MAX</td><td>NLG5_ST</td><td>16</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by maximum mains current capability of NLG5</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_OC_MAX</td><td>NLG5_ST</td><td>17</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by maximum output current capability of NLG5</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_MO_MAX</td><td>NLG5_ST</td><td>18</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by maximum output voltage capability of NLG5</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_T_CPRIM</td><td>NLG5_ST</td><td>19</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by temperature of primary capacitors</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_T_POW</td><td>NLG5_ST</td><td>20</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by temperature of power stage</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_T_DIO</td><td>NLG5_ST</td><td>21</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by temperature of diodes</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_T_TR</td><td>NLG5_ST</td><td>22</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by temperature of transformer</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_L_T_BATT</td><td>NLG5_ST</td><td>23</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by battery temperature</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_S_AAC</td><td>NLG5_ST</td><td>31</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>AUX 12 V Automatic Charging Active</td>
+</tr>
+<tr class="msg">
+<td>Msg</td><td>NLG5_ACT_I</td><td>NLG5</td><td>0x611</td><td>8</td><td>0 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_MC_ACT</td><td>NLG5_ACT_I</td><td>0</td><td>16</td><td>0A</td><td>50A</td><td>0.01A/bit</td><td>0A</td><td>A</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Actual mains current</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_MV_ACT</td><td>NLG5_ACT_I</td><td>16</td><td>16</td><td>0V</td><td>500V</td><td>0.1V/bit</td><td>0V</td><td>V</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Actual mains voltage</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_OV_ACT</td><td>NLG5_ACT_I</td><td>32</td><td>16</td><td>0V</td><td>1000V</td><td>0.1V/bit</td><td>0V</td><td>V</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Actual battery output voltage</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_OC_ACT</td><td>NLG5_ACT_I</td><td>48</td><td>16</td><td>0A</td><td>150A</td><td>0.01A/bit</td><td>0A</td><td>A</td><td>Signed</td><td>0</td><td>Motorola</td><td>output current to the battery</td>
+</tr>
+<tr class="msg">
+<td>Msg</td><td>NLG5_ACT_II</td><td>NLG5</td><td>0x612</td><td>8</td><td>0 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_S_MC_M_CP</td><td>NLG5_ACT_II</td><td>0</td><td>16</td><td>0A</td><td>100A</td><td>0.1A/bit</td><td>0A</td><td>A</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Value of mains current limit, commanded by the control pilot (SAE J1772) signal</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_S_MC_M_PI</td><td>NLG5_ACT_II</td><td>16</td><td>8</td><td>0A</td><td>20A</td><td>0.1A/bit</td><td>0A</td><td>A</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Value of mains current limit, commanded by the 'power indicator' (PI) analog input signal</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_ABV</td><td>NLG5_ACT_II</td><td>24</td><td>8</td><td>0V</td><td>25V</td><td>0.1V/bit</td><td>0V</td><td>V</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Aux battery voltage</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_AHC_EXT</td><td>NLG5_ACT_II</td><td>32</td><td>16</td><td>-327.68Ah</td><td>327.67Ah</td><td>0.01Ah/bit</td><td>0Ah</td><td>Ah</td><td>Signed</td><td>0</td><td>Motorola</td><td>Charge balance obtained via<br>Ext. Ah counter connected to DI1 / DI2</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_OC_BO</td><td>NLG5_ACT_II</td><td>48</td><td>16</td><td>0A</td><td>50A</td><td>0.01A/bit</td><td>0A</td><td>A</td><td>Unsigned</td><td>0</td><td>Motorola</td><td>output current of the booster (if one is present and active)</td>
+</tr>
+<tr class="msg">
+<td>Msg</td><td>NLG5_TEMP</td><td>NLG5</td><td>0x613</td><td>8</td><td>0 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_P_TMP</td><td>NLG5_TEMP</td><td>0</td><td>16</td><td>-40°C</td><td>300°C</td><td>0.1°C/bit</td><td>0°C</td><td>°C</td><td>Signed</td><td>0</td><td>Motorola</td><td>Power stage temperature</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_TMP_EXT1</td><td>NLG5_TEMP</td><td>16</td><td>16</td><td>-40°C</td><td>300°C</td><td>0.1°C/bit</td><td>0°C</td><td>°C</td><td>Signed</td><td>0</td><td>Motorola</td><td>Value of external battery temperature sensor #1 (if connected and enabled)</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_TEMP_EXT2</td><td>NLG5_TEMP</td><td>32</td><td>16</td><td>-40°C</td><td>300°C</td><td>0.1°C/bit</td><td>0°C</td><td>°C</td><td>Signed</td><td>0</td><td>Motorola</td><td>Value of external battery temperature sensor #2 (if connected and enabled)</td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>NLG5_TMP_EXT3</td><td>NLG5_TEMP</td><td>48</td><td>16</td><td>-40°C</td><td>300°C</td><td>0.1°C/bit</td><td>0°C</td><td>°C</td><td>Signed</td><td>0</td><td>Motorola</td><td>Value of external battery temperature sensor #3 (if connected and enabled)</td>
+</tr>
+<tr class="msg">
+<td>Msg</td><td>NLG5_ERR</td><td>NLG5</td><td>0x614</td><td>5</td><td>0 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_OOV</td><td>NLG5_ERR</td><td>0</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>battery output overvoltage; error can only be cleared by cycling power ON-OFF-ON<br> </td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_MOV_II</td><td>NLG5_ERR</td><td>1</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Mains overvoltage 2 detected</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_MOV_I</td><td>NLG5_ERR</td><td>2</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Mains overvoltage 1 detected</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_SC</td><td>NLG5_ERR</td><td>3</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>power stage short circuit condition detected; error can only be cleared by cycling power ON-OFF-ON</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_P_OM</td><td>NLG5_ERR</td><td>4</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>plausibility battery output voltage measurement wrong</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_P_MV</td><td>NLG5_ERR</td><td>5</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>plausibility mains voltage measurement wrong</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_OF</td><td>NLG5_ERR</td><td>6</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>output fuse defective</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_MF</td><td>NLG5_ERR</td><td>7</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Mains fuse defective</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_B_P</td><td>NLG5_ERR</td><td>8</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>wrong battery polarity;<br>error can only be cleared by cycling power ON-OFF-ON</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_T_C</td><td>NLG5_ERR</td><td>9</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Temperature sensor for prim capacitor defective</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_T_POW</td><td>NLG5_ERR</td><td>10</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Temperature sensor for prim power stage defective</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_T_DIO</td><td>NLG5_ERR</td><td>11</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Temperature sensor for diodes defective</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_T_TR</td><td>NLG5_ERR</td><td>12</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Temperature sensor for transformer defective</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_T_EXT1</td><td>NLG5_ERR</td><td>13</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Ext. temperature sensor 1 defective (if enabled)</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_T_EXT2</td><td>NLG5_ERR</td><td>14</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Ext. temperature sensor 2 defective (if enabled)</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_T_EXT3</td><td>NLG5_ERR</td><td>15</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Ext. temperature sensor 3 defective (if enabled)</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_F_CRC</td><td>NLG5_ERR</td><td>16</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Flash memory checksum failure</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_NV_CRC</td><td>NLG5_ERR</td><td>17</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>NVSRAM check sum failure; contains most of the scaling &amp; calibration values, CAN ID's and<br>charging profile etc.</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_ES_CRC</td><td>NLG5_ERR</td><td>18</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Sys EEPROM checksum failure</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_EP_CRC</td><td>NLG5_ERR</td><td>19</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Pow EEPROM checksum failure</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_WDT</td><td>NLG5_ERR</td><td>20</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Internal Watchdog Timeout</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_INIT</td><td>NLG5_ERR</td><td>21</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Initialization error</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_C_TO</td><td>NLG5_ERR</td><td>22</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>CAN timeout, no control message received for &gt;300ms</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_C_OFF</td><td>NLG5_ERR</td><td>23</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>CAN off, transmit buffer &gt;255</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_C_TX</td><td>NLG5_ERR</td><td>24</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>CAN transmit buffer &gt;127</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_C_RX</td><td>NLG5_ERR</td><td>25</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>CAN receiver buffer &gt;127</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_SDT_BT</td><td>NLG5_ERR</td><td>26</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Emergency Shutdown Threshold 'Battery Temperature' is exceeded; see ChargeStar help section 'protective features';<br>error can only be cleared by cycling power ON-OFF-ON</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_SDT_BV</td><td>NLG5_ERR</td><td>27</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Emergency Shutdown Threshold 'Battery Voltage' is exceeded; see ChargeStar help section 'protective features';<br>error can only be cleared by cycling power ON-OFF-ON</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_SDT_AH</td><td>NLG5_ERR</td><td>28</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Emergency Shutdown Threshold 'Amp Hours' is exceeded; see ChargeStar help section 'protective features';<br>error can only be cleared by cycling power ON-OFF-ON</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_E_SDT_CT</td><td>NLG5_ERR</td><td>29</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Emergency Shutdown Threshold 'Charging Time' is exceeded; see ChargeStar help section 'protective features';<br>error can only be cleared by cycling power ON-OFF-ON</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_W_PL_MV</td><td>NLG5_ERR</td><td>32</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by low mains voltage</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_W_PL_BV</td><td>NLG5_ERR</td><td>33</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by low battery voltage</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_W_PL_IT</td><td>NLG5_ERR</td><td>34</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Output power limited by charger internal overtemperature</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_W_C_VOR</td><td>NLG5_ERR</td><td>35</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Commanded value is out of specified range; max or min applicable value is assumed instead</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_W_CM_NA</td><td>NLG5_ERR</td><td>36</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>NLG5 Control message not active</td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_W_OD</td><td>NLG5_ERR</td><td>38</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>LED Output driver defective, LEDs can´t be controlled by NLG5 anymore. Charging is still possible.<br></td>
+</tr>
+<tr class="bit">
+<td>Bit</td><td>NLG5_W_SC_M</td><td>NLG5_ERR</td><td>39</td><td>1</td><td colspan="6"></td><td>0</td><td>Motorola</td><td>Save-Charging-Mode reduces primary current to 3.95 A as long as one of the four internal temperature sensors indicates -18° C or less.<br></td>
+</tr>
+<tr class="msg">
+<td>Msg</td><td>NLG5_DIAG_TX</td><td>NLG5</td><td>0x71A</td><td>8</td><td>0 </td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr class="sig">
+<td>Sig</td><td>LAD_D_ParamRp</td><td>NLG5_DIAG_TX</td><td>0</td><td>64</td><td>0</td><td>0</td><td>1/bit</td><td>0</td><td></td><td>Unsigned</td><td>0</td><td>Motorola</td><td>Diag responded data to host</td>
+</tr>
+</tbody>
+</table>
+<h2 style="page-break-before:always"> Some CAN Bus information</h2>
+<p>All Messages are listed as transmit messages. The column 'node name' describes the
+sender of the message.</p>
+<p>The bus Speed is 500k.</p>
+<h2>Bit and Byte positions for MOTOROLA formated fields</h2>
+<p>
+The table below shows the bit numbering for motorola formated bit fields. Each row represents
+one byte (from Byte 0 to Byte 7) The Byte index is on the right side.<br>
+The green signal would be markes with startbit=12 and a bit size of 12. The most significant bit
+is on bit 12 and the least significant bit on bit position 23.
+</p>
+<table class="numbertable"><tbody><tr>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th></th>
+</tr><tr>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>5</td>
+<td>6</td>
+<td>7</td>
+<th>0</th>
+</tr><tr>
+<td>8</td>
+<td>9</td>
+<td>10</td>
+<td>11</td>
+<td class="sig">12</td>
+<td class="sig">13</td>
+<td class="sig">14</td>
+<td class="sig">15</td>
+<th>1</th>
+</tr><tr>
+<td class="sig">16</td>
+<td class="sig">17</td>
+<td class="sig">18</td>
+<td class="sig">19</td>
+<td class="sig">20</td>
+<td class="sig">21</td>
+<td class="sig">22</td>
+<td class="sig">23</td>
+<th>2</th>
+</tr><tr>
+<td>24</td>
+<td>25</td>
+<td>26</td>
+<td>27</td>
+<td>28</td>
+<td>29</td>
+<td>30</td>
+<td>31</td>
+<th>3</th>
+</tr><tr>
+<td>32</td>
+<td>33</td>
+<td>34</td>
+<td>35</td>
+<td>36</td>
+<td>37</td>
+<td>38</td>
+<td>39</td>
+<th>4</th>
+</tr><tr>
+<td>40</td>
+<td>41</td>
+<td>42</td>
+<td>43</td>
+<td>44</td>
+<td>45</td>
+<td>46</td>
+<td>47</td>
+<th>5</th>
+</tr><tr>
+<td>48</td>
+<td>49</td>
+<td>50</td>
+<td>51</td>
+<td>52</td>
+<td>53</td>
+<td>54</td>
+<td>55</td>
+<th>6</th>
+</tr><tr>
+<td>56</td>
+<td>57</td>
+<td>58</td>
+<td>59</td>
+<td>60</td>
+<td>61</td>
+<td>62</td>
+<td>63</td>
+<th>7</th>
+</tr></tbody></table>
+
+
+</body></html>

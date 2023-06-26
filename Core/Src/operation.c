@@ -172,7 +172,7 @@ int8_t core_routine(int32_t retest){
 	get_minmax_temperature(IC_NUM, temp_data, &status_data);
 	calc_sum_of_cells(IC_NUM, cell_data, &status_data);
 	AMS_OK(&status_data, &limits);
-
+	fan_control(&status_data);
 #if CAN_ENABLED
 	Send_cell_data(cell_data);
 
