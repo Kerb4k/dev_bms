@@ -110,6 +110,19 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 	}
 }
 
+
+void Send_Soc(status_data_t *status_data){
+	uint8_t TxData[8];
+	TxData[0] = (uint8_t)status_data->soc;
+	TxData[1] = 0;
+	TxData[2] = 0;
+	TxData[3] = 0;
+	TxData[4] = 0;
+	TxData[5] = 0;
+	TxData[6] = 0;
+	TxData[7] = 0;
+	CanSend(TxData, CAN_SOC);
+}
 //////////////////////////////////////////////////////////////////////
 static void payload_sort_old_to_new(uint32_t *payload, uint8_t *data)
 {

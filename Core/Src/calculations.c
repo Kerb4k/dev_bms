@@ -50,7 +50,7 @@ void calculate_soc(status_data_t *status_data){
 
 	//float consumed = status_data->IVT_I * FREQUENCY/3600;
 
-	status_data->soc = status_data->IVT_Wh / ACCU_Wh;
+	status_data->soc = 100 - (status_data->IVT_Wh / ACCU_Wh)*100;
 
 }
 /*!

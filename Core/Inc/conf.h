@@ -135,7 +135,19 @@ typedef struct status_data_t
 }status_data_t;
 
 //////////////////////////////////////////////////////////////////////
+/*CAN bus IDs
+ *
+ */
 
+#define CAN_IVT_I 0x521
+#define CAN_IVT_U1 0x522
+#define CAN_IVT_U2 0x523
+#define CAN_IVT_Wh 0x528
+#define CAN_LIMP 0x96
+#define CAN_SOC 0x97
+
+
+/////////////////////////////////////////////////////////////////////
 /*!
 	debug functionality enable/disable
  */

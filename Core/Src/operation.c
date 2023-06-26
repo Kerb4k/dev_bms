@@ -91,6 +91,7 @@ void operation_main(void){
 		switch (status_data.mode){
 			case 0:
 				core_routine(RETEST_YES);
+
 			    HAL_Delay(900);
 
 				break;
@@ -160,6 +161,9 @@ int AMS_OK(status_data_t *status_data, limit_t *limit){
 	return 1;
 }
 
+
+
+
 int8_t core_routine(int32_t retest){
 	empty_disch_cfg();
 	read_cell_voltage();
@@ -168,6 +172,11 @@ int8_t core_routine(int32_t retest){
 	get_minmax_temperature(IC_NUM, temp_data, &status_data);
 	calc_sum_of_cells(IC_NUM, cell_data, &status_data);
 	AMS_OK(&status_data, &limits);
+
+#if CAN_ENABLED
+	Send_cell_data(cell_data);
+
+#endif
 	//calculate_power(&status_data);
 	//set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);
 
@@ -177,7 +186,7 @@ int8_t core_routine(int32_t retest){
 	precharge_compare();
 #endif
 
-	//test_limp(&status_data, &limits);
+	test_limp(&status_data, &limits);
 
 
 	return test_limits(&status_data, &limits, retest);
@@ -396,13 +405,37 @@ void goto_safe_state(uint8_t reason)
 
 int32_t test_limp(status_data_t *status_data, limit_t *limit)
 {
-#if TEST_UNDERVOLTAGE
+
+	if(status_data->min_voltage < limit->limp_min_voltage){
+		status_data->limping = 1;
+
+		uint8_t data[8];
+
+		data[0]=8;
+		data[1]=0;
+		data[2]=0;
+		data[3]=(uint8_t)status_data->sum_of_cells;
+
+		data[4]=status_data->limping;
+		data[5]=0;
+		data[6]=0xAB;
+		data[7]=0xCD;
+
+		CanSend(data, 0x08);
+		}
+	else{
+		status_data->limping = 0;
+	}
+
+/*#if TEST_UNDERVOLTAGE
 	if(status_data->min_voltage < limit->limp_min_voltage)
 	{
 		if(!(status_data->limp_counters[0]<=LIMP_COUNT_LIMIT))
 		{
 			status_data->limping = 1;
 			status_data->limp_counters[0]+=10; //we have this here so it takes a bit of time for bms to exit limp mode once it enters
+
+
 		}
 		else
 		{
@@ -417,7 +450,7 @@ int32_t test_limp(status_data_t *status_data, limit_t *limit)
 			status_data->limping = 0;
 		}
 	}
-#endif
+#endif*/
 }
 
 
