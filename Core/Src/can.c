@@ -14,6 +14,10 @@ extern FDCAN_HandleTypeDef hfdcan;
 extern FDCAN_TxHeaderTypeDef TxHeader;
 extern FDCAN_RxHeaderTypeDef RxHeader;
 
+uint8_t nlg5a_buffer[4];
+uint8_t nlg5b_buffer[4];
+
+
 
 #define ERR_CANOFFLINE				11
 uint8_t canSendErrorFlag;

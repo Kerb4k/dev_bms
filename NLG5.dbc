@@ -1,0 +1,162 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: BMS NLG5
+
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ NLG5_OV_COM : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NLG5_OC_COM : 40|16@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1560 NLG5_CTL: 7 BMS
+ SG_ NLG5_C_C_EN : 0|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ NLG5_C_C_EL : 1|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ NLG5_C_CP_V : 2|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ NLG5_C_MR : 3|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ NLG5_MC_MAX : 7|16@0+ (0.1,0) [0|50] "A" Vector__XXX
+ SG_ NLG5_OV_COM : 23|16@0+ (0.1,0) [0|1000] "V" Vector__XXX
+ SG_ NLG5_OC_COM : 15|16@0+ (0.1,0) [0|150] "A" Vector__XXX
+
+BO_ 1816 NLG5_DIAG_RX: 8 BMS
+ SG_ LAD_D_ParamRq : -17|64@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1552 NLG5_ST: 8 NLG5
+ SG_ NLG5_S_HE : 0|1@0+ (1,0) [0|0] "Indicates if hardware enabled, i.e. a hi or lo signal is fed to the 'Power On' pin (pin3 of control connector)" Vector__XXX
+ SG_ NLG5_S_ERR : 1|1@0+ (1,0) [0|0] "An error has been detected, red LED is ON, no power is output" Vector__XXX
+ SG_ NLG5_S_WAR : 2|1@0+ (1,0) [0|0] "Warning condition on, i.e. charging power limited due to any limiting condition; red LED is blinking" Vector__XXX
+ SG_ NLG5_S_FAN : 3|1@0+ (1,0) [0|0] "Charger cooling fan is active" Vector__XXX
+ SG_ NLG5_S_EUM : 4|1@0+ (1,0) [0|0] "European mains input detected (230V, 50Hz)" Vector__XXX
+ SG_ NLG5_S_UM_I : 5|1@0+ (1,0) [0|0] "US mains level 1 (120VAC / 60Hz) detected" Vector__XXX
+ SG_ NLG5_S_UM_II : 6|1@0+ (1,0) [0|0] "US mains level 2 (240VAC / 60Hz) detected" Vector__XXX
+ SG_ NLG5_S_CP_DT : 7|1@0+ (1,0) [0|0] "Control pilot signal (SAE J1772) detected " Vector__XXX
+ SG_ NLG5_S_BPD_I : 8|1@0+ (1,0) [0|0] "Bypass detection bit 1; 00: no bypass, 01: DC bypass detected, 10:AC bypass in phase, 11: AC bypass not in phase" Vector__XXX
+ SG_ NLG5_S_BPD_II : 9|1@0+ (1,0) [0|0] "Bypass detection bit 2; 00: no bypass, 01: DC bypass detected, 10:AC bypass in phase, 11: AC bypass not in phase" Vector__XXX
+ SG_ NLG5_S_L_OV : 10|1@0+ (1,0) [0|0] "Output power limited by battery output voltage limit" Vector__XXX
+ SG_ NLG5_S_L_OC : 11|1@0+ (1,0) [0|0] "Output power limited by battery output current limit" Vector__XXX
+ SG_ NLG5_S_L_MC : 12|1@0+ (1,0) [0|0] "Output power limited by mains current limit" Vector__XXX
+ SG_ NLG5_S_L_PI : 13|1@0+ (1,0) [0|0] "Output power limited by analog input 'power indicator' (PI) limit" Vector__XXX
+ SG_ NLG5_S_L_CP : 14|1@0+ (1,0) [0|0] "Output power limited by control pilot signal (SAE J1772)" Vector__XXX
+ SG_ NLG5_S_L_PMAX : 15|1@0+ (1,0) [0|0] "Output power limited by maximum power capability of NLG5" Vector__XXX
+ SG_ NLG5_S_L_MC_MAX : 16|1@0+ (1,0) [0|0] "Output power limited by maximum mains current capability of NLG5" Vector__XXX
+ SG_ NLG5_S_L_OC_MAX : 17|1@0+ (1,0) [0|0] "Output power limited by maximum output current capability of NLG5" Vector__XXX
+ SG_ NLG5_S_L_MO_MAX : 18|1@0+ (1,0) [0|0] "Output power limited by maximum output voltage capability of NLG5" Vector__XXX
+ SG_ NLG5_S_L_T_CPRIM : 19|1@0+ (1,0) [0|0] "Output power limited by temperature of primary capacitors" Vector__XXX
+ SG_ NLG5_S_L_T_POW : 20|1@0+ (1,0) [0|0] "Output power limited by temperature of power stage" Vector__XXX
+ SG_ NLG5_S_L_T_DIO : 21|1@0+ (1,0) [0|0] "Output power limited by temperature of diodes" Vector__XXX
+ SG_ NLG5_S_L_T_TR : 22|1@0+ (1,0) [0|0] "Output power limited by temperature of transformer" Vector__XXX
+ SG_ NLG5_S_L_T_BATT : 23|1@0+ (1,0) [0|0] "Output power limited by battery temperature" Vector__XXX
+ SG_ NLG5_S_AAC : 31|1@0+ (1,0) [0|0] "AUX 12 V Automatic Charging Active" Vector__XXX
+
+BO_ 1553 NLG5_ACT_I: 8 NLG5
+ SG_ NLG5_MC_ACT : 15|16@0+ (0.01,0) [0|50] "A" Vector__XXX
+ SG_ NLG5_MV_ACT : 15|16@0+ (0.1,0) [0|500] "V" Vector__XXX
+ SG_ NLG5_OV_ACT : 31|16@0+ (0.1,0) [0|1000] "V" Vector__XXX
+ SG_ NLG5_OC_ACT : 47|16@0- (0.01,0) [0|150] "A" Vector__XXX
+
+BO_ 1554 NLG5_ACT_II: 8 NLG5
+ SG_ NLG5_S_MC_M_CP : -1|16@0+ (0.1,0) [0|100] "A" Vector__XXX
+ SG_ NLG5_S_MC_M_PI : 23|8@0+ (0.1,0) [0|20] "A" Vector__XXX
+ SG_ NLG5_ABV : 31|8@0+ (0.1,0) [0|25] "V" Vector__XXX
+ SG_ NLG5_AHC_EXT : 31|16@0- (0.01,0) [-327|327.67] "Ah" Vector__XXX
+ SG_ NLG5_OC_BO : 47|16@0+ (0.01,0) [0|50] "A" Vector__XXX
+
+BO_ 1555 NLG5_TEMP: 8 NLG5
+ SG_ NLG5_P_TMP : -1|16@0- (0.1,0) [-40|300] "C" Vector__XXX
+ SG_ NLG5_TMP_EXT1 : 15|16@0- (0.1,0) [-40|300] "C" Vector__XXX
+ SG_ NLG5_TEMP_EXT2 : 31|16@0+ (0.1,0) [-40|300] "C" Vector__XXX
+ SG_ NLG5_TMP_EXT3 : 47|16@0+ (0.1,0) [-40|300] "C" Vector__XXX
+
+BO_ 1556 NLG5_ERR: 5 NLG5
+ SG_ NewSignal_0010 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0011 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0012 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0013 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0014 : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 1818 NLG5_DIAG_TX: 8 NLG5
+ SG_ LAD_D_ParamRp : -49|64@0+ (1,0) [0|0] "" Vector__XXX
+
+
+
+CM_ SG_ 1560 NLG5_C_C_EL "Must be ON to enable power stage of the charger";
+CM_ SG_ 1560 NLG5_C_CP_V "cycle this value 0-1-0 to clear all latched charger errors ";
+CM_ SG_ 1560 NLG5_C_MR "special signal to tell a charging station equipped with the Control Pilot interface (SAE J1772) to switch on the facility's ventilation (in order to get rid of battery gases like hydrogen, e.g.)";
+CM_ SG_ 1560 NLG5_MC_MAX "Maximum current to be drawn from the mains outlet, usually 16A. Must always contain a valid value in order to keep on charging.";
+CM_ SG_ 1560 NLG5_OV_COM "Desired voltage to be output to the battery. Must always contain a valid value in order to keep on charging.";
+CM_ SG_ 1560 NLG5_OC_COM "Desired battery current. Must always contain a valid value in order to keep on charging.";
+CM_ SG_ 1816 LAD_D_ParamRq "Diag requested data from host";
+CM_ SG_ 1553 NLG5_MC_ACT "Actual mains current";
+CM_ SG_ 1553 NLG5_MV_ACT "Actual mains voltage";
+CM_ SG_ 1553 NLG5_OV_ACT "Actual battery output voltage";
+CM_ SG_ 1553 NLG5_OC_ACT "output current to the battery";
+CM_ SG_ 1554 NLG5_S_MC_M_CP "Value of mains current limit, commanded by the control pilot (SAE J1772) signal";
+CM_ SG_ 1554 NLG5_S_MC_M_PI "Value of mains current limit, commanded by the 'power indicator' (PI) analog input signal";
+CM_ SG_ 1554 NLG5_ABV "Aux battery voltage";
+CM_ SG_ 1554 NLG5_AHC_EXT "Charge balance obtained via
+Ext. Ah counter connected to DI1 / DI2";
+CM_ SG_ 1554 NLG5_OC_BO "output current of the booster (if one is present and active)";
+CM_ SG_ 1555 NLG5_P_TMP "Power stage temperature";
+CM_ SG_ 1555 NLG5_TMP_EXT1 "Value of external battery temperature sensor #1 (if connected and enabled)";
+CM_ SG_ 1555 NLG5_TEMP_EXT2 "Value of external battery temperature sensor #2 (if connected and enabled)";
+CM_ SG_ 1555 NLG5_TMP_EXT3 "
+Value of external battery temperature sensor #3 (if connected and enabled)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+";
+CM_ SG_ 1818 LAD_D_ParamRp "Diag responded data to host";
+

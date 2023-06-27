@@ -453,6 +453,37 @@ int32_t test_limp(status_data_t *status_data, limit_t *limit)
 #endif*/
 }
 
+/*!
+	\brief	Charger current limit and enabled state is set.
+	\todo	Implement a proper charging algorithm.
+*/
+
+void set_charge_current(void)
+{
+	//nlg5_ctrl.oc_limit = 120; //DONT SET IT HERE
+
+	if (status_data.max_voltage > limits.charger_dis) {
+		nlg5_ctrl.ctrl = 0;
+	} else {
+		if (status_data.max_voltage < limits.charger_en) {
+			nlg5_ctrl.ctrl = NLG5_C_C_EN;
+		}
+	}
+}
+
+/*!
+	\brief	Send charger command message on CAN bus.
+
+	Every fifth time charger_event_flag is set a reset command is sent,
+	if charger is in fault state. Otherwise a charge command is sent.
+*/
+void set_charger(void){
+	if(charger_event_flag){
+		if (((nlg5a_buffer[0] == 136) || (nlg5a_buffer[0] == 152)) && ((nlg5b_buffer[0] == 136) || (nlg5b_buffer[0] == 152))) {
+	}
+}
+
+
 
 int8_t test_limits(status_data_t *status_data, limit_t *limit, int32_t retest)
 {
