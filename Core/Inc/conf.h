@@ -109,6 +109,11 @@ typedef struct status_data_t
 	uint8_t min_voltage_id;
 	uint8_t max_voltage_id;
 	float sum_of_cells;
+	bool air_s;
+	bool pre_s;
+	bool air_pre;
+	bool air_p;
+	bool air_m;
 	uint8_t opmode;
 	uint8_t discharge_mode;
 	bool logging;
@@ -151,10 +156,10 @@ typedef struct status_data_t
 /*!
 	debug functionality enable/disable
  */
-#define IVT							0
+#define IVT							1
 #define CAN_DEBUG					1
 #define CAN_ENABLED					1
-#define FAN_DEBUG					1
+#define FAN_DEBUG					0
 #define BMS_RELAY_CTRL_BYPASS		0
 #define STOP_CORE_ON_SAFE_STATE		0
 #define START_DEBUG_ON_SAFE_STATE	1

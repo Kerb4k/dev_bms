@@ -51,6 +51,9 @@ TIM_HandleTypeDef htim8;
 
 UART_HandleTypeDef huart2;
 
+FDCAN_TxHeaderTypeDef TxHeader;
+
+FDCAN_RxHeaderTypeDef RxHeader;
 /* USER CODE BEGIN PV */
 #define CANID_SYNC		0x80
 /* USER CODE END PV */
@@ -201,11 +204,11 @@ static void MX_FDCAN1_Init(void)
   /* USER CODE BEGIN FDCAN1_Init 2 */
   FDCAN_FilterTypeDef	sFilterConfig;
 
-  if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan, FDCAN_RX_FIFO0, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
+  if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan1, FDCAN_RX_FIFO0, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
   	{
   		Error_Handler();
   	}
-  	if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan, FDCAN_RX_FIFO1, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
+  	if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan1, FDCAN_RX_FIFO1, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
   	{
   		Error_Handler();
   	}
@@ -217,7 +220,7 @@ static void MX_FDCAN1_Init(void)
   	sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
   	sFilterConfig.FilterID1 = CANID_CONFIG;
   	sFilterConfig.FilterID2 = 0x7FF;
-  	if (HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig) != HAL_OK)
+  	if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
   	{
   		Error_Handler();
   	}
@@ -229,21 +232,21 @@ static void MX_FDCAN1_Init(void)
     sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
     sFilterConfig.FilterID1 = 0x520;   // Start of the range
     sFilterConfig.FilterID2 = 0x700;   // Mask for the filter. This will allow IDs 0x520 - 0x52F
-    if (HAL_FDCAN_ConfigFilter(&hfdcan, &sFilterConfig) != HAL_OK)
+    if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
     {
         Error_Handler();
     }
 
-  	if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
+  	if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
   	{
   		Error_Handler();
   	}
 
-  	if(HAL_FDCAN_Start(&hfdcan) != HAL_OK)
+  	if(HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
   	{
   		Error_Handler();
   	}
-  	if(HAL_FDCAN_ActivateNotification(&hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
+  	if(HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
   	{
   		Error_Handler();
   	}

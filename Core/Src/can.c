@@ -10,7 +10,7 @@
 #include "conf.h"
 
 
-extern FDCAN_HandleTypeDef hfdcan;
+extern FDCAN_HandleTypeDef hfdcan1;
 extern FDCAN_TxHeaderTypeDef TxHeader;
 extern FDCAN_RxHeaderTypeDef RxHeader;
 
@@ -28,13 +28,13 @@ uint8_t CheckCanError( void )
 
 	static uint8_t offcan1 = 0;
 
-	HAL_FDCAN_GetProtocolStatus(&hfdcan, &CAN1Status);
+	HAL_FDCAN_GetProtocolStatus(&hfdcan1, &CAN1Status);
 
 	static uint8_t offcan = 0;
 
 	if ( !offcan1 && CAN1Status.BusOff) // detect passive error instead and try to stay off bus till clears?
 	{
-		  HAL_FDCAN_Stop(&hfdcan);
+		  HAL_FDCAN_Stop(&hfdcan1);
 		  Set_Error(ERR_CANOFFLINE);
 		  // set LED.
 		  offcan = 1;
@@ -44,7 +44,7 @@ uint8_t CheckCanError( void )
 	// use the senderrorflag to only try once a second to get back onbus.
 	if ( CAN1Status.BusOff && canSendErrorFlag )
 	{
-		if (HAL_FDCAN_Start(&hfdcan) == HAL_OK)
+		if (HAL_FDCAN_Start(&hfdcan1) == HAL_OK)
 		{
 			offcan = 0;
 		}
@@ -57,7 +57,7 @@ void CanSend(uint8_t *TxData, uint8_t identifier ){
 
 	TxHeader.Identifier = identifier;
 
-	if(HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan, &TxHeader, TxData) != HAL_OK){
+	if(HAL_FDCAN_AddMessageToTxFifoQ(&hfdcan1, &TxHeader, TxData) != HAL_OK){
 	        // Transmission request Error
 		Error_Handler();
 	}
@@ -66,21 +66,27 @@ void CanSend(uint8_t *TxData, uint8_t identifier ){
 
 int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1)
 {
+    /* Infinite loop to keep trying to read the message */
+	uint8_t t = 0;
 
-    /* Check if a new message is available in RX FIFO 0 */
-    if(HAL_FDCAN_GetRxMessage(&hfdcan, FDCAN_RX_FIFO0, &RxHeader, RxData1) != HAL_OK)
+    while(t < 101)
     {
-        // If there's an error reading the message, you can handle it here
-        // For example, you could print an error message
-        Error_Handler();
+    	t++;
+        /* Check if a new message is available in RX FIFO 0 */
+        if(HAL_FDCAN_GetRxMessage(&hfdcan1, FDCAN_RX_FIFO0, &RxHeader, RxData1) == HAL_OK)
+        {
+            /* Validate the Identifier */
+            if(RxHeader.Identifier == messageIdentifier)
+            {
+                return 0; // Message successfully read and validated
+            }
+            else
+            {
+                return 1; // Message Identifier did not match
+            }
+        }
+        // Else, ignore the error and try again
     }
-
-    /* Validate the Identifier */
-    if(RxHeader.Identifier == messageIdentifier)
-    {
-        return 0; // Message successfully read and validated
-    }
-    return 1; // Message Identifier did not match
 }
 
 

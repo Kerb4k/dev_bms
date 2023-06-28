@@ -62,12 +62,12 @@ void operation_main(void){
 	open_AIR();
 	open_PRE();
 
-	CanSend(start_ivt, 0x411);
+
 
 	initialize();
 	//fan_energize();
 	init_slave_cfg();
-
+	uint32_t timer = 0;
 	for(uint32_t i=0; i<NUMB_REASON_CODES; i++)
 		{
 			status_data.error_counters[i]=0;
@@ -83,7 +83,8 @@ void operation_main(void){
 		status_data.opmode = 0;
 		status_data.opmode = (1 << 0)|(1 << 4);
 
-		status_data.mode = 0;
+		status_data.mode = 3;
+
 
 	while(1){
 
@@ -91,7 +92,8 @@ void operation_main(void){
 		switch (status_data.mode){
 			case 0:
 				core_routine(RETEST_YES);
-
+				status_data.uptime++;
+				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_15);
 			    HAL_Delay(900);
 
 				break;
@@ -99,14 +101,21 @@ void operation_main(void){
 				read_cell_voltage();
 				get_minmax_voltage(IC_NUM, cell_data, &status_data);
 				balance_routine();
+
 				HAL_Delay(2000);
 
 				break;
 			case 2:
 				//charge_routine();
+			//	fan_control(&status_data)
+
+				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_15);
+				HAL_Delay(1000);
 				break;
 			case 3:
 				//debug_routine();
+				close_AIR();
+				close_PRE();
 				break;
 			default:
 				break;
@@ -134,19 +143,23 @@ void operation_main(void){
 
 void open_AIR(void){
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, RESET);
+	status_data.air_s = false;
+
 }
 
 void close_AIR(void){
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, SET);
+	status_data.air_s = true;
 }
 
 void close_PRE(void){
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, SET);
-
+	status_data.pre_s = true;
 }
 
 void open_PRE(void){
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, RESET);
+	status_data.pre_s = false;
 
 }
 
@@ -165,6 +178,11 @@ int AMS_OK(status_data_t *status_data, limit_t *limit){
 
 
 int8_t core_routine(int32_t retest){
+
+	status_data.air_m = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
+	status_data.air_p = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7);
+	status_data.air_pre = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
+
 	empty_disch_cfg();
 	read_cell_voltage();
 	read_temp_measurement();
@@ -196,7 +214,7 @@ void read_IVT(status_data_t *status_data){
 
 	uint8_t RxData1[8];
 	while(ReadCANBusMessage(0x522, &RxData1)){
-		delay_u(20000);
+		delay_u(200);
 	}
 
 	//delay_u(500);
@@ -205,14 +223,14 @@ void read_IVT(status_data_t *status_data){
 	status_data->IVT_U1_f = status_data->IVT_U1 / 1000.0f;
 	uint8_t RxData2[8];
 	while(ReadCANBusMessage(0x523, &RxData2)){
-		delay_u(20000);
+		delay_u(200);
 	}
 	//delay_u(500);
 	status_data->IVT_U2 = (uint32_t)(RxData2[5] | (RxData2[4] << 8) | (RxData2[3] << 16) | (RxData2[2] << 24) );
 	status_data->IVT_U2_f = status_data->IVT_U2 / 1000.0f;
 	uint8_t RxData3[8];
 	while(ReadCANBusMessage(0x528, &RxData3)){
-		delay_u(20000);
+		delay_u(200);
 	}
 	//delay_u(500);
 	status_data->IVT_Wh = (uint32_t)(RxData3[5] | (RxData3[4] << 8) | (RxData3[3] << 16) | (RxData3[2] << 24) );
@@ -476,13 +494,13 @@ void set_charge_current(void)
 
 	Every fifth time charger_event_flag is set a reset command is sent,
 	if charger is in fault state. Otherwise a charge command is sent.
-*/
+*//*
 void set_charger(void){
 	if(charger_event_flag){
 		if (((nlg5a_buffer[0] == 136) || (nlg5a_buffer[0] == 152)) && ((nlg5b_buffer[0] == 136) || (nlg5b_buffer[0] == 152))) {
 	}
 }
-
+*/
 
 
 int8_t test_limits(status_data_t *status_data, limit_t *limit, int32_t retest)

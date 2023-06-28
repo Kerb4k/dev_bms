@@ -1,2 +1,3 @@
 pwm.c:20:6:pwm_init	1
-pwm.c:25:6:set_fan_duty_cycle	4
+pwm.c:26:6:fan_control	2
+pwm.c:33:6:set_fan_duty_cycle	4
