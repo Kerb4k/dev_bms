@@ -106,11 +106,9 @@ void operation_main(void){
 
 				break;
 			case 2:
-				//charge_routine();
-			//	fan_control(&status_data)
-
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_15);
-				HAL_Delay(1000);
+				status_data.uptime++;
+				charge_routine();
+				HAL_Delay(2000);
 				break;
 			case 3:
 				//debug_routine();
@@ -176,6 +174,29 @@ int AMS_OK(status_data_t *status_data, limit_t *limit){
 
 
 
+
+void charge_routine(void){
+	status_data.air_m = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
+	status_data.air_p = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7);
+	status_data.air_pre = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
+
+	empty_disch_cfg();
+	read_cell_voltage();
+	read_temp_measurement();
+	get_minmax_voltage(IC_NUM, cell_data, &status_data);
+	get_minmax_temperature(IC_NUM, temp_data, &status_data);
+	calc_sum_of_cells(IC_NUM, cell_data, &status_data);
+	AMS_OK(&status_data, &limits);
+
+#if IVT
+	read_IVT(&status_data);
+	calculate_soc(&status_data);
+	precharge_compare();
+#endif
+
+	balance_routine();
+
+}
 
 int8_t core_routine(int32_t retest){
 
