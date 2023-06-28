@@ -50,7 +50,7 @@ BO_ 1560 NLG5_CTL: 7 BMS
  SG_ NLG5_OC_COM : 15|16@0+ (0.1,0) [0|150] "A" Vector__XXX
 
 BO_ 1816 NLG5_DIAG_RX: 8 BMS
- SG_ LAD_D_ParamRq : -17|64@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ LAD_D_ParamRq : -1|64@0+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 1552 NLG5_ST: 8 NLG5
  SG_ NLG5_S_HE : 0|1@0+ (1,0) [0|0] "Indicates if hardware enabled, i.e. a hi or lo signal is fed to the 'Power On' pin (pin3 of control connector)" Vector__XXX
@@ -86,27 +86,59 @@ BO_ 1553 NLG5_ACT_I: 8 NLG5
  SG_ NLG5_OC_ACT : 47|16@0- (0.01,0) [0|150] "A" Vector__XXX
 
 BO_ 1554 NLG5_ACT_II: 8 NLG5
- SG_ NLG5_S_MC_M_CP : -1|16@0+ (0.1,0) [0|100] "A" Vector__XXX
+ SG_ NLG5_S_MC_M_CP : 15|16@0+ (0.1,0) [0|100] "A" Vector__XXX
  SG_ NLG5_S_MC_M_PI : 23|8@0+ (0.1,0) [0|20] "A" Vector__XXX
  SG_ NLG5_ABV : 31|8@0+ (0.1,0) [0|25] "V" Vector__XXX
  SG_ NLG5_AHC_EXT : 31|16@0- (0.01,0) [-327|327.67] "Ah" Vector__XXX
  SG_ NLG5_OC_BO : 47|16@0+ (0.01,0) [0|50] "A" Vector__XXX
 
 BO_ 1555 NLG5_TEMP: 8 NLG5
- SG_ NLG5_P_TMP : -1|16@0- (0.1,0) [-40|300] "C" Vector__XXX
+ SG_ NLG5_P_TMP : 15|16@0- (0.1,0) [-40|300] "C" Vector__XXX
  SG_ NLG5_TMP_EXT1 : 15|16@0- (0.1,0) [-40|300] "C" Vector__XXX
- SG_ NLG5_TEMP_EXT2 : 31|16@0+ (0.1,0) [-40|300] "C" Vector__XXX
- SG_ NLG5_TMP_EXT3 : 47|16@0+ (0.1,0) [-40|300] "C" Vector__XXX
+ SG_ NLG5_TEMP_EXT2 : 31|16@0+ (0.1,0) [4294967256|300] "C" Vector__XXX
+ SG_ NLG5_TMP_EXT3 : 47|16@0+ (0.1,0) [4294967256|300] "C" Vector__XXX
 
 BO_ 1556 NLG5_ERR: 5 NLG5
- SG_ NewSignal_0010 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0011 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0012 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0013 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ NewSignal_0014 : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NLG5_E_OOV : 0|1@0+ (1,0) [0|0] "battery output overvoltage; error can only be cleared by cycling power ON-OFF-ON" Vector__XXX
+ SG_ NLG5_E_MOV_II : 1|1@0+ (1,0) [0|0] "Mains overvoltage 2 detected" Vector__XXX
+ SG_ NLG5_E_MOV_I : 2|1@0+ (1,0) [0|0] "Mains overvoltage 1 detected" Vector__XXX
+ SG_ NLG5_E_SC : 3|1@0+ (1,0) [0|0] "power stage short circuit condition detected; error can only be cleared by cycling power ON-OFF-ON" Vector__XXX
+ SG_ NLG5_E_P_OM : 4|1@0+ (1,0) [0|0] "plausibility battery output voltage measurement wrong" Vector__XXX
+ SG_ NLG5_E_P_MV : 5|1@0+ (1,0) [0|0] "plausibility mains voltage measurement wrong" Vector__XXX
+ SG_ NLG5_E_OF : 6|1@0+ (1,0) [0|0] "output fuse defective" Vector__XXX
+ SG_ NLG5_E_MF : 7|1@0+ (1,0) [0|0] "Mains fuse defective" Vector__XXX
+ SG_ NLG5_E_B_P : 8|1@0+ (1,0) [0|0] "wrong battery polarity; error can only be cleared by cycling power ON-OFF-ON" Vector__XXX
+ SG_ NLG5_E_T_C : 9|1@0+ (1,0) [0|0] "Temperature sensor for prim capacitor defective" Vector__XXX
+ SG_ NLG5_E_T_POW : 10|1@0+ (1,0) [0|0] "Temperature sensor for prim power stage defective" Vector__XXX
+ SG_ NLG5_E_T_DIO : 11|1@0+ (1,0) [0|0] "Temperature sensor for diodes defective" Vector__XXX
+ SG_ NLG5_E_T_TR : 12|1@0+ (1,0) [0|0] "Temperature sensor for transformer defective" Vector__XXX
+ SG_ NLG5_E_T_EXT1 : 13|1@0+ (1,0) [0|0] "Ext. temperature sensor 1 defective (if enabled)" Vector__XXX
+ SG_ NLG5_E_T_EXT2 : 14|1@0+ (1,0) [0|0] "Ext. temperature sensor 2 defective (if enabled)" Vector__XXX
+ SG_ NLG5_E_T_EXT3 : 15|1@0+ (1,0) [0|0] "Ext. temperature sensor 3 defective (if enabled)" Vector__XXX
+ SG_ NLG5_E_F_CRC : 16|1@0+ (1,0) [0|0] "Flash memory checksum failure" Vector__XXX
+ SG_ NLG5_E_NV_CRC : 17|1@0+ (1,0) [0|0] "NVSRAM check sum failure; contains most of the scaling & calibration values, CAN ID's and charging profile etc." Vector__XXX
+ SG_ NLG5_E_ES_CRC : 18|1@0+ (1,0) [0|0] "Sys EEPROM checksum failure" Vector__XXX
+ SG_ NLG5_E_EP_CRC : 19|1@0+ (1,0) [0|0] "Pow EEPROM checksum failure" Vector__XXX
+ SG_ NLG5_E_WDT : 20|1@0+ (1,0) [0|0] "Internal Watchdog Timeout" Vector__XXX
+ SG_ NLG5_E_INIT : 21|1@0+ (1,0) [0|0] "Initialization error" Vector__XXX
+ SG_ NLG5_E_C_TO : 22|1@0+ (1,0) [0|0] "CAN timeout, no control message received for >300ms" Vector__XXX
+ SG_ NLG5_E_C_OFF : 23|1@0+ (1,0) [0|0] "CAN off, transmit buffer >255" Vector__XXX
+ SG_ NLG5_E_C_TX : 24|1@0+ (1,0) [0|0] "CAN transmit buffer >127" Vector__XXX
+ SG_ NLG5_E_C_RX : 25|1@0+ (1,0) [0|0] "CAN receiver buffer >127" Vector__XXX
+ SG_ NLG5_E_SDT_BT : 26|1@0+ (1,0) [0|0] "Emergency Shutdown Threshold 'Battery Temperature' is exceeded; see ChargeStar help section 'protective features'; error can only be cleared by cycling power ON-OFF-ON" Vector__XXX
+ SG_ NLG5_E_SDT_BV : 27|1@0+ (1,0) [0|0] "Emergency Shutdown Threshold 'Battery Voltage' is exceeded; see ChargeStar help section 'protective features'; error can only be cleared by cycling power ON-OFF-ON" Vector__XXX
+ SG_ NLG5_E_SDT_AH : 28|1@0+ (1,0) [0|0] "Emergency Shutdown Threshold 'Amp Hours' is exceeded; see ChargeStar help section 'protective features'; error can only be cleared by cycling power ON-OFF-ON" Vector__XXX
+ SG_ NLG5_E_SDT_CT : 29|1@0+ (1,0) [0|0] "Emergency Shutdown Threshold 'Charging Time' is exceeded; see ChargeStar help section 'protective features'; error can only be cleared by cycling power ON-OFF-ON" Vector__XXX
+ SG_ NLG5_W_PL_MV : 32|1@0+ (1,0) [0|0] "Output power limited by low mains voltage" Vector__XXX
+ SG_ NLG5_W_PL_BV : 33|1@0+ (1,0) [0|0] "Output power limited by low battery voltage" Vector__XXX
+ SG_ NLG5_W_PL_IT : 34|1@0+ (1,0) [0|0] "Output power limited by charger internal overtemperature" Vector__XXX
+ SG_ NLG5_W_C_VOR : 35|1@0+ (1,0) [0|0] "Commanded value is out of specified range; max or min applicable value is assumed instead" Vector__XXX
+ SG_ NLG5_W_CM_NA : 36|1@0+ (1,0) [0|0] "NLG5 Control message not active" Vector__XXX
+ SG_ NLG5_W_OD : 38|1@0+ (1,0) [0|0] "LED Output driver defective, LEDs can´t be controlled by NLG5 anymore. Charging is still possible." Vector__XXX
+ SG_ NLG5_W_SC_M : 39|1@1+ (1,0) [0|0] "Save-Charging-Mode reduces primary current to 3.95 A as long as one of the four internal temperature sensors indicates -18° C or less." Vector__XXX
 
 BO_ 1818 NLG5_DIAG_TX: 8 NLG5
- SG_ LAD_D_ParamRp : -49|64@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ LAD_D_ParamRp : -33|64@0+ (1,0) [0|0] "" Vector__XXX
 
 
 
