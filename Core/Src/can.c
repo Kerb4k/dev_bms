@@ -195,7 +195,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 			CanSend(TxData, temp_id);
 			delay_u(100);
 
-			buf = temp_data[i][2].temp;
+			buf = temp_data[i][2.temp;
 			buf2 = temp_data[i][1].temp;
 			buf3 = temp_data[i][0].temp;
 
