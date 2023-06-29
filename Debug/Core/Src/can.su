@@ -2,6 +2,7 @@
 ../Core/Src/can.c:56:6:CanSend	16	static
 ../Core/Src/can.c:67:5:ReadCANBusMessage	24	static
 ../Core/Src/can.c:94:6:Send_cell_data	48	static
-../Core/Src/can.c:124:6:Send_Soc	24	static
-../Core/Src/can.c:137:13:payload_sort_old_to_new	16	static
-../Core/Src/can.c:143:13:payload_sort_new_to_old	16	static
+../Core/Src/can.c:124:6:Send_temp_data	64	static
+../Core/Src/can.c:227:6:Send_Soc	24	static
+../Core/Src/can.c:240:13:payload_sort_old_to_new	16	static
+../Core/Src/can.c:246:13:payload_sort_new_to_old	16	static

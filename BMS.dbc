@@ -1,0 +1,309 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 0 cell_1: 8 Vector__XXX
+ SG_ cell_1 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_2 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_3 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 3 cell_4: 8 Vector__XXX
+ SG_ cell_4 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_5 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_6 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 6 cell_7: 8 Vector__XXX
+ SG_ cell_7 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_8 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_9 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 9 cell_10: 8 Vector__XXX
+ SG_ cell_10 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_11 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_12 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 12 cell_13: 8 Vector__XXX
+ SG_ cell_13 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_14 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_15 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 15 cell_16: 8 Vector__XXX
+ SG_ cell_16 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_17 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_18 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 18 cell_19: 8 Vector__XXX
+ SG_ cell_19 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_20 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_21 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 21 cell_22: 8 Vector__XXX
+ SG_ cell_22 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_23 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_24 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 24 cell_25: 8 Vector__XXX
+ SG_ cell_25 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_26 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_27 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 27 cell_28: 8 Vector__XXX
+ SG_ cell_28 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_29 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_30 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 30 cell_31: 8 Vector__XXX
+ SG_ cell_31 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_32 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_33 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 33 cell_34: 8 Vector__XXX
+ SG_ cell_34 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_35 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_36 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 36 cell_37: 8 Vector__XXX
+ SG_ cell_37 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_38 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_39 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 39 cell_40: 8 Vector__XXX
+ SG_ cell_40 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_41 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_42 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 42 cell_43: 8 Vector__XXX
+ SG_ cell_43 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_44 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_45 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 45 cell_46: 8 Vector__XXX
+ SG_ cell_46 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_47 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_48 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 48 cell_49: 8 Vector__XXX
+ SG_ cell_49 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_50 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_51 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 51 cell_52: 8 Vector__XXX
+ SG_ cell_52 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_53 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_54 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 54 cell_55: 8 Vector__XXX
+ SG_ cell_55 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_56 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_57 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 57 cell_58: 8 Vector__XXX
+ SG_ cell_58 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_59 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_60 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 60 cell_61: 8 Vector__XXX
+ SG_ cell_61 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_62 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_63 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 63 cell_64: 8 Vector__XXX
+ SG_ cell_64 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_65 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_66 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 66 cell_67: 8 Vector__XXX
+ SG_ cell_67 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_68 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_69 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 69 cell_70: 8 Vector__XXX
+ SG_ cell_70 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_71 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_72 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 72 cell_73: 8 Vector__XXX
+ SG_ cell_73 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_74 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_75 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 75 cell_76: 8 Vector__XXX
+ SG_ cell_76 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_77 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_78 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 78 cell_79: 8 Vector__XXX
+ SG_ cell_79 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_80 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_81 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 81 cell_82: 8 Vector__XXX
+ SG_ cell_82 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_83 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_84 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 84 cell_85: 8 Vector__XXX
+ SG_ cell_85 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_86 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_87 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 87 cell_88: 8 Vector__XXX
+ SG_ cell_88 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_89 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_90 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 90 cell_91: 8 Vector__XXX
+ SG_ cell_91 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_92 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_93 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 93 cell_94: 8 Vector__XXX
+ SG_ cell_94 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_95 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_96 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 96 cell_97: 8 Vector__XXX
+ SG_ cell_97 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_98 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_99 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 99 cell_100: 8 Vector__XXX
+ SG_ cell_100 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_101 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_102 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 102 cell_103: 8 Vector__XXX
+ SG_ cell_103 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_104 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_105 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 105 cell_106: 8 Vector__XXX
+ SG_ cell_106 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_107 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_108 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 108 cell_109: 8 Vector__XXX
+ SG_ cell_109 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_110 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_111 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 111 cell_112: 8 Vector__XXX
+ SG_ cell_112 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_113 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_114 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 114 cell_115: 8 Vector__XXX
+ SG_ cell_115 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_116 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_117 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 117 cell_118: 8 Vector__XXX
+ SG_ cell_118 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_119 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_120 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 120 cell_121: 8 Vector__XXX
+ SG_ cell_121 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_122 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_123 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 123 cell_124: 8 Vector__XXX
+ SG_ cell_124 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_125 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_126 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 126 cell_127: 8 Vector__XXX
+ SG_ cell_127 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_128 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_129 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 129 cell_130: 8 Vector__XXX
+ SG_ cell_130 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_131 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_132 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 132 cell_133: 8 Vector__XXX
+ SG_ cell_133 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_134 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_135 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 135 cell_136: 8 Vector__XXX
+ SG_ cell_136 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_137 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_138 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 138 cell_139: 8 Vector__XXX
+ SG_ cell_139 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_140 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_141 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 141 cell_142: 8 Vector__XXX
+ SG_ cell_142 : 0|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_143 : 16|16@1+ (1,0) [0|0] "volts" Vector__XXX
+ SG_ cell_144 : 32|16@1+ (1,0) [0|0] "volts" Vector__XXX
+
+BO_ 150 limping_mode: 8 Vector__XXX
+ SG_ ID : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sum_of_cells : 32|8@1+ (1,0) [0|0] "V" Vector__XXX
+ SG_ limping_mode : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 151 SOC: 8 Vector__XXX
+ SG_ SOC : 0|8@1+ (1,0) [0|0] "%" Vector__XXX
+
+BO_ 200 temp_1: 8 Vector__XXX
+ SG_ temp_1 : 0|16@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ temp_2 : 16|16@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ temp_3 : 32|16@1+ (1,0) [0|0] "C" Vector__XXX
+
+BO_ 203 temp_2: 8 Vector__XXX
+ SG_ temp_4 : 0|16@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ temp_5 : 16|16@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ temp_6 : 32|16@1+ (1,0) [0|0] "C" Vector__XXX
+
+BO_ 206 temp_3: 8 Vector__XXX
+ SG_ temp_7 : 0|16@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ temp_8 : 16|16@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ temp_9 : 32|16@1+ (1,0) [0|0] "C" Vector__XXX
+
+BO_ 209 temp_4: 8 Vector__XXX
+ SG_ temp_10 : 0|16@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ tem_11 : 16|16@1+ (1,0) [0|0] "C" Vector__XXX
+ SG_ temp_12 : 32|16@1+ (1,0) [0|0] "C" Vector__XXX
+
+
+
+

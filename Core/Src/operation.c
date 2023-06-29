@@ -83,7 +83,7 @@ void operation_main(void){
 		status_data.opmode = 0;
 		status_data.opmode = (1 << 0)|(1 << 4);
 
-		status_data.mode = 3;
+		status_data.mode = 0;
 
 
 	while(1){
@@ -214,7 +214,7 @@ int8_t core_routine(int32_t retest){
 	fan_control(&status_data);
 #if CAN_ENABLED
 	Send_cell_data(cell_data);
-
+	Send_temp_data(temp_data);
 #endif
 	//calculate_power(&status_data);
 	//set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);

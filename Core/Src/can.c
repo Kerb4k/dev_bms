@@ -98,7 +98,7 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 		for(int j = 0; j < CELL_NUM; j += 3){
 			uint16_t buf = cell_data[i][j].voltage;
 			uint16_t buf2 = cell_data[i][j+1].voltage;
-			uint16_t buf3 = cell_data[i][j+3].voltage;
+			uint16_t buf3 = cell_data[i][j+2].voltage;
 
 			uint8_t c1_1 = buf;
 			uint8_t c2_1 = buf >> 8;
@@ -119,6 +119,109 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 		}
 	}
 }
+
+#define TEMP_FIXED 0
+void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
+
+#if TEMP_FIXED
+	uint8_t temp_id = 0;
+		for(int i = 0; i < IC_NUM; i++){
+			for(int j = 0; j < GPIO_NUM; j += 3){
+				uint16_t buf = temp_data[i][j].temp;
+				uint16_t buf2 = temp_data[i][j+1].temp;
+				uint16_t buf3 = temp_data[i][j+2].temp;
+
+				uint8_t c1_1 = buf;
+				uint8_t c2_1 = buf >> 8;
+
+				uint8_t c1_2 = buf2;
+				uint8_t c2_2 = buf2 >> 8;
+
+				uint8_t c1_3 = buf3;
+				uint8_t c2_3 = buf3 >> 8;
+
+
+
+				temp_id = i * 18 + j + 200;
+				uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
+
+				CanSend(TxData, temp_id);
+				delay_u(100);
+			}
+		}
+#else
+	uint8_t temp_id = 0;
+	for(int i = 0; i < IC_NUM; i++){
+
+			uint16_t buf = temp_data[i][0].temp;
+			uint16_t buf2 = temp_data[i][1].temp;
+			uint16_t buf3 = temp_data[i][2].temp;
+
+			uint8_t c1_1 = buf;
+			uint8_t c2_1 = buf >> 8;
+
+			uint8_t c1_2 = buf2;
+			uint8_t c2_2 = buf2 >> 8;
+
+			uint8_t c1_3 = buf3;
+			uint8_t c2_3 = buf3 >> 8;
+
+
+
+			temp_id = i * 18 + 0 + 200;
+			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
+
+			CanSend(TxData, temp_id);
+			delay_u(100);
+
+			buf = temp_data[i][3].temp;
+			buf2 = temp_data[i][4].temp;
+			buf3 = temp_data[i][3].temp;
+
+			c1_1 = buf;
+			c2_1 = buf >> 8;
+
+			c1_2 = buf2;
+			c2_2 = buf2 >> 8;
+
+			c1_3 = buf3;
+			c2_3 = buf3 >> 8;
+
+
+
+			temp_id = i * 18 + 3 + 200;
+			uint8_t TxData1[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
+
+			CanSend(TxData, temp_id);
+			delay_u(100);
+
+			buf = temp_data[i][2].temp;
+			buf2 = temp_data[i][1].temp;
+			buf3 = temp_data[i][0].temp;
+
+			c1_1 = buf;
+			c2_1 = buf >> 8;
+
+			c1_2 = buf2;
+			c2_2 = buf2 >> 8;
+
+			c1_3 = buf3;
+			c2_3 = buf3 >> 8;
+
+
+
+			temp_id = i * 18 + 6 + 200;
+			uint8_t TxData2[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
+			CanSend(TxData, temp_id);
+			delay_u(100);
+		}
+#endif
+
+
+
+}
+
+
 
 
 void Send_Soc(status_data_t *status_data){

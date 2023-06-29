@@ -62,6 +62,6 @@ void CanSend(uint8_t *TxData[], uint8_t identifier );
 
 uint8_t Send_cell_data(cell_data_t cell_data[][CELL_NUM]);
 
-
+void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]);
 
 #endif /* INC_CAN_H_ */
