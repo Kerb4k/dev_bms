@@ -57,6 +57,7 @@ limit_t limits  = {
 int charger_event_flag;
 static uint8_t charger_event_counter;
 
+#define MODE_CAN 1
 void operation_main(void){
 
 	open_AIR();
@@ -85,6 +86,14 @@ void operation_main(void){
 
 		status_data.mode = 0;
 
+
+#if MODE_CAN
+		uint8_t RxData1[8];
+		while(ReadCANBusMessage(1900, RxData1)){
+
+		}
+		status_data.opmode = RxData1[0];
+#endif
 
 	while(1){
 

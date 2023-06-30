@@ -116,8 +116,12 @@ int main(void)
   while (1)
     {
       // Here we create a FDCAN message
-	  operation_main();
-    /* USER CODE END WHILE */
+
+	  uint8_t RxData[8];
+	  ReadCANBusMessage(0x602, &RxData);
+	  HAL_Delay(500);
+
+	  /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
     }
@@ -218,7 +222,7 @@ static void MX_FDCAN1_Init(void)
   	sFilterConfig.FilterIndex = 0;
   	sFilterConfig.FilterType = FDCAN_FILTER_MASK;
   	sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-  	sFilterConfig.FilterID1 = CANID_CONFIG;
+  	sFilterConfig.FilterID1 = 1900; //CANID_CONFIG;
   	sFilterConfig.FilterID2 = 0x7FF;
   	if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
   	{

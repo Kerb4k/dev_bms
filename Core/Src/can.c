@@ -69,7 +69,7 @@ int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1)
     /* Infinite loop to keep trying to read the message */
 	uint8_t t = 0;
 
-    while(t < 101)
+    while(t < 100)
     {
     	t++;
         /* Check if a new message is available in RX FIFO 0 */
@@ -80,13 +80,11 @@ int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1)
             {
                 return 0; // Message successfully read and validated
             }
-            else
-            {
-                return 1; // Message Identifier did not match
-            }
+            delay_u(10);
         }
         // Else, ignore the error and try again
     }
+    return 1;
 }
 
 
@@ -111,7 +109,7 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 
 
 
-			cell_id = i * 18 + j;
+			cell_id = i * 18 + j/3 + 1912;
 			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
 
 			CanSend(TxData, cell_id);
@@ -195,7 +193,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 			CanSend(TxData, temp_id);
 			delay_u(100);
 
-			buf = temp_data[i][2.temp;
+			buf = temp_data[i][2].temp;
 			buf2 = temp_data[i][1].temp;
 			buf3 = temp_data[i][0].temp;
 
