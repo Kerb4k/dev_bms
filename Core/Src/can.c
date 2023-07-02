@@ -221,78 +221,28 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 
 
-
 void Send_Soc(status_data_t *status_data){
-	uint8_t TxData[8];
-	TxData[0] = (uint8_t)status_data->soc;
-	TxData[1] = 0;
-	TxData[2] = 0;
-	TxData[3] = 0;
-	TxData[4] = 0;
-	TxData[5] = 0;
-	TxData[6] = 0;
-	TxData[7] = 0;
-	CanSend(TxData, CAN_SOC);
-}
-//////////////////////////////////////////////////////////////////////
-static void payload_sort_old_to_new(uint32_t *payload, uint8_t *data)
-{
-	payload[0] = (data[0] << 0)|(data[1] << 8)|(data[2] << 16)|(data[3] << 24);
-	payload[1] = (data[4] << 0)|(data[5] << 8)|(data[6] << 16)|(data[7] << 24);
-}
+	uint8_t Tx_Data[8];
 
-static void payload_sort_new_to_old(uint8_t * data, uint32_t *payload)
-{
+	Tx_Data[0] = (uint8_t)status_data->soc;
+	uint16_t buf = status_data->max_voltage;
+	uint8_t c1 = buf;
+	uint8_t c2 = buf >> 8;
+	Tx_Data[1] = c1;
+	Tx_Data[2] = c2;
+	if(status_data->air_s = true)
+	Tx_Data[3] = 0;
 
-	data[0] = (payload[0] >> 0);
-	data[1] = (payload[0] >> 8);
-	data[2] = (payload[0] >> 16);
-	data[3] = (payload[0] >> 24);
 
-	data[4] = (payload[1] >> 0);
-	data[5] = (payload[1] >> 8);
-	data[6] = (payload[1] >> 16);
-	data[7] = (payload[1] >> 24);
+	uint16_t buf1 = (uint16_t)status_data->sum_of_cells;
 
+	Tx_Data[4]= (uint8_t)(buf1);
+	Tx_Data[5]= (uint8_t)(buf1 >> 8);
+
+
+
+	CanSend(Tx_Data, CAN_SOC);
 
 }
-
-/*int32_t cantx_voltage_limp_total(void)
-{
-    uint32_t ret;
-    uint8_t data[8];
-    uint32_t sum_of_cells = status_data.sum_of_cells;
-    uint8_t limping = status_data.limping;
-
-    data[0] = sum_of_cells >> 24;
-    data[1] = sum_of_cells >> 16;
-    data[2] = sum_of_cells >> 8;
-    data[3] = sum_of_cells;
-
-    data[4] = limping;
-    data[5] = 0;
-    data[6] = 0xAB;
-    data[7] = 0xCD;
-
-    uint32_t mailbox;
-
-
-    TxHeader.Identifier = CAN_ID_VOLT_TOTAL;
-    TxHeader. = 0;
-    TxHeader.RTR = CAN_RTR_DATA;
-    TxHeader.IDE = CAN_ID_STD;
-    TxHeader.DLC = 8;
-
-    ret = HAL_CAN_AddTxMessage(&hcan1, &TxHeader, data, &mailbox);
-    if (ret != HAL_OK)
-    {
-        // Handle Error
-        return -1;
-    }
-    return 0;
-}*/
-
-
-
 
 

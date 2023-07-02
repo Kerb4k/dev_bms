@@ -103,7 +103,7 @@ void operation_main(void){
 				core_routine(RETEST_YES);
 				status_data.uptime++;
 				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_15);
-			    HAL_Delay(900);
+			    HAL_Delay(500);
 
 				break;
 			case 1:
@@ -207,6 +207,9 @@ void charge_routine(void){
 
 }
 
+
+
+
 int8_t core_routine(int32_t retest){
 
 	status_data.air_m = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
@@ -221,17 +224,18 @@ int8_t core_routine(int32_t retest){
 	calc_sum_of_cells(IC_NUM, cell_data, &status_data);
 	AMS_OK(&status_data, &limits);
 	fan_control(&status_data);
-#if CAN_ENABLED
-	Send_cell_data(cell_data);
-	Send_temp_data(temp_data);
-#endif
-	//calculate_power(&status_data);
-	//set_fan_duty_cycle(get_duty_cycle(status_data.max_temp), status_data.manual_fan_dc);
 
 #if IVT
 	read_IVT(&status_data);
 	calculate_soc(&status_data);
 	precharge_compare();
+	calculate_soc(&status_data);
+#endif
+
+#if CAN_ENABLED
+	Send_cell_data(cell_data);
+	Send_temp_data(temp_data);
+	Send_Soc(&status_data);
 #endif
 
 	test_limp(&status_data, &limits);
@@ -265,6 +269,14 @@ void read_IVT(status_data_t *status_data){
 	//delay_u(500);
 	status_data->IVT_Wh = (uint32_t)(RxData3[5] | (RxData3[4] << 8) | (RxData3[3] << 16) | (RxData3[2] << 24) );
 	status_data->IVT_Wh_f = status_data->IVT_Wh / 1000.0f;
+
+	uint8_t RxData4[8];
+		while(ReadCANBusMessage(0x521, &RxData4)){
+			delay_u(200);
+		}
+	status_data->IVT_I = (uint32_t)(RxData4[5] | (RxData4[4] << 8) | (RxData4[3] << 16) | (RxData4[2] << 24) );
+	status_data->IVT_I_f = status_data->IVT_I / 1000.0f;
+
 
 }
 

@@ -117,10 +117,7 @@ int main(void)
     {
       // Here we create a FDCAN message
 
-	  uint8_t RxData[8];
-	  ReadCANBusMessage(0x602, &RxData);
-	  HAL_Delay(500);
-
+	  operation_main();
 	  /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

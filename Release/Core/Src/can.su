@@ -1,0 +1,5 @@
+../Core/Src/can.c:21:9:CheckCanError	56	static
+../Core/Src/can.c:52:6:CanSend	8	static
+../Core/Src/can.c:63:5:ReadCANBusMessage	8	static
+../Core/Src/can.c:84:6:Send_cell_data	40	static
+../Core/Src/can.c:114:6:Send_Soc	16	static
