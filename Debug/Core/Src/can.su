@@ -3,6 +3,4 @@
 ../Core/Src/can.c:67:5:ReadCANBusMessage	24	static
 ../Core/Src/can.c:92:6:Send_cell_data	48	static
 ../Core/Src/can.c:122:6:Send_temp_data	64	static
-../Core/Src/can.c:225:6:Send_Soc	24	static
-../Core/Src/can.c:238:13:payload_sort_old_to_new	16	static
-../Core/Src/can.c:244:13:payload_sort_new_to_old	16	static
+../Core/Src/can.c:224:6:Send_Soc	32	static

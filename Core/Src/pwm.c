@@ -24,7 +24,7 @@ void pwm_init(void){
 
 
 void fan_control(status_data_t *status_data){
-	if(status_data->max_temp > 40)
+	if(status_data->max_temp > 50)
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, SET);
 	else
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, RESET);

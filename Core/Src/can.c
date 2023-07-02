@@ -225,14 +225,15 @@ void Send_Soc(status_data_t *status_data){
 	uint8_t Tx_Data[8];
 
 	Tx_Data[0] = (uint8_t)status_data->soc;
-	uint16_t buf = status_data->max_voltage;
+	uint16_t buf = status_data->max_voltage / 10;
 	uint8_t c1 = buf;
 	uint8_t c2 = buf >> 8;
 	Tx_Data[1] = c1;
 	Tx_Data[2] = c2;
-	if(status_data->air_s = true)
+	if(status_data->air_s == true)
 	Tx_Data[3] = 0;
-
+	else
+	Tx_Data[3] = 1;
 
 	uint16_t buf1 = (uint16_t)status_data->sum_of_cells;
 

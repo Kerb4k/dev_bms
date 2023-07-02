@@ -57,7 +57,7 @@ limit_t limits  = {
 int charger_event_flag;
 static uint8_t charger_event_counter;
 
-#define MODE_CAN 1
+#define MODE_CAN 0
 void operation_main(void){
 
 	open_AIR();
@@ -102,7 +102,8 @@ void operation_main(void){
 			case 0:
 				core_routine(RETEST_YES);
 				status_data.uptime++;
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_15);
+				//if(status_data.uptime % 10 == 0)
+					//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_15);
 			    HAL_Delay(500);
 
 				break;
@@ -233,8 +234,8 @@ int8_t core_routine(int32_t retest){
 #endif
 
 #if CAN_ENABLED
-	Send_cell_data(cell_data);
-	Send_temp_data(temp_data);
+	//Send_cell_data(cell_data);
+	//Send_temp_data(temp_data);
 	Send_Soc(&status_data);
 #endif
 
@@ -292,6 +293,8 @@ void precharge_compare(void)
 	status_data.pre_percentage = percentage;
 	if (status_data.safe_state_executed == 0) {
 		if ((percentage >= 95) && (check_voltage_match() == true) && status_data.IVT_U1_f > limits.precharge_min_start_voltage) {
+			if(status_data.pre_s == false)
+				HAL_Delay(5000);
 			close_PRE();
 		}
 		/*else
