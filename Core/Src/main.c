@@ -52,8 +52,8 @@ TIM_HandleTypeDef htim8;
 UART_HandleTypeDef huart2;
 
 FDCAN_TxHeaderTypeDef TxHeader;
-
 FDCAN_RxHeaderTypeDef RxHeader;
+
 /* USER CODE BEGIN PV */
 #define CANID_SYNC		0x80
 /* USER CODE END PV */
@@ -107,8 +107,8 @@ int main(void)
   MX_TIM8_Init();
   MX_FDCAN1_Init();
   /* USER CODE BEGIN 2 */
-
-
+  HAL_TIMEx_PWMN_Start(&htim8, TIM_CHANNEL_3);
+  uint16_t pulse = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -117,8 +117,8 @@ int main(void)
     {
       // Here we create a FDCAN message
 
-	  operation_main();
-	  /* USER CODE END WHILE */
+	 operation_main();
+    /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
     }
@@ -326,9 +326,9 @@ static void MX_TIM8_Init(void)
 
   /* USER CODE END TIM8_Init 1 */
   htim8.Instance = TIM8;
-  htim8.Init.Prescaler = 0;
+  htim8.Init.Prescaler = 15;
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim8.Init.Period = 65535;
+  htim8.Init.Period = 39;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
   htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -353,7 +353,7 @@ static void MX_TIM8_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 19;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;

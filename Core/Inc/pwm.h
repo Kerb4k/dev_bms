@@ -11,7 +11,7 @@
 
 
 void pwm_init(void);
-void set_fan_duty_cycle(uint8_t dc, int manual_mode_bit);
+void set_fan_duty_cycle(status_data_t *status_data);
 void fan_control(status_data_t *status_data);
 
 #endif /* SRC_PWM_H_ */

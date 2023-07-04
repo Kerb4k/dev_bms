@@ -8,8 +8,10 @@
 #include <stdint.h>
 #include "stm32g4xx.h"
 #include "pwm.h"
+
+#define MAX_PWM 40
 /** PWM frequency in Hz */
-#define PWM_FREQUENCY      20000
+#define PWM_FREQUENCY      25000
 /** Period value of PWM output waveform */
 #define PERIOD_VALUE       100
 /** Initial duty cycle value */
@@ -17,10 +19,7 @@
 
 extern TIM_HandleTypeDef htim8;
 
-void pwm_init(void){
-	TIM8->CCR3 = INIT_DUTY_VALUE;
-	HAL_TIMEx_PWMN_Start(&htim8, TIM_CHANNEL_3);
-}
+
 
 
 void fan_control(status_data_t *status_data){
@@ -30,14 +29,12 @@ void fan_control(status_data_t *status_data){
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, RESET);
 }
 
-void set_fan_duty_cycle(uint8_t dc, int manual_mode_bit){
-	if (dc >= 100) {
-			dc = 100;
-		} else if (dc <= 0) {
-			dc = 0;
-		}
+void set_fan_duty_cycle(status_data_t *status_data){
 
-		if (manual_mode_bit == 0) {
-			TIM8->CCR3 = INIT_DUTY_VALUE;
-		}
+	if(status_data->max_temp > 39){
+		 __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, MAX_PWM);
+	}
+	else{
+		 __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 15);
+	}
 }
