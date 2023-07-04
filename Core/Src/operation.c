@@ -86,6 +86,7 @@ void operation_main(void){
 
 		status_data.mode = 0;
 
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, SET);
 
 #if MODE_CAN
 		uint8_t RxData1[8];
