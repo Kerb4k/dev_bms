@@ -298,10 +298,10 @@ void precharge_compare(void)
 				HAL_Delay(5000);
 			close_PRE();
 		}
-		/*else
+		else
 		{
 			open_PRE();
-		}*/
+		}
 		/*else {
 			open_PRE(); //it is maybe not a great idea to actively open the precharge without opening all the contactors
 		}*/
@@ -440,31 +440,10 @@ void increase_pec_counter(void)
 
 void goto_safe_state(uint8_t reason)
 {
-#if BMS_RELAY_CTRL_BYPASS
-	// Do nothing.
-#else
-#if SKIP_PEC_ERROR_ACTIONS
-	if (reason != PEC_ERROR)
-	{
-		open_AIR();
-		open_PRE();
-	}
-#else
+
 	open_AIR();
 	open_PRE();
-#endif
-#endif
 
-#if STOP_CORE_ON_SAFE_STATE
-	status_data.opmode &= ~(1 << 0);
-#endif
-
-#if START_DEBUG_ON_SAFE_STATE
-	status_data.opmode |= (1 << 3);
-#endif
-
-	status_data.safe_state_executed = true;
-	status_data.reason_code = reason;
 }
 
 int32_t test_limp(status_data_t *status_data, limit_t *limit)
