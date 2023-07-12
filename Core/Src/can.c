@@ -108,11 +108,9 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 			uint8_t c2_3 = buf3 >> 8;
 
 
+			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, i, j};
 
-			cell_id = i * 18 + j/3 + 1912;
-			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
-
-			CanSend(TxData, cell_id);
+			CanSend(TxData, 1912);
 			delay_u(100);
 		}
 	}
@@ -164,12 +162,9 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 			uint8_t c1_3 = buf3;
 			uint8_t c2_3 = buf3 >> 8;
 
-
-
-			temp_id = 1960;
 			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
 
-			CanSend(TxData, temp_id);
+			CanSend(TxData, 1960);
 			delay_u(100);
 
 			buf = temp_data[i][3].temp;
@@ -185,10 +180,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 			c1_3 = buf3;
 			c2_3 = buf3 >> 8;
 
-
-
-			temp_id = 1961;
-			uint8_t TxData1[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
+			uint8_t TxData1[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 1};
 
 			CanSend(TxData, temp_id);
 			delay_u(100);
@@ -207,9 +199,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 			c2_3 = buf3 >> 8;
 
 
-
-			temp_id = 1962;
-			uint8_t TxData2[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
+			uint8_t TxData2[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 2};
 			CanSend(TxData, temp_id);
 			delay_u(100);
 		}
