@@ -105,7 +105,7 @@ void operation_main(void){
 				status_data.uptime++;
 				//if(status_data.uptime % 10 == 0)
 					//HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_15);
-			    HAL_Delay(500);
+			    HAL_Delay(100);
 
 				break;
 			case 1:
