@@ -166,7 +166,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 
 
-			temp_id = i * 18 + 0 + 200;
+			temp_id = 1960;
 			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
 
 			CanSend(TxData, temp_id);
@@ -187,7 +187,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 
 
-			temp_id = i * 18 + 3 + 200;
+			temp_id = 1961;
 			uint8_t TxData1[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
 
 			CanSend(TxData, temp_id);
@@ -208,7 +208,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 
 
-			temp_id = i * 18 + 6 + 200;
+			temp_id = 1962;
 			uint8_t TxData2[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
 			CanSend(TxData, temp_id);
 			delay_u(100);
