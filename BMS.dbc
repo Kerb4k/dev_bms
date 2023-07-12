@@ -284,7 +284,7 @@ BO_ 150 limping_mode: 8 Vector__XXX
 BO_ 151 SOC: 8 Vector__XXX
  SG_ SOC : 0|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ MAX_voltage : 8|16@1+ (1,0) [0|0] "mV" Vector__XXX
- SG_ AIT_S : 24|8@+ (1,0) [0|0] "0/1" Vector__XXX
+ SG_ AIT_S : 24|8@1+ (1,0) [0|0] "0/1" Vector__XXX
  SG_ SUM_OF_CELLS : 32|16@1+ (1,0) [0|0] "mV" Vector__XXX
 
 
