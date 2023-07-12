@@ -2,5 +2,5 @@
 ../Core/Src/can.c:56:6:CanSend	16	static
 ../Core/Src/can.c:67:5:ReadCANBusMessage	24	static
 ../Core/Src/can.c:92:6:Send_cell_data	56	static
-../Core/Src/can.c:121:6:Send_temp_data	64	static
+../Core/Src/can.c:121:6:Send_temp_data	88	static
 ../Core/Src/can.c:217:6:Send_Soc	32	static

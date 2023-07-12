@@ -147,7 +147,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 			}
 		}
 #else
-	uint8_t temp_id = 0;
+
 	for(int i = 0; i < IC_NUM; i++){
 
 			uint32_t id_t = 1960;
@@ -165,45 +165,45 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 			uint8_t c1_3 = buf3;
 			uint8_t c2_3 = buf3 >> 8;
 
-			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
+			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, i, 0};
 
 			CanSend(TxData, id_t);
 			delay_u(100);
 
-			buf = temp_data[i][3].temp;
-			buf2 = temp_data[i][4].temp;
-			buf3 = temp_data[i][3].temp;
+			uint16_t buf4 = temp_data[i][3].temp;
+			uint16_t buf5 = temp_data[i][4].temp;
+			uint16_t buf6 = temp_data[i][3].temp;
 
-			c1_1 = buf;
-			c2_1 = buf >> 8;
+			uint8_t c1_4 = buf4;
+			uint8_t c2_4 = buf4 >> 8;
 
-			c1_2 = buf2;
-			c2_2 = buf2 >> 8;
+			uint8_t c1_5 = buf5;
+			uint8_t c2_5 = buf5 >> 8;
 
-			c1_3 = buf3;
-			c2_3 = buf3 >> 8;
+			uint8_t c1_6 = buf6;
+			uint8_t c2_6 = buf6 >> 8;
 
-			uint8_t TxData1[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 1};
+			uint8_t TxData1[8] = { c1_4, c2_4, c1_5, c2_5 ,c1_6, c2_6, i, 1};
 
-			CanSend(TxData, id_t);
+			CanSend(TxData1, id_t);
 			delay_u(100);
 
-			buf = temp_data[i][2].temp;
-			buf2 = temp_data[i][1].temp;
-			buf3 = temp_data[i][0].temp;
+			uint16_t buf7 = temp_data[i][2].temp;
+			uint16_t buf8 = temp_data[i][1].temp;
+			uint16_t buf9 = temp_data[i][0].temp;
 
-			c1_1 = buf;
-			c2_1 = buf >> 8;
+			uint8_t c1_7 = buf7;
+			uint8_t c2_7 = buf7 >> 8;
 
-			c1_2 = buf2;
-			c2_2 = buf2 >> 8;
+			uint8_t c1_8 = buf8;
+			uint8_t c2_8 = buf8 >> 8;
 
-			c1_3 = buf3;
-			c2_3 = buf3 >> 8;
+			uint8_t c1_9 = buf9;
+			uint8_t c2_9 = buf9 >> 8;
 
 
-			uint8_t TxData2[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 2};
-			CanSend(TxData, id_t);
+			uint8_t TxData2[8] = { c1_7, c2_7, c1_8, c2_8 ,c1_9, c2_9, i, 2};
+			CanSend(TxData2, id_t);
 			delay_u(100);
 		}
 #endif
@@ -233,7 +233,10 @@ void Send_Soc(status_data_t *status_data){
 	Tx_Data[4]= (uint8_t)(buf1);
 	Tx_Data[5]= (uint8_t)(buf1 >> 8);
 
+	uint16_t buf2 = (uint16_t)status_data->max_temp;
 
+	Tx_Data[6]= (uint8_t)(buf1);
+	Tx_Data[7]= (uint8_t)(buf1 >> 8);
 
 	CanSend(Tx_Data, CAN_SOC);
 
