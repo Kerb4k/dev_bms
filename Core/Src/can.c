@@ -53,7 +53,7 @@ uint8_t CheckCanError( void )
 	return offcan;
 }
 
-void CanSend(uint8_t *TxData, uint8_t identifier ){
+void CanSend(uint8_t *TxData, uint32_t identifier ){
 
 	TxHeader.Identifier = identifier;
 
@@ -110,7 +110,8 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 
 			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, i, j};
 
-			CanSend(TxData, 1912);
+			uint32_t id_c = 0x778;
+			CanSend(TxData, id_c);
 			delay_u(100);
 		}
 	}
@@ -149,6 +150,8 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 	uint8_t temp_id = 0;
 	for(int i = 0; i < IC_NUM; i++){
 
+			uint32_t id_t = 1960;
+
 			uint16_t buf = temp_data[i][0].temp;
 			uint16_t buf2 = temp_data[i][1].temp;
 			uint16_t buf3 = temp_data[i][2].temp;
@@ -164,7 +167,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 			uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
 
-			CanSend(TxData, 1960);
+			CanSend(TxData, id_t);
 			delay_u(100);
 
 			buf = temp_data[i][3].temp;
@@ -182,7 +185,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 			uint8_t TxData1[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 1};
 
-			CanSend(TxData, temp_id);
+			CanSend(TxData, id_t);
 			delay_u(100);
 
 			buf = temp_data[i][2].temp;
@@ -200,7 +203,7 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 
 			uint8_t TxData2[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 2};
-			CanSend(TxData, temp_id);
+			CanSend(TxData, id_t);
 			delay_u(100);
 		}
 #endif

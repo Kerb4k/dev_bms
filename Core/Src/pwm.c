@@ -35,6 +35,6 @@ void set_fan_duty_cycle(status_data_t *status_data){
 		 __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, MAX_PWM);
 	}
 	else{
-		 __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 12);
+		 __HAL_TIM_SET_COMPARE(&htim8, TIM_CHANNEL_3, 18);
 	}
 }

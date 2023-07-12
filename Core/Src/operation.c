@@ -236,8 +236,10 @@ int8_t core_routine(int32_t retest){
 #endif
 
 #if CAN_ENABLED
-	//Send_cell_data(cell_data);
-	//Send_temp_data(temp_data);
+
+	Send_cell_data(cell_data);
+
+	Send_temp_data(temp_data);
 	Send_Soc(&status_data);
 #endif
 

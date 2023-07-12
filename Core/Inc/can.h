@@ -58,7 +58,7 @@ int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1);
 
 uint8_t CheckCanError( void );
 
-void CanSend(uint8_t *TxData[], uint8_t identifier );
+void CanSend(uint8_t *TxData[], uint32_t identifier );
 
 uint8_t Send_cell_data(cell_data_t cell_data[][CELL_NUM]);
 
