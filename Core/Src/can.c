@@ -67,9 +67,9 @@ void CanSend(uint8_t *TxData, uint32_t identifier ){
 int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1)
 {
     /* Infinite loop to keep trying to read the message */
-	uint8_t t = 0;
+	uint32_t t = 0;
 
-    while(t < 100)
+    while(t < 4294967295)
     {
     	t++;
         /* Check if a new message is available in RX FIFO 0 */

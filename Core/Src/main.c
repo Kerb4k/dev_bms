@@ -195,7 +195,7 @@ static void MX_FDCAN1_Init(void)
   hfdcan1.Init.DataSyncJumpWidth = 1;
   hfdcan1.Init.DataTimeSeg1 = 1;
   hfdcan1.Init.DataTimeSeg2 = 1;
-  hfdcan1.Init.StdFiltersNbr = 28;
+  hfdcan1.Init.StdFiltersNbr = 29;
   hfdcan1.Init.ExtFiltersNbr = 0;
   hfdcan1.Init.TxFifoQueueMode = FDCAN_TX_FIFO_OPERATION;
   if (HAL_FDCAN_Init(&hfdcan1) != HAL_OK)
@@ -203,67 +203,80 @@ static void MX_FDCAN1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN FDCAN1_Init 2 */
-  FDCAN_FilterTypeDef	sFilterConfig;
+  FDCAN_FilterTypeDef sFilterConfig;
 
   if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan1, FDCAN_RX_FIFO0, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
-  	if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan1, FDCAN_RX_FIFO1, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
-
-    //only accept config/request can messages and sync can messages
-  	sFilterConfig.IdType = FDCAN_STANDARD_ID;
-  	sFilterConfig.FilterIndex = 0;
-  	sFilterConfig.FilterType = FDCAN_FILTER_MASK;
-  	sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-  	sFilterConfig.FilterID1 = 1900; //CANID_CONFIG;
-  	sFilterConfig.FilterID2 = 0x7FF;
-  	if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
-
-    // Additional filter configuration for 0x52x messages
-    sFilterConfig.IdType = FDCAN_STANDARD_ID;
-    sFilterConfig.FilterIndex = 1;
-    sFilterConfig.FilterType = FDCAN_FILTER_MASK;
-    sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
-    sFilterConfig.FilterID1 = 0x520;   // Start of the range
-    sFilterConfig.FilterID2 = 0x700;   // Mask for the filter. This will allow IDs 0x520 - 0x52F
-    if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
     {
-        Error_Handler();
+      Error_Handler();
+    }
+  if (HAL_FDCAN_ConfigRxFifoOverwrite(&hfdcan1, FDCAN_RX_FIFO1, FDCAN_RX_FIFO_OVERWRITE) != HAL_OK)
+    {
+      Error_Handler();
     }
 
-  	if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
+  //only accept config/request can messages and sync can messages
+  sFilterConfig.IdType = FDCAN_STANDARD_ID;
+  sFilterConfig.FilterIndex = 0;
+  sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+  sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  sFilterConfig.FilterID1 = 1900; //CANID_CONFIG;
+  sFilterConfig.FilterID2 = 0x7FF;
+  if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
+    {
+      Error_Handler();
+    }
 
-  	if(HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
-  	if(HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
-  	{
-  		Error_Handler();
-  	}
+  // Additional filter configuration for 0x52x messages
+  sFilterConfig.IdType = FDCAN_STANDARD_ID;
+  sFilterConfig.FilterIndex = 1;
+  sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+  sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  sFilterConfig.FilterID1 = 0x520;   // Start of the range
+  sFilterConfig.FilterID2 = 0x700;   // Mask for the filter. This will allow IDs 0x520 - 0x52F
+  if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
+  {
+      Error_Handler();
+  }
 
-  	TxHeader.Identifier = 0x123; // Modify this with your identifier
-  	TxHeader.IdType = FDCAN_STANDARD_ID;
-  	TxHeader.TxFrameType = FDCAN_DATA_FRAME;
-  	TxHeader.DataLength = FDCAN_DLC_BYTES_8;
-  	TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
-  	TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
-  	TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
-  	TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
-  	TxHeader.MessageMarker = 0;
+  // Filter configuration for message ID 150
+  sFilterConfig.IdType = FDCAN_STANDARD_ID;
+  sFilterConfig.FilterIndex = 2; // Different index for this filter
+  sFilterConfig.FilterType = FDCAN_FILTER_MASK;
+  sFilterConfig.FilterConfig = FDCAN_FILTER_TO_RXFIFO0;
+  sFilterConfig.FilterID1 = 150;   // Specific ID
+  sFilterConfig.FilterID2 = 0x7FF;   // Mask for the filter. This will allow only ID 150
+  if (HAL_FDCAN_ConfigFilter(&hfdcan1, &sFilterConfig) != HAL_OK)
+  {
+      Error_Handler();
+  }
+
+  if (HAL_FDCAN_ConfigGlobalFilter(&hfdcan1, FDCAN_REJECT, FDCAN_REJECT, FDCAN_REJECT_REMOTE, FDCAN_REJECT_REMOTE) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+  if(HAL_FDCAN_Start(&hfdcan1) != HAL_OK)
+    {
+      Error_Handler();
+    }
+  if(HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
+  TxHeader.Identifier = 0x123; // Modify this with your identifier
+  TxHeader.IdType = FDCAN_STANDARD_ID;
+  TxHeader.TxFrameType = FDCAN_DATA_FRAME;
+  TxHeader.DataLength = FDCAN_DLC_BYTES_8;
+  TxHeader.ErrorStateIndicator = FDCAN_ESI_ACTIVE;
+  TxHeader.BitRateSwitch = FDCAN_BRS_OFF;
+  TxHeader.FDFormat = FDCAN_CLASSIC_CAN;
+  TxHeader.TxEventFifoControl = FDCAN_NO_TX_EVENTS;
+  TxHeader.MessageMarker = 0;
   /* USER CODE END FDCAN1_Init 2 */
 
 }
+
 
 /**
   * @brief SPI1 Initialization Function

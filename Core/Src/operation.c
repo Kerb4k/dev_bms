@@ -84,7 +84,7 @@ void operation_main(void){
 		status_data.opmode = 0;
 		status_data.opmode = (1 << 0)|(1 << 4);
 
-		status_data.mode = 0;
+		status_data.mode = 2;
 
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, SET);
 
@@ -117,9 +117,8 @@ void operation_main(void){
 
 				break;
 			case 2:
-				status_data.uptime++;
+
 				charge_routine();
-				HAL_Delay(2000);
 				break;
 			case 3:
 				//debug_routine();
@@ -187,25 +186,21 @@ int AMS_OK(status_data_t *status_data, limit_t *limit){
 
 
 void charge_routine(void){
-	status_data.air_m = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
-	status_data.air_p = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7);
-	status_data.air_pre = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
 
-	empty_disch_cfg();
-	read_cell_voltage();
-	read_temp_measurement();
-	get_minmax_voltage(IC_NUM, cell_data, &status_data);
-	get_minmax_temperature(IC_NUM, temp_data, &status_data);
-	calc_sum_of_cells(IC_NUM, cell_data, &status_data);
-	AMS_OK(&status_data, &limits);
 
-#if IVT
-	read_IVT(&status_data);
-	calculate_soc(&status_data);
-	precharge_compare();
-#endif
+	uint8_t flag = 0;
 
-	balance_routine();
+
+	uint8_t RxData2[8];
+		while(ReadCANBusMessage(0x96, &RxData2)){
+			delay_u(200);
+		}
+
+	while(1){
+		core_routine(RETEST_YES);
+		HAL_Delay(100);
+	}
+
 
 }
 
@@ -298,7 +293,15 @@ void precharge_compare(void)
 	if (status_data.safe_state_executed == 0) {
 		if ((percentage >= 95) && (check_voltage_match() == true) && status_data.IVT_U1_f > limits.precharge_min_start_voltage) {
 			if(status_data.pre_s == false)
-				HAL_Delay(5000);
+			{
+				uint32_t starttick = HAL_GetTick();
+				while ( HAL_GetTick() - starttick < 5000 )
+				{
+					calculate_soc(&status_data);
+					Send_Soc(&status_data);
+					HAL_Delay(100);
+				}
+			}
 			close_PRE();
 		}
 		else
