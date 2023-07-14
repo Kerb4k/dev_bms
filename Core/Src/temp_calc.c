@@ -17,6 +17,7 @@ void temp_calc(uint8_t total_ic,  temp_data_t temp_data[][GPIO_NUM]){ //fix argu
 			vv = temp_data[i][j].raw;
 			v = vv/10000;
 			r = (v*10000)/(3-v);
+			//r = (v*10000)/v;
 			t = log(r/10000);
 			    t = t / 3660;
 			    t = t + 1/298.15;

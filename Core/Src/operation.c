@@ -84,7 +84,7 @@ void operation_main(void){
 		status_data.opmode = 0;
 		status_data.opmode = (1 << 0)|(1 << 4);
 
-		status_data.mode = 2;
+		status_data.mode = 3;
 
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, SET);
 
@@ -122,8 +122,11 @@ void operation_main(void){
 				break;
 			case 3:
 				//debug_routine();
-				close_AIR();
-				close_PRE();
+				read_cell_voltage();
+				read_temp_measurement();
+				get_minmax_temperature(IC_NUM, temp_data, &status_data);
+				HAL_Delay(1000);
+
 				break;
 			default:
 				break;
