@@ -24,7 +24,7 @@ void temp_calc(uint8_t total_ic,  temp_data_t temp_data[][GPIO_NUM]){ //fix argu
 			    t = 1/t;
 
 			    t -= 273.15;
-		temp_data[i][j].temp = (int)t;
+		temp_data[i][j].temp = (int)t-15;
 		//	ic[i].aux.s_temp[j] = t;
 
 		}
