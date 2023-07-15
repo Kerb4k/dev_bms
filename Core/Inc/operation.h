@@ -14,7 +14,7 @@
 void operation_main(void);
 int8_t core_routine(int32_t retest);
 void balance_routine(void);
-void charge_routine(void);
+int8_t charge_routine(void);
 void debug_routine(void);
 void datalog_routine(void);
 void dis_check(void);
