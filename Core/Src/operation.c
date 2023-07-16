@@ -84,7 +84,7 @@ void operation_main(void){
 		status_data.opmode = 0;
 		status_data.opmode = (1 << 0)|(1 << 4);
 
-		status_data.mode = 0;
+		status_data.mode = 2;
 
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, SET);
 
@@ -232,7 +232,7 @@ int8_t charge_routine(void){
 
 		balance_routine();
 		HAL_Delay(100);
-		return test_limits(&status_data, &limits, retest);
+	//	return test_limits(&status_data, &limits, RETEST_YES);
 
 	}
 

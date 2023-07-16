@@ -123,28 +123,61 @@ void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 #if TEMP_FIXED
 	uint8_t temp_id = 0;
 		for(int i = 0; i < IC_NUM; i++){
-			for(int j = 0; j < GPIO_NUM; j += 3){
-				uint16_t buf = temp_data[i][j].temp;
-				uint16_t buf2 = temp_data[i][j+1].temp;
-				uint16_t buf3 = temp_data[i][j+2].temp;
+			uint32_t id_t = 1960;
 
-				uint8_t c1_1 = buf;
-				uint8_t c2_1 = buf >> 8;
+						uint16_t buf = temp_data[i][0].temp;
+						uint16_t buf2 = temp_data[i][1].temp;
+						uint16_t buf3 = temp_data[i][2].temp;
 
-				uint8_t c1_2 = buf2;
-				uint8_t c2_2 = buf2 >> 8;
+						uint8_t c1_1 = buf;
+						uint8_t c2_1 = buf >> 8;
 
-				uint8_t c1_3 = buf3;
-				uint8_t c2_3 = buf3 >> 8;
+						uint8_t c1_2 = buf2;
+						uint8_t c2_2 = buf2 >> 8;
+
+						uint8_t c1_3 = buf3;
+						uint8_t c2_3 = buf3 >> 8;
+
+						uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, i, 0};
+
+						CanSend(TxData, id_t);
+						delay_u(100);
+
+						uint16_t buf4 = temp_data[i][3].temp;
+						uint16_t buf5 = temp_data[i][4].temp;
+						uint16_t buf6 = temp_data[i][6].temp;
+
+						uint8_t c1_4 = buf4;
+						uint8_t c2_4 = buf4 >> 8;
+
+						uint8_t c1_5 = buf5;
+						uint8_t c2_5 = buf5 >> 8;
+
+						uint8_t c1_6 = buf6;
+						uint8_t c2_6 = buf6 >> 8;
+
+						uint8_t TxData1[8] = { c1_4, c2_4, c1_5, c2_5 ,c1_6, c2_6, i, 1};
+
+						CanSend(TxData1, id_t);
+						delay_u(100);
+
+						uint16_t buf7 = temp_data[i][7].temp;
+						uint16_t buf8 = temp_data[i][8].temp;
+						uint16_t buf9 = temp_data[i][9].temp;
+
+						uint8_t c1_7 = buf7;
+						uint8_t c2_7 = buf7 >> 8;
+
+						uint8_t c1_8 = buf8;
+						uint8_t c2_8 = buf8 >> 8;
+
+						uint8_t c1_9 = buf9;
+						uint8_t c2_9 = buf9 >> 8;
 
 
-
-				temp_id = i * 18 + j + 200;
-				uint8_t TxData[8] = { c1_1, c2_1, c1_2, c2_2 ,c1_3, c2_3, 0, 0};
-
-				CanSend(TxData, temp_id);
-				delay_u(100);
-			}
+						uint8_t TxData2[8] = { c1_7, c2_7, c1_8, c2_8 ,c1_9, c2_9, i, 2};
+						CanSend(TxData2, id_t);
+						delay_u(100);
 		}
 #else
 

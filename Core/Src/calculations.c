@@ -70,7 +70,7 @@ void get_minmax_temperature(uint8_t total_ic, temp_data_t temp_data[][GPIO_NUM],
 
 	for (uint8_t i = 0; i < total_ic; i++)
 	{
-		for (uint8_t j = 0; j < GPIO_NUM-7; j++)
+		for (uint8_t j = 0; j < 10; j++)
 		{
 
 			if (temp_data[i][j].temp > max)
@@ -80,7 +80,7 @@ void get_minmax_temperature(uint8_t total_ic, temp_data_t temp_data[][GPIO_NUM],
 				max_id = (i << 4) | (j & 0x0f);
 
 			}
-			if (temp_data[i][j].temp < min)
+			if (temp_data[i][j].temp < min && j != 5)
 			{
 
 				min = temp_data[i][j].temp;
