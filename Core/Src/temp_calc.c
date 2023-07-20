@@ -11,8 +11,8 @@
 
 void temp_calc(uint8_t total_ic,  temp_data_t temp_data[][GPIO_NUM]){
     float v, r, vv , t;
-    float B = 3730; // B-parameter from CSV file
-    float R0 = 10000; // Reference resistance at 25 degrees Celsius
+    float B = 3605; // B-parameter from CSV file
+    float R0 = 2700; // Reference resistance at 25 degrees Celsius
     float T0 = 298.15; // Reference temperature in Kelvin (25 degrees Celsius)
     float tolerance = 0.05; // Tolerance of the thermistor
 
