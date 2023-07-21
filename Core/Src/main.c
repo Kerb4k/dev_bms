@@ -109,6 +109,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIMEx_PWMN_Start(&htim8, TIM_CHANNEL_3);
   uint16_t pulse = 0;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
