@@ -1,5 +1,5 @@
-isoSpi.c:12:6:delay_u	2
-isoSpi.c:23:6:delay_m	1
-isoSpi.c:27:9:spi_write_read_byte	1
-isoSpi.c:38:10:spi_write_array	1
-isoSpi.c:47:10:spi_write_then_read_array_ltc	1
+../Core/Src/isoSpi.c:12:6:delay_u	2
+../Core/Src/isoSpi.c:23:6:delay_m	1
+../Core/Src/isoSpi.c:27:9:spi_write_read_byte	1
+../Core/Src/isoSpi.c:38:10:spi_write_array	1
+../Core/Src/isoSpi.c:47:10:spi_write_then_read_array_ltc	1

@@ -415,6 +415,14 @@ uint8_t read_cell_voltage(void){
 
 	for(uint8_t reg = 0; reg < 5; reg++){
 		pec = rdcv(0, IC_NUM, cell_data);
+#if 1 // put 0 if cells are fixed
+		if(IC_NUM == 8){
+			cell_data[1][8].voltage += cell_data[1][9].voltage;
+			cell_data[1][8].voltage /= 2;
+			cell_data[1][9].voltage = cell_data[1][8].voltage;
+		}
+#endif
+
 		if (pec == 0) {
 			return 0;
 		}

@@ -112,6 +112,9 @@ void get_minmax_voltage(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], sta
 	uint8_t max_id = 0;
 
 
+
+
+
 	for (uint8_t i = 0; i < total_ic; i++)
 	{
 		for (uint8_t j = 0; j < CELL_NUM; j++)

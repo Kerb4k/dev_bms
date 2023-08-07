@@ -1,2 +1,2 @@
-pwm.c:25:6:fan_control	2
-pwm.c:32:6:set_fan_duty_cycle	2
+../Core/Src/pwm.c:25:6:fan_control	2
+../Core/Src/pwm.c:32:6:set_fan_duty_cycle	2
