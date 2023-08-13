@@ -135,7 +135,7 @@ typedef struct status_data_t
 	float pec_error_average;
 	uint32_t error_counters[NUMB_REASON_CODES];
 	uint32_t limping;
-	uint32_t recieved_IVT;
+	uint8_t recieved_IVT;
 	uint32_t limp_counters[10]; //this 10 shouldn't be hardcoded here but it is now
 }status_data_t;
 

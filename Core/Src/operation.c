@@ -181,7 +181,8 @@ void open_PRE(void){
 int AMS_OK(status_data_t *status_data, limit_t *limit){
 	if(status_data->min_voltage > limit->min_voltage && status_data->max_voltage < limit->max_voltage){
 		if(status_data->min_temp > limit->min_temp && status_data->max_temp < limit->max_temp){
-			close_AIR();
+			if(status_data->recieved_IVT)
+				close_AIR();
 			return 0;
 		}
 	}
@@ -270,9 +271,8 @@ int8_t core_routine(int32_t retest){
 
 #if CAN_ENABLED
 
-	//Send_cell_data(cell_data);
-
-	//Send_temp_data(temp_data);
+	Send_cell_data(cell_data);
+	Send_temp_data(temp_data);
 	Send_Soc(&status_data);
 #endif
 
@@ -285,35 +285,51 @@ int8_t core_routine(int32_t retest){
 void read_IVT(status_data_t *status_data){
 
 	uint8_t RxData1[8];
-	while(ReadCANBusMessage(0x522, &RxData1)){
+
+	uint8_t check = 0;
+
+	for(int i = 0; i < 5000; i++){
+
+		check = ReadCANBusMessage(0x522, &RxData1);
+		if(check == 0)
+			break;
 		delay_u(200);
 	}
 
-	//delay_u(500);
-
-	status_data->IVT_U1 = (uint32_t)(RxData1[5] | (RxData1[4] << 8) | (RxData1[3] << 16) | (RxData1[2] << 24) );
-	status_data->IVT_U1_f = status_data->IVT_U1 / 1000.0f;
-	uint8_t RxData2[8];
-	while(ReadCANBusMessage(0x523, &RxData2)){
-		delay_u(200);
+	if(check){
+		status_data->recieved_IVT = 0;
+		AMS_OK(&status_data, &limits); //TODO check if it works
+	}
+	else{
+		status_data->recieved_IVT = 1;
 	}
 	//delay_u(500);
-	status_data->IVT_U2 = (uint32_t)(RxData2[5] | (RxData2[4] << 8) | (RxData2[3] << 16) | (RxData2[2] << 24) );
-	status_data->IVT_U2_f = status_data->IVT_U2 / 1000.0f;
-	uint8_t RxData3[8];
-	while(ReadCANBusMessage(0x528, &RxData3)){
-		delay_u(200);
-	}
-	//delay_u(500);
-	status_data->IVT_Wh = (uint32_t)(RxData3[5] | (RxData3[4] << 8) | (RxData3[3] << 16) | (RxData3[2] << 24) );
-	status_data->IVT_Wh_f = status_data->IVT_Wh / 1000.0f;
 
-	uint8_t RxData4[8];
-		while(ReadCANBusMessage(0x521, &RxData4)){
+	if(status_data->recieved_IVT){
+		status_data->IVT_U1 = (uint32_t)(RxData1[5] | (RxData1[4] << 8) | (RxData1[3] << 16) | (RxData1[2] << 24) );
+		status_data->IVT_U1_f = status_data->IVT_U1 / 1000.0f;
+		uint8_t RxData2[8];
+		while(ReadCANBusMessage(0x523, &RxData2)){
 			delay_u(200);
 		}
-	status_data->IVT_I = (uint32_t)(RxData4[5] | (RxData4[4] << 8) | (RxData4[3] << 16) | (RxData4[2] << 24) );
-	status_data->IVT_I_f = status_data->IVT_I / 1000.0f;
+		//delay_u(500);
+		status_data->IVT_U2 = (uint32_t)(RxData2[5] | (RxData2[4] << 8) | (RxData2[3] << 16) | (RxData2[2] << 24) );
+		status_data->IVT_U2_f = status_data->IVT_U2 / 1000.0f;
+		uint8_t RxData3[8];
+		while(ReadCANBusMessage(0x528, &RxData3)){
+			delay_u(200);
+		}
+		//delay_u(500);
+		status_data->IVT_Wh = (uint32_t)(RxData3[5] | (RxData3[4] << 8) | (RxData3[3] << 16) | (RxData3[2] << 24) );
+		status_data->IVT_Wh_f = status_data->IVT_Wh / 1000.0f;
+
+		uint8_t RxData4[8];
+			while(ReadCANBusMessage(0x521, &RxData4)){
+				delay_u(200);
+			}
+		status_data->IVT_I = (uint32_t)(RxData4[5] | (RxData4[4] << 8) | (RxData4[3] << 16) | (RxData4[2] << 24) );
+		status_data->IVT_I_f = status_data->IVT_I / 1000.0f;
+	}
 
 
 }
@@ -480,7 +496,7 @@ void cfg_slaves(void){
 	WakeUp();
 	wrcfg(IC_NUM, slave_cfg_tx);
 	WakeUp();
-	wrcfgb(IC_NUM, slave_cfgb_tx); //TODO
+	wrcfgb(IC_NUM, slave_cfgb_tx);
 	delay_u(500);
 	rdcfg(IC_NUM, slave_cfg_rx);
 	rdcfgb(IC_NUM, slave_cfgb_rx);
