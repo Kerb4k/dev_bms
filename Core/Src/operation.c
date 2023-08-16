@@ -84,7 +84,7 @@ void operation_main(void){
 		status_data.opmode = 0;
 		status_data.opmode = (1 << 0)|(1 << 4);
 
-		status_data.mode = 1;
+		status_data.mode = 0;
 
 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, SET);
 
@@ -754,26 +754,21 @@ else if (status_data->error_counters[OVERCURR]>0)
 #endif
 
 #if IVT_TIMEOUT
+	#define IVT_TIMEOUT_TICKS 2000
+	static uint32_t lastivt = 0;
+	uint32_t curtick = HAL_GetTick();
 	if (status_data->recieved_IVT != 1 )
 	{
-		if(!(status_data->error_counters[IVT_LOST]<=ERROR_COUNT_LIMIT_LOST && retest))
+		if ( curtick > lastivt + IVT_TIMEOUT_TICKS )
 		{
 			goto_safe_state(IVT_LOST);
 			return -1;
 		}
-		else
-		{
-			status_data->error_counters[IVT_LOST]++;
-		}
 	}
 	else
 	{
+		lastivt = HAL_GetTick();
 		status_data->recieved_IVT = 0;
-
-		if((status_data->error_counters[ACCU_UNDERVOLTAGE]>0))
-		{
-			status_data->error_counters[IVT_LOST]--;
-		}
 	}
 #endif
 
