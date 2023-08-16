@@ -273,9 +273,10 @@ int8_t core_routine(int32_t retest){
 	Send_cell_data(cell_data);
 	Send_temp_data(temp_data);
 	Send_Soc(&status_data);
+	test_limp(&status_data, &limits);
 #endif
 
-	test_limp(&status_data, &limits);
+
 
 
 	return test_limits(&status_data, &limits, retest);
