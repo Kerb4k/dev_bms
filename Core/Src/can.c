@@ -57,11 +57,10 @@ void CanSend(uint8_t *TxData, uint32_t identifier ){
 
 	TxHeader.Identifier = identifier;
 
-	if ( HAL_FDCAN_GetTxFifoFreeLevel(hfdcanp) != 0 ){
-		if (HAL_FDCAN_AddMessageToTxFifoQ(hfdcanp, &TxHeader, TxData) != HAL_OK){
-			CanSend(TxData, identifier);
-			delay_u(10);
-		}
+
+	while(HAL_FDCAN_GetTxFifoFreeLevel(hfdcanp) != 0 && HAL_FDCAN_AddMessageToTxFifoQ(hfdcanp, &TxHeader, TxData) != HAL_OK){
+		CanSend(TxData, identifier);
+		delay_u(10);
 	}
 
 }
