@@ -117,7 +117,7 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 	}
 }
 
-#define TEMP_FIXED 0
+#define TEMP_FIXED 1
 void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 #if TEMP_FIXED
