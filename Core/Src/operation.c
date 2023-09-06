@@ -39,7 +39,7 @@ status_data_t status_data;
 
 limit_t limits  = {
 	.max_voltage = 42000,
-	.min_voltage = 30000,
+	.min_voltage = 31000,
 	.max_charge_temp = 4400,
 	.max_temp = 57,
 	.min_temp = 0,
@@ -48,7 +48,7 @@ limit_t limits  = {
 	.charger_dis = 41800,
 	.charger_en = 41500,
 	.tolerance = 100,
-	.accu_min_voltage = 490.0,
+	.accu_min_voltage = 450.0,
 	.precharge_min_start_voltage = 450.0,
 	.precharge_max_end_voltage = 450.0,
 	.limp_min_voltage = 34000
