@@ -329,6 +329,10 @@ void read_IVT(status_data_t *status_data){
 			}
 		status_data->IVT_I = (uint32_t)(RxData4[5] | (RxData4[4] << 8) | (RxData4[3] << 16) | (RxData4[2] << 24) );
 		status_data->IVT_I_f = status_data->IVT_I / 1000.0f;
+
+		if(status_data->IVT_U1_f * status_data->IVT_I_f > 80000){
+			open_AIR();
+		}
 	}
 
 
