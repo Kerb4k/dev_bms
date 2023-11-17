@@ -39,7 +39,7 @@ status_data_t status_data;
 
 limit_t limits  = {
 	.max_voltage = 42000,
-	.min_voltage = 30000,
+	.min_voltage = 31000,
 	.max_charge_temp = 4400,
 	.max_temp = 59,
 	.min_temp = 0,
@@ -48,7 +48,7 @@ limit_t limits  = {
 	.charger_dis = 41800,
 	.charger_en = 41500,
 	.tolerance = 100,
-	.accu_min_voltage = 490.0,
+	.accu_min_voltage = 450.0,
 	.precharge_min_start_voltage = 450.0,
 	.precharge_max_end_voltage = 450.0,
 	.limp_min_voltage = 34000
@@ -110,21 +110,27 @@ void operation_main(void){
 				break;
 			case 1:
 				read_cell_voltage();
+				read_temp_measurement();
 				get_minmax_voltage(IC_NUM, cell_data, &status_data);
+				get_minmax_temperature(IC_NUM, temp_data, &status_data);
+				calc_sum_of_cells(IC_NUM, cell_data, &status_data);
 				balance_routine();
 
-				HAL_Delay(2000);
+				HAL_Delay(1900);
 
 				break;
 			case 2:
-				status_data.uptime++;
+
 				charge_routine();
-				HAL_Delay(2000);
 				break;
 			case 3:
 				//debug_routine();
-				close_AIR();
-				close_PRE();
+				read_cell_voltage();
+				read_temp_measurement();
+				get_minmax_temperature(IC_NUM, temp_data, &status_data);
+				get_minmax_voltage(IC_NUM, cell_data, &status_data);
+				HAL_Delay(100);
+
 				break;
 			default:
 				break;
@@ -175,7 +181,8 @@ void open_PRE(void){
 int AMS_OK(status_data_t *status_data, limit_t *limit){
 	if(status_data->min_voltage > limit->min_voltage && status_data->max_voltage < limit->max_voltage){
 		if(status_data->min_temp > limit->min_temp && status_data->max_temp < limit->max_temp){
-			close_AIR();
+			if(status_data->recieved_IVT)
+				close_AIR();
 			return 0;
 		}
 	}
@@ -186,26 +193,53 @@ int AMS_OK(status_data_t *status_data, limit_t *limit){
 
 
 
-void charge_routine(void){
-	status_data.air_m = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
-	status_data.air_p = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7);
-	status_data.air_pre = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
+int8_t charge_routine(void){
 
-	empty_disch_cfg();
-	read_cell_voltage();
-	read_temp_measurement();
-	get_minmax_voltage(IC_NUM, cell_data, &status_data);
-	get_minmax_temperature(IC_NUM, temp_data, &status_data);
-	calc_sum_of_cells(IC_NUM, cell_data, &status_data);
-	AMS_OK(&status_data, &limits);
 
-#if IVT
-	read_IVT(&status_data);
-	calculate_soc(&status_data);
-	precharge_compare();
-#endif
+	uint8_t flag = 0;
 
-	balance_routine();
+
+	uint8_t RxData2[8];
+		while(ReadCANBusMessage(0x96, &RxData2)){
+			delay_u(200);
+		}
+
+	while(1){
+		status_data.air_m = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_6);
+		status_data.air_p = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_7);
+		status_data.air_pre = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
+
+		empty_disch_cfg();
+		read_cell_voltage();
+		read_temp_measurement();
+		get_minmax_voltage(IC_NUM, cell_data, &status_data);
+		get_minmax_temperature(IC_NUM, temp_data, &status_data);
+		calc_sum_of_cells(IC_NUM, cell_data, &status_data);
+		AMS_OK(&status_data, &limits);
+		//fan_control(&status_data);
+		set_fan_duty_cycle(&status_data);
+
+	#if IVT
+		read_IVT(&status_data);
+		calculate_soc(&status_data);
+		precharge_compare();
+		calculate_soc(&status_data);
+	#endif
+
+	#if CAN_ENABLED
+
+		Send_cell_data(cell_data);
+
+		Send_temp_data(temp_data);
+		Send_Soc(&status_data);
+	#endif
+
+		balance_routine();
+		HAL_Delay(100);
+	//	return test_limits(&status_data, &limits, RETEST_YES);
+
+	}
+
 
 }
 
@@ -225,7 +259,6 @@ int8_t core_routine(int32_t retest){
 	get_minmax_temperature(IC_NUM, temp_data, &status_data);
 	calc_sum_of_cells(IC_NUM, cell_data, &status_data);
 	AMS_OK(&status_data, &limits);
-	//fan_control(&status_data);
 	set_fan_duty_cycle(&status_data);
 
 #if IVT
@@ -236,12 +269,14 @@ int8_t core_routine(int32_t retest){
 #endif
 
 #if CAN_ENABLED
-	//Send_cell_data(cell_data);
-	//Send_temp_data(temp_data);
+
+	Send_cell_data(cell_data);
+	Send_temp_data(temp_data);
 	Send_Soc(&status_data);
+	test_limp(&status_data, &limits);
 #endif
 
-	test_limp(&status_data, &limits);
+
 
 
 	return test_limits(&status_data, &limits, retest);
@@ -250,35 +285,55 @@ int8_t core_routine(int32_t retest){
 void read_IVT(status_data_t *status_data){
 
 	uint8_t RxData1[8];
-	while(ReadCANBusMessage(0x522, &RxData1)){
+
+	uint8_t check = 0;
+
+	for(int i = 0; i < 5000; i++){
+
+		check = ReadCANBusMessage(0x522, &RxData1);
+		if(check == 0)
+			break;
 		delay_u(200);
 	}
 
-	//delay_u(500);
-
-	status_data->IVT_U1 = (uint32_t)(RxData1[5] | (RxData1[4] << 8) | (RxData1[3] << 16) | (RxData1[2] << 24) );
-	status_data->IVT_U1_f = status_data->IVT_U1 / 1000.0f;
-	uint8_t RxData2[8];
-	while(ReadCANBusMessage(0x523, &RxData2)){
-		delay_u(200);
+	if(check){
+		status_data->recieved_IVT = 0;
+		AMS_OK(&status_data, &limits); //TODO check if it works
+	}
+	else{
+		status_data->recieved_IVT = 1;
 	}
 	//delay_u(500);
-	status_data->IVT_U2 = (uint32_t)(RxData2[5] | (RxData2[4] << 8) | (RxData2[3] << 16) | (RxData2[2] << 24) );
-	status_data->IVT_U2_f = status_data->IVT_U2 / 1000.0f;
-	uint8_t RxData3[8];
-	while(ReadCANBusMessage(0x528, &RxData3)){
-		delay_u(200);
-	}
-	//delay_u(500);
-	status_data->IVT_Wh = (uint32_t)(RxData3[5] | (RxData3[4] << 8) | (RxData3[3] << 16) | (RxData3[2] << 24) );
-	status_data->IVT_Wh_f = status_data->IVT_Wh / 1000.0f;
 
-	uint8_t RxData4[8];
-		while(ReadCANBusMessage(0x521, &RxData4)){
+	if(status_data->recieved_IVT){
+		status_data->IVT_U1 = (uint32_t)(RxData1[5] | (RxData1[4] << 8) | (RxData1[3] << 16) | (RxData1[2] << 24) );
+		status_data->IVT_U1_f = status_data->IVT_U1 / 1000.0f;
+		uint8_t RxData2[8];
+		while(ReadCANBusMessage(0x523, &RxData2)){
 			delay_u(200);
 		}
-	status_data->IVT_I = (uint32_t)(RxData4[5] | (RxData4[4] << 8) | (RxData4[3] << 16) | (RxData4[2] << 24) );
-	status_data->IVT_I_f = status_data->IVT_I / 1000.0f;
+		//delay_u(500);
+		status_data->IVT_U2 = (uint32_t)(RxData2[5] | (RxData2[4] << 8) | (RxData2[3] << 16) | (RxData2[2] << 24) );
+		status_data->IVT_U2_f = status_data->IVT_U2 / 1000.0f;
+		uint8_t RxData3[8];
+		while(ReadCANBusMessage(0x528, &RxData3)){
+			delay_u(200);
+		}
+		//delay_u(500);
+		status_data->IVT_Wh = (uint32_t)(RxData3[5] | (RxData3[4] << 8) | (RxData3[3] << 16) | (RxData3[2] << 24) );
+		status_data->IVT_Wh_f = status_data->IVT_Wh / 1000.0f;
+
+		uint8_t RxData4[8];
+			while(ReadCANBusMessage(0x521, &RxData4)){
+				delay_u(200);
+			}
+		status_data->IVT_I = (uint32_t)(RxData4[5] | (RxData4[4] << 8) | (RxData4[3] << 16) | (RxData4[2] << 24) );
+		status_data->IVT_I_f = status_data->IVT_I / 1000.0f;
+
+		if(status_data->IVT_U1_f * status_data->IVT_I_f > 80000){
+			open_AIR();
+		}
+	}
 
 
 }
@@ -296,7 +351,15 @@ void precharge_compare(void)
 	if (status_data.safe_state_executed == 0) {
 		if ((percentage >= 95) && (check_voltage_match() == true) && status_data.IVT_U1_f > limits.precharge_min_start_voltage) {
 			if(status_data.pre_s == false)
-				HAL_Delay(5000);
+			{
+				uint32_t starttick = HAL_GetTick();
+				while ( HAL_GetTick() - starttick < 5000 )
+				{
+					calculate_soc(&status_data);
+					Send_Soc(&status_data);
+					HAL_Delay(100);
+				}
+			}
 			close_PRE();
 		}
 		else
@@ -372,6 +435,20 @@ uint8_t read_cell_voltage(void){
 
 	for(uint8_t reg = 0; reg < 5; reg++){
 		pec = rdcv(0, IC_NUM, cell_data);
+#if 0 // put 0 if cells are fixed
+		if(IC_NUM == 8){
+
+			float avg = (float)(cell_data[1][8].voltage + cell_data[1][9].voltage) / 2;
+
+			cell_data[1][8].voltage = (uint16_t)avg;
+			cell_data[1][9].voltage = (uint16_t)avg;
+		}float avg = (float)(cell_data[1][8].voltage + cell_data[1][9].voltage) / 2;
+
+		cell_data[1][8].voltage = (uint16_t)avg;
+		cell_data[1][9].voltage = (uint16_t)avg;
+	}
+#endif
+
 		if (pec == 0) {
 			return 0;
 		}
@@ -427,7 +504,7 @@ void cfg_slaves(void){
 	WakeUp();
 	wrcfg(IC_NUM, slave_cfg_tx);
 	WakeUp();
-	wrcfgb(IC_NUM, slave_cfgb_tx); //TODO
+	wrcfgb(IC_NUM, slave_cfgb_tx);
 	delay_u(500);
 	rdcfg(IC_NUM, slave_cfg_rx);
 	rdcfgb(IC_NUM, slave_cfgb_rx);
@@ -685,26 +762,21 @@ else if (status_data->error_counters[OVERCURR]>0)
 #endif
 
 #if IVT_TIMEOUT
+	#define IVT_TIMEOUT_TICKS 2000
+	static uint32_t lastivt = 0;
+	uint32_t curtick = HAL_GetTick();
 	if (status_data->recieved_IVT != 1 )
 	{
-		if(!(status_data->error_counters[IVT_LOST]<=ERROR_COUNT_LIMIT_LOST && retest))
+		if ( curtick > lastivt + IVT_TIMEOUT_TICKS )
 		{
 			goto_safe_state(IVT_LOST);
 			return -1;
 		}
-		else
-		{
-			status_data->error_counters[IVT_LOST]++;
-		}
 	}
 	else
 	{
+		lastivt = HAL_GetTick();
 		status_data->recieved_IVT = 0;
-
-		if((status_data->error_counters[ACCU_UNDERVOLTAGE]>0))
-		{
-			status_data->error_counters[IVT_LOST]--;
-		}
 	}
 #endif
 

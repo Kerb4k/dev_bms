@@ -4,6 +4,6 @@
 ../Core/Src/calculations.c:49:6:calculate_soc	16	static
 ../Core/Src/calculations.c:64:6:get_minmax_temperature	40	static
 ../Core/Src/calculations.c:107:6:get_minmax_voltage	32	static
-../Core/Src/calculations.c:141:9:get_duty_cycle	24	static
-../Core/Src/calculations.c:171:6:build_disch_cfg	32	static
-../Core/Src/calculations.c:199:6:build_disch_cfgb	32	static
+../Core/Src/calculations.c:144:9:get_duty_cycle	24	static
+../Core/Src/calculations.c:174:6:build_disch_cfg	32	static
+../Core/Src/calculations.c:202:6:build_disch_cfgb	32	static

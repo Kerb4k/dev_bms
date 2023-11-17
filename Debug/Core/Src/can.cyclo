@@ -1,6 +1,6 @@
-can.c:25:9:CheckCanError	6
-can.c:56:6:CanSend	2
-can.c:67:5:ReadCANBusMessage	4
-can.c:92:6:Send_cell_data	3
-can.c:122:6:Send_temp_data	2
-can.c:224:6:Send_Soc	1
+../Core/Src/can.c:25:9:CheckCanError	6
+../Core/Src/can.c:56:6:CanSend	3
+../Core/Src/can.c:67:5:ReadCANBusMessage	4
+../Core/Src/can.c:92:6:Send_cell_data	3
+../Core/Src/can.c:121:6:Send_temp_data	2
+../Core/Src/can.c:250:6:Send_Soc	2
