@@ -4,11 +4,6 @@
 #include "math.h"
 #include <stdint.h>
 
-
-
-
-
-
 void temp_calc(uint8_t total_ic,  temp_data_t temp_data[][GPIO_NUM]){
     float v, r, t;
     float B = 3730; // B-parameter from CSV file
@@ -44,9 +39,6 @@ void temp_calc(uint8_t total_ic,  temp_data_t temp_data[][GPIO_NUM]){
     		temp_data[i][j].temp = (int)t;
     	}
     }
-
-
-
 }
 
 #endif
