@@ -53,6 +53,15 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 #define CANID_SYNC		0x80
+
+FDCAN_TxHeaderTypeDef TxHeader;
+
+FDCAN_RxHeaderTypeDef RxHeader;
+
+uint8_t               CAN_TxData[8];
+uint8_t               CAN_RxData[8];
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -104,8 +113,22 @@ int main(void)
   MX_TIM8_Init();
   MX_FDCAN1_Init();
   /* USER CODE BEGIN 2 */
+
+  if(HAL_FDCAN_Start(&hfdcan1)!= HAL_OK)
+    {
+  	  Error_Handler();
+    }
+    if (HAL_FDCAN_ActivateNotification(&hfdcan1, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
+    {
+      /* Notification Error */
+      Error_Handler();
+    }
+
   HAL_TIMEx_PWMN_Start(&htim8, TIM_CHANNEL_3);
   uint16_t pulse = 0;
+
+
+
 
   /* USER CODE END 2 */
 

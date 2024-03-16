@@ -10,17 +10,6 @@
 	\brief	Calculates the Sum of Cells.
 */
 
-void get_current(status_data_t *status_data){
-	uint8_t data[8];
-	ReadCANBusMessage(0x521, data, sizeof(data));
-
-	status_data->IVT_I = ((uint32_t)data[2] << 24) |
-	        		     ((uint32_t)data[3] << 16) |
-					     ((uint32_t)data[4] << 8)  |
-					     ((uint32_t)data[5]);
-
-
-}
 
 void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], status_data_t *status_data)
 {
@@ -37,14 +26,6 @@ void calc_sum_of_cells(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], stat
 /*!
 	\brief	Calculate power from current data and Sum of Cells.
 */
-void calculate_power(status_data_t *status_data)
-{
-		int32_t current = status_data->current;
-		uint16_t voltage = status_data->IVT_voltage;
-
-		int32_t power = status_data->IVT_I * (int32_t)voltage;
-		status_data->power = power;
-}
 
 void calculate_soc(status_data_t *status_data){
 
@@ -138,27 +119,6 @@ void get_minmax_voltage(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], sta
 	status_data->max_voltage_id = max_id;
 }
 
-/*!
-	\brief Returns the duty cycle of fan based on temperature input.
-*/
-uint8_t get_duty_cycle(int16_t temperature){
-	uint8_t duty_cycle;
-
-			if (temperature > T2DC_HIGH_TEMPERATURE - 5)
-			{
-				duty_cycle = T2DC_HIGH_DUTY_CYCLE;
-			}
-			else if (temperature < T2DC_LOW_DUTY_CYCLE)
-			{
-				duty_cycle = T2DC_LOW_DUTY_CYCLE;
-			}
-			else
-			{
-				duty_cycle = temperature * T2DC_M + T2DC_B;
-			}
-
-			return duty_cycle;
-}
 
 /*!
 	Parses data in cell_data array
@@ -188,14 +148,6 @@ void build_disch_cfg(uint8_t total_ic, cell_data_t cell_data[][CELL_NUM], uint8_
 		tx_config[i][4] = (DCCx & 0x00ff);
 		tx_config[i][5] = ((DCCx >> 8) & 0x0f);
 	}
-
-
-	/*tx_config[0][0] = 0;
-	tx_config[0][1] = 0;
-	tx_config[0][2] = 0;
-	tx_config[0][3] = 0;
-	tx_config[0][4] = 255;
-	tx_config[0][5] =15;*/
 
 }
 

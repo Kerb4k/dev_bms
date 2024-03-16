@@ -11,7 +11,7 @@
 ../Core/Src/LTC681x.c:387:6:rdcv_reg	24	static
 ../Core/Src/LTC681x.c:440:8:rdaux	80	dynamic
 ../Core/Src/LTC681x.c:540:8:rdaux1	32	static
-../Core/Src/LTC681x.c:568:1:adcv_delay	8	static
+../Core/Src/LTC681x.c:568:6:adcv_delay	8	static
 ../Core/Src/LTC681x.c:572:6:adax_delay	8	static
 ../Core/Src/LTC681x.c:580:6:rdaux_reg	24	static
 ../Core/Src/LTC681x.c:624:8:parse_cells	40	static

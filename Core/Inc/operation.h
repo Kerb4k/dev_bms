@@ -12,9 +12,9 @@
 
 
 void operation_main(void);
-int8_t core_routine(int32_t retest);
+void core_routine(int32_t retest);
 void balance_routine(void);
-int8_t charge_routine(void);
+void charge_routine(void);
 void debug_routine(void);
 void datalog_routine(void);
 void dis_check(void);
@@ -27,8 +27,7 @@ uint8_t read_current_data(void);
 void goto_safe_state(uint8_t reason);
 void close_AIR(void);
 void open_AIR(void);
-int32_t test_limp(status_data_t *status_data, limit_t *limit);
-int8_t test_limits(status_data_t *status_data, limit_t *limit, int32_t retest);
+void test_limp(status_data_t *status_data, limit_t *limit);
 void set_charge_current(void);
 void set_charger(void);
 void fan_energize(void);
@@ -41,6 +40,5 @@ void close_PRE(void);
 void open_PRE(void);
 int check_voltage_match(void);
 void increase_pec_counter(void);
-void read_IVT(status_data_t *status_data);
 int AMS_OK(status_data_t *status_data, limit_t *limit);
 #endif /* INC_OPERATION_H_ */

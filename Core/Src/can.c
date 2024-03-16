@@ -14,6 +14,12 @@ extern FDCAN_HandleTypeDef hfdcan1;
 extern FDCAN_TxHeaderTypeDef TxHeader;
 extern FDCAN_RxHeaderTypeDef RxHeader;
 
+extern status_data_t status_data;
+
+
+extern uint8_t               CAN_TxData[8];
+extern uint8_t               CAN_RxData[8];
+
 uint8_t nlg5a_buffer[4];
 uint8_t nlg5b_buffer[4];
 
@@ -22,36 +28,78 @@ uint8_t nlg5b_buffer[4];
 #define ERR_CANOFFLINE				11
 uint8_t canSendErrorFlag;
 
-uint8_t CheckCanError( void )
-{
-	FDCAN_ProtocolStatusTypeDef CAN1Status;
+void read_IVT_I(){
+	status_data.recieved_IVT = 0;
 
-	static uint8_t offcan1 = 0;
-
-	HAL_FDCAN_GetProtocolStatus(&hfdcan1, &CAN1Status);
-
-	static uint8_t offcan = 0;
-
-	if ( !offcan1 && CAN1Status.BusOff) // detect passive error instead and try to stay off bus till clears?
-	{
-		  HAL_FDCAN_Stop(&hfdcan1);
-		  Set_Error(ERR_CANOFFLINE);
-		  // set LED.
-		  offcan = 1;
-		  return 0;
-	}
-
-	// use the senderrorflag to only try once a second to get back onbus.
-	if ( CAN1Status.BusOff && canSendErrorFlag )
-	{
-		if (HAL_FDCAN_Start(&hfdcan1) == HAL_OK)
-		{
-			offcan = 0;
-		}
-	}
-
-	return offcan;
+	status_data.IVT_I = (uint32_t)(CAN_RxData[5] | (CAN_RxData[4] << 8) | (CAN_RxData[3] << 16) | (CAN_RxData[2] << 24) );
+	status_data.IVT_I_f = status_data.IVT_I / 1000.0f;
 }
+
+void read_IVT_U1(){
+	status_data.recieved_IVT = 0;
+
+	status_data.IVT_U1 = (uint32_t)(CAN_RxData[5] | (CAN_RxData[4] << 8) | (CAN_RxData[3] << 16) | (CAN_RxData[2] << 24) );
+	status_data.IVT_U1_f = status_data.IVT_U1 / 1000.0f;
+}
+
+void read_IVT_U2(){
+	status_data.recieved_IVT = 0;
+
+	status_data.IVT_U2 = (uint32_t)(CAN_RxData[5] | (CAN_RxData[4] << 8) | (CAN_RxData[3] << 16) | (CAN_RxData[2] << 24) );
+	status_data.IVT_U2_f = status_data.IVT_U2 / 1000.0f;
+}
+
+void read_IVT_Wh(){
+	status_data.recieved_IVT = 0;
+
+	status_data.IVT_Wh = (uint32_t)(CAN_RxData[5] | (CAN_RxData[4] << 8) | (CAN_RxData[3] << 16) | (CAN_RxData[2] << 24) );
+	status_data.IVT_Wh_f = status_data.IVT_Wh / 1000.0f;
+}
+
+
+
+
+
+void HAL_FDCAN_RxFifo0Callback(FDCAN_HandleTypeDef *hfdcan, uint32_t RxFifo0ITs)
+{
+  if((RxFifo0ITs & FDCAN_IT_RX_FIFO0_NEW_MESSAGE) != RESET)
+  {
+    /* Retreive Rx messages from RX FIFO0 */
+    if (HAL_FDCAN_GetRxMessage(hfdcan, FDCAN_RX_FIFO0, &RxHeader, CAN_RxData) != HAL_OK)
+    {
+    /* Reception Error */
+    Error_Handler();
+    }
+    else{
+    	switch(RxHeader.Identifier){
+    	case CAN_IVT_I:
+			read_IVT_I();
+    		break;
+    	case CAN_IVT_U1:
+			read_IVT_U1();
+			break;
+		case CAN_IVT_U2:
+			read_IVT_U2();
+			break;
+		case CAN_IVT_Wh:
+			read_IVT_Wh();
+			break;
+
+	
+
+    	}
+    }
+
+    if (HAL_FDCAN_ActivateNotification(hfdcan, FDCAN_IT_RX_FIFO0_NEW_MESSAGE, 0) != HAL_OK)
+    {
+      /* Notification Error */
+      Error_Handler();
+    }
+
+
+  }
+}
+
 
 void CanSend(uint8_t *TxData, uint32_t identifier ){
 
@@ -91,7 +139,6 @@ int ReadCANBusMessage(uint32_t messageIdentifier, uint8_t* RxData1)
 
 void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 
-	uint8_t cell_id = 0;
 	for(int i = 0; i < IC_NUM; i++){
 		for(int j = 0; j < CELL_NUM; j += 3){
 			uint16_t buf = cell_data[i][j].voltage;
@@ -121,7 +168,7 @@ void Send_cell_data(cell_data_t cell_data[][CELL_NUM]){
 void Send_temp_data(temp_data_t temp_data[][GPIO_NUM]){
 
 #if TEMP_FIXED
-	uint8_t temp_id = 0;
+
 		for(int i = 0; i < IC_NUM; i++){
 			uint32_t id_t = 1960;
 
@@ -268,8 +315,8 @@ void Send_Soc(status_data_t *status_data){
 
 	uint16_t buf2 = (uint16_t)status_data->max_temp;
 
-	Tx_Data[6]= (uint8_t)(buf1);
-	Tx_Data[7]= (uint8_t)(buf1 >> 8);
+	Tx_Data[6]= (uint8_t)(buf2);
+	Tx_Data[7]= (uint8_t)(buf2 >> 8);
 
 	CanSend(Tx_Data, CAN_SOC);
 

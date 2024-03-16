@@ -565,7 +565,7 @@ int8_t rdaux1(uint8_t reg,				//Determines which GPIO voltage register is read b
 	return (pec_error);
 }
 
-adcv_delay(void){
+void adcv_delay(void){
 	delay_u(T_REFUP_MAX + T_CYCLE_FAST_MAX);
 }
 
